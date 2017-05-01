@@ -13,4 +13,4 @@ class YellowButler:
         pass
 
     def get_message(self):
-        return "YellowButler is here!"
+        return "YellowButler 1.0 is here!"
