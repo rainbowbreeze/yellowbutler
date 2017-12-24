@@ -2,6 +2,8 @@
 Main class
 """
 
+from yellowbot.gears.musicgear import MusicGear
+
 class YellowBot:
     """
     Entry point for the bot
@@ -9,7 +11,27 @@ class YellowBot:
 
     def __init__(self):
         self.keys = []
-        self.module = []
+        self._gears = []
+        self._register_gears()
+
+    def _register_gears(self):
+        """Registers all the gears in the bot"""
+        self._gears.append(MusicGear())
+
+    def process_intent(self, intent, params):
+        """Process an intent"""
+
+        # Check if any of the registered gears is able to process the intent
+        gear = None
+        for working_gear in self._gears:
+            if working_gear.can_process_intent(intent):
+                gear = working_gear
+                break
+        if gear is not None:
+            return gear.process_intent(intent, params)
+        else:
+            return "I don't know how to process your request"
+
 
     def echo_message(self, message):
         return "You said {}".format(message)
@@ -24,4 +46,3 @@ class YellowBot:
     def unauthorize_answer(self, key):
         print("Attempt to access with a wrong key {}".format(key))
         return 404
-    
