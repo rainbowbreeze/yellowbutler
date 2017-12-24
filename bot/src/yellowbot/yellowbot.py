@@ -3,6 +3,7 @@ Main class
 """
 
 from yellowbot.gears.musicgear import MusicGear
+from yellowbot.gears.kindergartengear import KindergartenGear
 
 class YellowBot:
     """
@@ -17,6 +18,7 @@ class YellowBot:
     def _register_gears(self):
         """Registers all the gears in the bot"""
         self._gears.append(MusicGear())
+        self._gears.append(KindergartenGear())
 
     def process_intent(self, intent, params):
         """Process an intent"""

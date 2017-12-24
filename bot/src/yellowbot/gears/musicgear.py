@@ -1,5 +1,5 @@
 """
-Check for music
+A YellowBot gear to check for music
 
 Requirements
 - nothing
@@ -18,4 +18,4 @@ class MusicGear(BaseGear):
         BaseGear.__init__(self, "MusicGear", self.INTENTS)
 
     def process_intent(self, intent, params):
-        return "Yeah!!!"
+        return "Music subsystem here, at your command"

@@ -9,7 +9,7 @@ from yellowbot.yellowbot import YellowBot
 def index():
     yb = YellowBot()
     # return yb.echo_message("Ciao")
-    return yb.process_intent("trace_music", "bella storia")
+    return yb.process_intent("kindergarten_check", "bella storia")
 
 
 if __name__ == '__main__':
