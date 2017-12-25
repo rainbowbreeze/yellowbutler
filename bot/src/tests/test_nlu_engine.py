@@ -1,6 +1,7 @@
 """
 Test for the NLU engine
 """
+
 from yellowbot.globalbag import GlobalBag
 from yellowbot.nluengine import NluEngine
 
