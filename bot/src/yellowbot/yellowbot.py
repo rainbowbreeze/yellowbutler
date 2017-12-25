@@ -40,20 +40,24 @@ class YellowBot:
         self._load_config_file(config_file)
 
 
-
+        
     def _load_config_file(self, config_file):
         # Load config file
-        self.config = None
+        self.config = {}
         if not os.path.isfile(config_file):
             base_folder = os.path.dirname(__file__)  # Path where this file is
             full_config_path = os.path.join(base_folder, config_file)  # combine with the config file name
         else:
             full_config_path = config_file
+        # Now if has the file and full path with configurations
         if os.path.isfile(full_config_path):
             with open(full_config_path, 'r') as f:
                 self.config = json.load(f)
-        if self.config is None:
+        else:
             raise ValueError("Cannot find configuration file {}".format(full_config_path))
+        # Checks if the config files has real values
+        if len(self.config.keys()) == 0:
+            raise ValueError("Empty configuration file {}".format(full_config_path))
 
     def _register_gears(self):
         """
@@ -62,13 +66,13 @@ class YellowBot:
         self._gears.append(MusicGear())
         self._gears.append(KindergartenGear())
 
-    def is_authorized(self, key):
+    def is_client_authorized(self, key):
         """
         Checks if the key is among the ones authorized to use the bot
         :param key:
         :return: True if the key is authorized, otherwise False
         """
-        for auth_key in self.config.authorized_keys:
+        for auth_key in self.config["authorized_keys"]:
             if auth_key == key:
                 return True
         return False
