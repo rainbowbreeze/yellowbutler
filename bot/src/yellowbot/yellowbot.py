@@ -4,21 +4,36 @@ Main class
 
 from yellowbot.gears.musicgear import MusicGear
 from yellowbot.gears.kindergartengear import KindergartenGear
+from yellowbot.nluengine import NluEngine
+
 
 class YellowBot:
     """
-    Entry point for the bot
+    The Yellow bot core class. Orchestrate the connections between the external world and the gears
     """
 
-    def __init__(self):
+    def __init__(self,
+                 nlu_engine = NluEngine(),
+                 ):
+        """
+        Init the bot
+
+        :param nlu_engine: engine to use to extract intent and arguments
+        """
         self.keys = []
         self._gears = []
         self._register_gears()
+        self.nlu_engine = nlu_engine
 
     def _register_gears(self):
         """Registers all the gears in the bot"""
         self._gears.append(MusicGear())
         self._gears.append(KindergartenGear())
+
+    def infer_intent_and_params(self, chat_message):
+        """Find intent and arguments from a chat message"""
+        return self.nlu_engine.infer_intent_and_args(chat_message)
+        pass
 
     def process_intent(self, intent, params):
         """Process an intent"""
@@ -33,7 +48,6 @@ class YellowBot:
             return gear.process_intent(intent, params)
         else:
             return "I don't know how to process your request"
-
 
     def echo_message(self, message):
         return "You said {}".format(message)

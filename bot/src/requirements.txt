@@ -1,1 +1,13 @@
+# Flask
 flask
+# ---
+
+# Telegram part
+urllib3
+telepot
+# ---
+
+
+# Test
+pytest
+# ---

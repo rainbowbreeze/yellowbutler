@@ -22,6 +22,6 @@ class BaseGear:
 
     def process_intent(self, intent, params):
         """Process the intent. Need to be implemented in every subclass"""
-        raise ValueError("Intent processing login for gear {} not implemented".format(self._gear_name))
+        raise ValueError("Intent processing for gear {} not implemented".format(self._gear_name))
 
 

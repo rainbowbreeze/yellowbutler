@@ -1,4 +1,4 @@
-** Create the environment
+** CREATE THE ENVIRONMENT
 
 https://docs.python.org/3/library/venv.html
 python3 -m venv venv
@@ -11,7 +11,7 @@ To configure inside PyCharm, I first create a venv for the new project, selectin
 Alternatively, create the venv in Pycharm, then from command line remove it and create a new one using python3 and rename the venv in the project preferences
 
 
-** Flask
+** FLASK
 create folder wsgi, as source folder
 pip install flask
 added flask to requirements.txt
@@ -37,3 +37,9 @@ from CL
  export FLASK_APP=wsgi/app.py
  flask run
 
+
+** TEST
+using PyTest: https://docs.pytest.org/en/latest/
+http://pytest.readthedocs.io/en/latest/goodpractices.html
+
+from the project root, run pytest
