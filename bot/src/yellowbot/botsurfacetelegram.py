@@ -2,7 +2,8 @@
 Class to interact with Telegram surface
 """
 
-from yellowbot import YellowBot
+from yellowbot.yellowbot import YellowBot
+
 
 class BotSurfaceTelegram:
     """

@@ -48,7 +48,6 @@ def echo_message():
     print('***************************')
     print(request.get_json())
     print('***************************')
-    return yb.echo_message("Welcome to the world!")
 
 
 @app.route('{}/intent'.format(BASIC_ADDRESS), methods=['POST'])

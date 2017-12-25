@@ -7,6 +7,8 @@ from yellowbot.yellowbot import YellowBot
 
 class TestYellowBot(TestCase):
 
-    def test_is_security_code_valid(self):
+    def test_is_authorized(self):
         yb = YellowBot()
+
+        assert not yb.is_authorized(None)
 

@@ -43,3 +43,9 @@ using PyTest: https://docs.pytest.org/en/latest/
 http://pytest.readthedocs.io/en/latest/goodpractices.html
 
 from the project root, run pytest
+
+
+** CONFIGURATION
+https://martin-thoma.com/configuration-files-in-python/
+https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
+
