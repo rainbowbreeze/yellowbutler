@@ -26,17 +26,32 @@ class YellowBot:
         self.nlu_engine = nlu_engine
 
     def _register_gears(self):
-        """Registers all the gears in the bot"""
+        """
+        Registers all the gears in the bot
+        """
         self._gears.append(MusicGear())
         self._gears.append(KindergartenGear())
 
     def infer_intent_and_params(self, chat_message):
-        """Find intent and arguments from a chat message"""
+        """
+        Find intent and arguments from a chat message. Use this method when YellowBot
+        acts as a chatbot
+
+        :param chat_message:
+        :return:
+        """
         return self.nlu_engine.infer_intent_and_args(chat_message)
         pass
 
     def process_intent(self, intent, params):
-        """Process an intent"""
+        """
+        Process an intent. Use this method when YellowBot acts behind a REST API or
+        something similar
+
+        :param intent:
+        :param params:
+        :return:
+        """
 
         # Check if any of the registered gears is able to process the intent
         gear = None

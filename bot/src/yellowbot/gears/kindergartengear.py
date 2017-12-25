@@ -6,15 +6,16 @@ Requirements
 """
 
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.globalbag import GlobalBag
 
 
 class KindergartenGear(BaseGear):
     INTENTS = [
-        "kindergarten_report_last_status",
-        "kindergarten_check"]
+        GlobalBag.KINDERGARTEN_INTENT_CHECK,
+        GlobalBag.KINDERGARTEN_INTENT_REPORT]
 
     def __init__(self):
-        BaseGear.__init__(self, "KindergartenGear", self.INTENTS)
+        BaseGear.__init__(self, KindergartenGear.__name__, self.INTENTS)
 
     def process_intent(self, intent, params):
         return "Kindergarten subsystem here, at your command"
