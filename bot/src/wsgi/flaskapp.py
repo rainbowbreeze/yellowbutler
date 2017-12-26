@@ -35,109 +35,109 @@ from flask import Flask, request, make_response, jsonify
 from werkzeug.exceptions import abort, BadRequest
 
 from yellowbot.yellowbot import YellowBot
-from yellowbot.botsurfacetelegram import BotSurfaceTelegram
-# Telegram management
-import telepot
-import urllib3
+from yellowbot.telegramsurface import TelegramSurface
 
-# Basic address for all the API calls
-BASIC_ADDRESS = '/yellowbot/api/v1.0'
-
-
-# You can leave this bit out if you're using a paid PythonAnywhere account
-proxy_url = "http://proxy.server:3128"
-telepot.api._pools = {
-    'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
-}
-telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
-# end of the stuff that's only needed for free accounts
-
-telegram_bot = telepot.Bot('YOUR_AUTHORIZATION_TOKEN')
+# Flask init
 app = Flask(__name__)
-yb = YellowBot()
-bot_surface_telegram = BotSurfaceTelegram()
 
 
-@app.route("/")
-def hello_world():
-    return "YellowBot here, happy to serve :)"
-
-
-@app.route('{}/intent'.format(BASIC_ADDRESS), methods=['POST'])
-def process_intent():
+class FlaskManager:
     """
-    Process and intent with given parameters
-
-    :return:
+    Class to gather all the flask routes as class's static methods. I like
+     that more than defining them as global functions (the usual way you can
+     find in tutorials)
     """
+    # Basic address for all the API calls
+    BASIC_ADDRESS = '/yellowbot/api/v1.0'
 
-    # Request object format reference can be found at
-    #  http://flask.pocoo.org/docs/0.12/api/#incoming-request-data
+    # Yellowbot init
+    yellowbot = YellowBot()
 
-    # print('******** NEW REQ *******************')
-    # print(request.headers)
-    # print('***************************')
-    # print(request.data)
-    # print('***************************')
-    # print("Is json? {}".format(request.is_json))
-    # # print(request.get_json())  # Can create errors if the request is not properly json made
-    # print('******** END REQ *******************')
+    # Telegram integration init
+    telegram_surface = TelegramSurface(yellowbot)
+    telegram_surface.init_python_anywhere()
 
-    # Find the authorization key
-    auth_key = request.headers.get("X-Authorization")
+    @staticmethod
+    @app.route("/")
+    def hello_world():
+        return "YellowBot here, happy to serve :)"
 
-    # None or invalid auth key
-    if not yb.is_client_authorized(auth_key):
-        abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+    @staticmethod
+    @app.route('{}/intent'.format(BASIC_ADDRESS), methods=['POST'])
+    def process_intent():
+        """
+        Process and intent with given parameters
 
-    # Extract the intent from the request
-    if not request.is_json:
-        abort(make_response(
-            jsonify(message="No json data in the request"), 400)
-        )
-    # This conversion can fail if content_type is set to application/json
-    #  but body is empty, so it needs to be handled in the proper way
-    #  Method reference is here: http://flask.pocoo.org/docs/0.12/api/#flask.Request.get_json
-    try:
-        # silent=True doesn't raise any error
-        json_payload = request.get_json()
-    except BadRequest:
-        abort(make_response(
-            jsonify(message="Invalid json body, cannot parse it"), 400)
-        )
-    # No intent field in the request
-    if "intent" not in json_payload:
-        abort(make_response(
-            jsonify(message="Missing intent field in the request"), 400)
-        )
-    intent = request.json["intent"]
-    # Extract the parameters from the request
-    if "params" in request.json:
-        params = request.json["params"]
-    else:
-        params = {}
+        :return:
+        """
 
-    # Pass everything to the bot
-    try:
-        message = yb.process_intent(intent, params)  # Process the intent
-        return make_response(jsonify(message=message), 200)
-    except Exception as e:
-        # If something goes wrong, like missing parameters or errors in
-        #  the gear process, flow falls here
-        abort(make_response(
-            jsonify(message=e.args[0]), 400)
-        )
+        # Request object format reference can be found at
+        #  http://flask.pocoo.org/docs/0.12/api/#incoming-request-data
 
+        # print('******** NEW REQ *******************')
+        # print(request.headers)
+        # print('***************************')
+        # print(request.data)
+        # print('***************************')
+        # print("Is json? {}".format(request.is_json))
+        # # print(request.get_json())  # Can create errors if the request is not properly json made
+        # print('******** END REQ *******************')
 
-@app.route('/yellowbot/telegramwebhook/v1.0', methods=["POST"])
-def telegram_webhook():
-    update = request.get_json()
-    if "message" in update:
-        text = update["message"]["text"]
-        chat_id = update["message"]["chat"]["id"]
-        chat_response = bot_surface_telegram.process_chat_message(text)
-        telegram_bot.sendMessage(chat_id, "From the web: you said '{}'".format(chat_response))
-    return "OK"
+        # Find the authorization key
+        auth_key = request.headers.get("X-Authorization")
+
+        # None or invalid auth key
+        if not FlaskManager.yellowbot.is_client_authorized(auth_key):
+            abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+
+        # Extract the intent from the request
+        if not request.is_json:
+            abort(make_response(
+                jsonify(message="No json data in the request"), 400)
+            )
+        # This conversion can fail if content_type is set to application/json
+        #  but body is empty, so it needs to be handled in the proper way
+        #  Method reference is here: http://flask.pocoo.org/docs/0.12/api/#flask.Request.get_json
+        try:
+            # silent=True doesn't raise any error
+            json_payload = request.get_json()
+        except BadRequest:
+            abort(make_response(
+                jsonify(message="Invalid json body, cannot parse it"), 400)
+            )
+        # No intent field in the request
+        if "intent" not in json_payload:
+            abort(make_response(
+                jsonify(message="Missing intent field in the request"), 400)
+            )
+        intent = request.json["intent"]
+        # Extract the parameters from the request
+        if "params" in request.json:
+            params = request.json["params"]
+        else:
+            params = {}
+
+        # Pass everything to the bot
+        try:
+            message = FlaskManager.yellowbot.process_intent(intent, params)  # Process the intent
+            return make_response(jsonify(message=message), 200)
+        except Exception as e:
+            # If something goes wrong, like missing parameters or errors in
+            #  the gear process, flow falls here
+            abort(make_response(
+                jsonify(message=e.args[0]), 400)
+            )
+
+    @staticmethod
+    @app.route('/yellowbot/telegramwebhook/v1.0', methods=["POST"])
+    def telegram_webhook():
+        update = request.get_json()
+        if "message" in update:
+            text = update["message"]["text"]
+            chat_id = update["message"]["chat"]["id"]
+            chat_response = FlaskManager.telegram_surface.process_chat_message(text)
+            FlaskManager.telegram_surface.sendMessage(chat_id, "From the web: you said '{}'".format(chat_response))
+        return "OK"
 
 
 if __name__ == '__main__':
