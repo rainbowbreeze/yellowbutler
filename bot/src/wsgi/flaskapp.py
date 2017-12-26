@@ -10,6 +10,8 @@ Conventions:
 """
 
 from flask import Flask, request
+from werkzeug.exceptions import abort
+
 from yellowbot.yellowbot import YellowBot
 from yellowbot.botsurfacetelegram import BotSurfaceTelegram
 # Telegram management
@@ -36,30 +38,58 @@ bot_surface_telegram = BotSurfaceTelegram()
 
 @app.route("/")
 def hello_world():
-    return 'Hello World!'
-
-
-@app.route('{}/message'.format(BASIC_ADDRESS), methods=['POST'])
-def echo_message():
-    print('***************************')
-    print(request.headers)
-    print('***************************')
-    print(request)
-    print('***************************')
-    print(request.get_json())
-    print('***************************')
+    return "Hello World!"
 
 
 @app.route('{}/intent'.format(BASIC_ADDRESS), methods=['POST'])
 def process_intent():
     """
     Process and intent with given parameters
-    intent name is
 
     :return:
     """
-    # return yb.process_intent("kindergarten_check", "bella storia")
-    return yb.process_intent("kindergarten_check", "bella storia")
+
+    print('******** NEW REQ *******************')
+    print(request.headers)
+    print('***************************')
+    print(request.data)
+    print('***************************')
+    print(request.is_json)
+    print('***************************')
+    #print(request.get_json(force=True))
+    print(request.get_json())
+    print('***************************')
+
+    # Request object format reference can be found at
+    #  http://flask.pocoo.org/docs/0.12/api/#incoming-request-data
+
+    # Find the authorization key
+    auth_key = request.headers.get("X-Authorization")
+
+    if not yb.is_client_authorized(auth_key):
+        abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+
+    # Extract the intent from the request
+    if not request.is_json:
+        # TODO add the message for no json data
+        abort(400)
+    if "intent" not in request.json:
+        # TODO add the need for the intent param
+        abort(400)
+    intent = request.json["intent"]
+    # Extract the parameters from the request
+    if "params" in request.json:
+        params = request.json["params"]
+    else:
+        params = {}
+    # TODO add the need for the params param
+
+    # Pass everything to the bot
+    try:
+        return yb.process_intent(intent, params)
+    except ValueError:
+        # TODO put the ValueError exception as string for the abort
+        abort(400)
 
 
 @app.route('/yellowbot/telegramwebhook/v1.0', methods=["POST"])

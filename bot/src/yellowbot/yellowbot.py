@@ -4,6 +4,7 @@ Main class
 import json
 import os
 
+from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
 from yellowbot.gears.kindergartengear import KindergartenGear
 from yellowbot.nluengine import NluEngine
@@ -13,10 +14,11 @@ class YellowBot:
     """
     The Yellow bot core class. Orchestrate the connections between the external world and the gears
     """
+    DEFAULT_CONFIG_FILE = "yellowbotconfig.json"
 
     def __init__(self,
                  nlu_engine = NluEngine(),
-                 config_file = "yellowbotconfig.json"
+                 config_file = DEFAULT_CONFIG_FILE
                  ):
         """
         Init the bot
@@ -39,8 +41,6 @@ class YellowBot:
         # Load the config file
         self._load_config_file(config_file)
 
-
-        
     def _load_config_file(self, config_file):
         # Load config file
         self.config = {}
@@ -65,17 +65,31 @@ class YellowBot:
         """
         self._gears.append(MusicGear())
         self._gears.append(KindergartenGear())
+        self._gears.append(EchoMessageGear())
 
     def is_client_authorized(self, key):
         """
         Checks if the key is among the ones authorized to use the bot
-        :param key:
+        :param key: the key to check for authorization. Authorized keys are
+               generally listed in the config file
         :return: True if the key is authorized, otherwise False
         """
+        if not key:
+            return False
+
         for auth_key in self.config["authorized_keys"]:
             if auth_key == key:
                 return True
         return False
+
+    def change_authorized_keys(self, new_keys):
+        """
+        Substitutes old authorization keys with new ones. Useful for testing
+        purposes
+        :param new_keys: new keys to use
+        :return:
+        """
+        self.config["authorized_keys"] = new_keys
 
     def infer_intent_and_params(self, chat_message):
         """
@@ -93,8 +107,8 @@ class YellowBot:
         Process an intent. Use this method when YellowBot acts behind a REST API or
         something similar
 
-        :param intent:
-        :param params:
+        :param intent: the intent to execute
+        :param params: a json object with all the intent's required params
         :return:
         """
 
@@ -109,13 +123,3 @@ class YellowBot:
         else:
             return "I don't know how to process your request"
 
-    def is_security_code_valid(self, security_code):
-        try:
-            self.keys.index(security_code)
-            return True
-        except ValueError:
-            return False
-
-    def unauthorize_answer(self, key):
-        print("Attempt to access with a wrong key {}".format(key))
-        return 404
