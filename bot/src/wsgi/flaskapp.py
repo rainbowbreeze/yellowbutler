@@ -60,7 +60,7 @@ bot_surface_telegram = BotSurfaceTelegram()
 
 @app.route("/")
 def hello_world():
-    return "Hello World!"
+    return "YellowBot here, happy to serve :)"
 
 
 @app.route('{}/intent'.format(BASIC_ADDRESS), methods=['POST'])

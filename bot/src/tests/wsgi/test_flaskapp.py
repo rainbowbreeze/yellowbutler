@@ -35,7 +35,7 @@ class TestFlaskApp(TestCase):
     def test_rootUrl(self):
         response = self.app.get("/", follow_redirects=True)
         assert 200 == response.status_code
-        assert b"Hello World!" in response.get_data()
+        assert b"YellowBot here, happy to serve :)" in response.get_data()
 
     def test_authorization(self):
         # Injects new auth keys
