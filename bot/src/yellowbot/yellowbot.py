@@ -109,7 +109,7 @@ class YellowBot:
 
         :param intent: the intent to execute
         :param params: a json object with all the intent's required params
-        :return:
+        :return: a message with the result of the processing
         """
 
         # Check if any of the registered gears is able to process the intent
@@ -121,5 +121,5 @@ class YellowBot:
         if gear is not None:
             return gear.process_intent(intent, params)
         else:
-            return "I don't know how to process your request"
+            return "No gear to process your intent"
 
