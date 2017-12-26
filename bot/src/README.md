@@ -51,18 +51,18 @@ https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
 
 
 ** PYTHONANYWHERE
-Open a shell
- git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
- cd yellowbutler/bot/src
-
 Steps here: https://help.pythonanywhere.com/pages/Flask/
 
-mkvirtualenv --python=/usr/bin/python3.6 yellowbutler-venv
-pip install -r requirements.txt
-(virtualenv created under /home/yellowbutler/.virtualenvs/yellowbutler-venv, as per command output)
+Copy the project
+ Open a shell
+ git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
+ cd yellowbutler/bot/src
+ mkvirtualenv --python=/usr/bin/python3.6 yellowbutler-venv
+ pip install -r requirements.txt
+ (virtualenv created under /home/yellowbutler/.virtualenvs/yellowbutler-venv, as per command output)
  
 Create a new webapp
- Manual mode
+ Select Manual mode, python 3.6 and confirm everything
  virtualenv:  /home/yellowbutler/.virtualenvs/yellowbutler-venv
  change WSGI file adding under the section +++++++++++ FLASK +++++++++++
  
