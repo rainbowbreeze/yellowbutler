@@ -63,9 +63,20 @@ pip install -r requirements.txt
  
 Create a new webapp
  Manual mode
-virtualenv:  /home/yellowbutler/.virtualenvs/yellowbutler-venv
+ virtualenv:  /home/yellowbutler/.virtualenvs/yellowbutler-venv
+ change WSGI file adding under the section +++++++++++ FLASK +++++++++++
+ 
+  import sys
+  path = '/home/yellowbutler/yellowbutler/bot/src'
+  if path not in sys.path:
+      sys.path.append(path)
+  from wsgi.flaskapp import app as application
+
+if I put the path to the wsgi folder, /home/yellowbutler/yellowbutler/bot/src/wsgi, I obtain a
+ ModuleNotFoundError: No module named 'yellowbot'
+because the root is not anymore src, but becomes src/wsgi, and so all the python import fails
 
 
-working directory: /home/yellowbutler/yellowbutler/bot/src
-
-
+To test:
+curl -X POST https://yellowbutler.pythonanywhere.com/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
+(remember to authorize the key in the config file, and reload the webapp)
