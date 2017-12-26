@@ -45,7 +45,8 @@ class YellowBot:
         # Load config file
         self.config = {}
         if not os.path.isfile(config_file):
-            base_folder = os.path.dirname(__file__)  # Path where this file is
+            #base_folder = os.path.dirname(__file__)  # Path where this file is
+            base_folder = os.path.abspath(os.path.dirname(__file__))  # Path where this file is
             full_config_path = os.path.join(base_folder, config_file)  # combine with the config file name
         else:
             full_config_path = config_file

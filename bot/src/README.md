@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
 from PyCharm, click on app.py and "Run app"
 from CL
- export FLASK_APP=wsgi/app.py
+ export FLASK_APP=wsgi/flaskapp.py
  flask run
 
 
@@ -48,4 +48,24 @@ from the project root, run pytest
 ** CONFIGURATION
 https://martin-thoma.com/configuration-files-in-python/
 https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
+
+
+** PYTHONANYWHERE
+Open a shell
+ git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
+ cd yellowbutler/bot/src
+
+Steps here: https://help.pythonanywhere.com/pages/Flask/
+
+mkvirtualenv --python=/usr/bin/python3.6 yellowbutler-venv
+pip install -r requirements.txt
+(virtualenv created under /home/yellowbutler/.virtualenvs/yellowbutler-venv, as per command output)
+ 
+Create a new webapp
+ Manual mode
+virtualenv:  /home/yellowbutler/.virtualenvs/yellowbutler-venv
+
+
+working directory: /home/yellowbutler/yellowbutler/bot/src
+
 
