@@ -71,18 +71,17 @@ def process_intent():
     :return:
     """
 
-    print('******** NEW REQ *******************')
-    print(request.headers)
-    print('***************************')
-    print(request.data)
-    print('***************************')
-    print("Is json? {}".format(request.is_json))
-    # print(request.get_json())  # Can create errors if the request is not properly json made
-    print('******** END REQ *******************')
-    print()
-
     # Request object format reference can be found at
     #  http://flask.pocoo.org/docs/0.12/api/#incoming-request-data
+
+    # print('******** NEW REQ *******************')
+    # print(request.headers)
+    # print('***************************')
+    # print(request.data)
+    # print('***************************')
+    # print("Is json? {}".format(request.is_json))
+    # # print(request.get_json())  # Can create errors if the request is not properly json made
+    # print('******** END REQ *******************')
 
     # Find the authorization key
     auth_key = request.headers.get("X-Authorization")
@@ -102,10 +101,11 @@ def process_intent():
     try:
         # silent=True doesn't raise any error
         json_payload = request.get_json()
-    except BadRequest as e:
+    except BadRequest:
         abort(make_response(
             jsonify(message="Invalid json body, cannot parse it"), 400)
         )
+    # No intent field in the request
     if "intent" not in json_payload:
         abort(make_response(
             jsonify(message="Missing intent field in the request"), 400)
