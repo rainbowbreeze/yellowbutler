@@ -70,8 +70,8 @@ class TelegramSurface:
         if "message" in update:
             text = update["message"]["text"]
             chat_id = update["message"]["chat"]["id"]
-            #chat_response = self._process_chat_message(text)
-            self._send_chat_message(chat_id, "From the web: you said '{}'".format(text))
+            # chat_response = self._process_chat_message(text)
+            self._send_chat_message(chat_id, "You said '{}'".format(text))
 
     def _process_chat_message(self, message):
         """
