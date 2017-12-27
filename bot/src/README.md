@@ -80,3 +80,11 @@ because the root is not anymore src, but becomes src/wsgi, and so all the python
 To test:
 curl -X POST https://yellowbutler.pythonanywhere.com/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
 (remember to authorize the key in the config file, and reload the webapp)
+
+
+** LOGGING
+
+Under PAW
+ https://www.pythonanywhere.com/forums/topic/3120/
+  print('debug info', file=sys.stderr)
+  end up in /var/log/…error.log (in some time after request)

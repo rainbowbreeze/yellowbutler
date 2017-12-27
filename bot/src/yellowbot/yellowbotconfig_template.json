@@ -1,6 +1,11 @@
 {
-    "authorized_keys":[
-      "put_your_authorized_key_value_here_1",
-      "put_your_authorized_key_value_here_2"
-    ]
+  "authorized_keys":[
+    "put_your_authorized_key_value_here_1",
+    "put_your_authorized_key_value_here_2"
+  ],
+
+  "telegram_authorization_token": "YOUR_AUTHORIZATION_TOKEN",
+  "telegram_webhook_url": "https://YOUR_PYTHONANYWHERE_USERNAME.pythonanywhere.com/yellowbot/telegramwebhook/v1.0",
+
+  "running_locally": false
 }

@@ -30,7 +30,8 @@ Useful links:
  Another resource
 
 """
-
+import telepot
+import urllib3
 from flask import Flask, request, make_response, jsonify
 from werkzeug.exceptions import abort, BadRequest
 
@@ -40,6 +41,8 @@ from yellowbot.telegramsurface import TelegramSurface
 # Flask init
 app = Flask(__name__)
 
+# Logging to unix log utils
+# See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
 
 class FlaskManager:
     """
@@ -132,11 +135,7 @@ class FlaskManager:
     @app.route('/yellowbot/telegramwebhook/v1.0', methods=["POST"])
     def telegram_webhook():
         update = request.get_json()
-        if "message" in update:
-            text = update["message"]["text"]
-            chat_id = update["message"]["chat"]["id"]
-            chat_response = FlaskManager.telegram_surface.process_chat_message(text)
-            FlaskManager.telegram_surface.sendMessage(chat_id, "From the web: you said '{}'".format(chat_response))
+        FlaskManager.telegram_surface.process_update(update)
         return "OK"
 
 

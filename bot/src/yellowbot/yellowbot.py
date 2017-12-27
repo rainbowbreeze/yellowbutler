@@ -43,7 +43,7 @@ class YellowBot:
 
     def _load_config_file(self, config_file):
         # Load config file
-        self.config = {}
+        self._config = {}
         if not os.path.isfile(config_file):
             # Folder where this file is, can work also without the abspath,
             #  but better for debug so full path is traced in the error
@@ -54,11 +54,11 @@ class YellowBot:
         # Now if has the file and full path with configurations
         if os.path.isfile(full_config_path):
             with open(full_config_path, 'r') as f:
-                self.config = json.load(f)
+                self._config = json.load(f)
         else:
             raise ValueError("Cannot find configuration file {}".format(full_config_path))
         # Checks if the config files has real values
-        if len(self.config.keys()) == 0:
+        if len(self._config.keys()) == 0:
             raise ValueError("Empty configuration file {}".format(full_config_path))
 
     def _register_gears(self):
@@ -68,6 +68,22 @@ class YellowBot:
         self._gears.append(MusicGear())
         self._gears.append(KindergartenGear())
         self._gears.append(EchoMessageGear())
+
+    def get_config(self, key_to_read, throw_error=True):
+        """
+        Read a value from the configuration, throwing an error if it doesn't exist
+        :param key_to_read: the key to read
+        :param throw_error: if False, doesn't throw an error, but return None instead
+        :return:
+        """
+        try:
+            return self._config[key_to_read]
+        except KeyError as e:
+            if throw_error:
+                raise ValueError(
+                    "Non existing {} value in the config, please add it".format(key_to_read))
+            else:
+                return None
 
     def is_client_authorized(self, key):
         """
@@ -79,7 +95,7 @@ class YellowBot:
         if not key:
             return False
 
-        for auth_key in self.config["authorized_keys"]:
+        for auth_key in self.get_config("authorized_keys"):
             if auth_key == key:
                 return True
         return False
@@ -91,7 +107,7 @@ class YellowBot:
         :param new_keys: new keys to use
         :return:
         """
-        self.config["authorized_keys"] = new_keys
+        self._config["authorized_keys"] = new_keys
 
     def infer_intent_and_params(self, chat_message):
         """
