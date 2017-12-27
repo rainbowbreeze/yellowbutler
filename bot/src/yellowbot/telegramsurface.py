@@ -40,16 +40,20 @@ class TelegramSurface:
             urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
         # end of the stuff that's only needed for free accounts
 
-
         # Sets the webhook url, reading it from configuration
-        # Sometimes there is an excetion
+        # Sometimes there is an exception
         #    telepot.exception.TooManyRequestsError: ('Too Many Requests: retry after 1', 429 ...
         #  It's because there is a limit on how often the webhook is set.
         #  In order to avoid it, follow https://github.com/nickoala/telepot/issues/165#issuecomment-256056446
         #  TL;DR: check if the webhook needs to be changed, before changing it
-        self.telegram_bot.setWebhook(
-            self.yellowbot.get_config("telegram_webhook_url"),
-            max_connections=1)
+        webhook_info = self.telegram_bot.getWebhookInfo()
+        new_webhook_url = self.yellowbot.get_config('telegram_webhook_url')
+        # With get, it also checks for the existence of the key in the dict.
+        #  If it doesn't exists, return None
+        if webhook_info.get('url') != new_webhook_url:
+            self.telegram_bot.setWebhook(
+                new_webhook_url,
+                max_connections=1)
 
     def process_update(self, update):
         """
