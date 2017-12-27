@@ -16,6 +16,8 @@ class GlobalBag:
 
     # Trace music gear
     TRACE_MUSIC_INTENT = "trace_music"
+    TRACE_MUSIC_PARAM_TITLE = "title"
+    TRACE_MUSIC_PARAM_AUTHOR = "author"
 
     # Kindergarten gear
     KINDERGARTEN_INTENT_CHECK = "kindergarten_check"

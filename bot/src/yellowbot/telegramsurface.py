@@ -29,6 +29,7 @@ class TelegramSurface:
         #  special config and the webhook for the bot.
         #  Otherwise, as soon as there is call to set the webhook when Flask
         #  is running locally, the command fails because of the proxy settings
+        #  with urllib3.exceptions.ProxyError
         running_locally = self.yellowbot.get_config("running_locally", throw_error=False)
         if running_locally:
             return
@@ -49,8 +50,8 @@ class TelegramSurface:
         #  It's because there is a limit on how often the webhook is set.
         #  In order to avoid it, follow https://github.com/nickoala/telepot/issues/165#issuecomment-256056446
         #  TL;DR: check if the webhook needs to be changed, before changing it
-        # If there is an exception because the proxy cannot be reached, is
-        #  because the PythonAnyWhere configurations: don't do them
+        # If there is an urllib3.exceptions.ProxyError error, is because the
+        #  PythonAnyWhere configuration: don't do it
         webhook_info = self.telegram_bot.getWebhookInfo()
         new_webhook_url = self.yellowbot.get_config('telegram_webhook_url')
         # With get, it also checks for the existence of the key in the dict.

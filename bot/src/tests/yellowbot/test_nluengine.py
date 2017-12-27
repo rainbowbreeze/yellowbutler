@@ -1,30 +1,45 @@
 """
 Test for the NLU engine
 """
+from unittest import TestCase
 
 from yellowbot.globalbag import GlobalBag
 from yellowbot.nluengine import NluEngine
 
 
-class TestNluEngine(object):
+class TestNluEngine(TestCase):
+    def setUp(self):
+        self.nlu_engine = NluEngine()
 
-    def test_rules(self):
-        nlu_engine = NluEngine()
+    def tearDown(self):
+        pass
 
-        # Try some sentences
-        intent, params = nlu_engine.infer_intent_and_args("Test message")
+    def test_empty_sentence(self):
+        intent, params = self.nlu_engine.infer_intent_and_args("Test message")
         assert intent is None
         assert params == {}
 
-        intent, params = nlu_engine.infer_intent_and_args("Echo very long message")
+    def test_echo_message_rules(self):
+        intent, params = self.nlu_engine.infer_intent_and_args("Echo very long message")
         assert intent == GlobalBag.ECHO_MESSAGE_INTENT
         assert GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE in params
         assert params.get(GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE) == "very long message"
-        intent, params = nlu_engine.infer_intent_and_args("Say whatever you want!")
+        intent, params = self.nlu_engine.infer_intent_and_args("Say whatever you want!")
         assert intent == GlobalBag.ECHO_MESSAGE_INTENT
         assert GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE in params
         assert params.get(GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE) == "whatever you want!"
-        intent, params = nlu_engine.infer_intent_and_args("Repeat a sentence of your choice")
+        intent, params = self.nlu_engine.infer_intent_and_args("Repeat a sentence of your choice")
         assert intent == GlobalBag.ECHO_MESSAGE_INTENT
         assert GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE in params
         assert params.get(GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE) == "a sentence of your choice"
+
+    def test_music_rules(self):
+        sentence = "Appena usato SoundHound per trovare You Could Be Mine di Guns N' Roses https://bnc.lt/Scoe/jrtmcTrzMH"
+        intent, params = self.nlu_engine.infer_intent_and_args(sentence)
+        assert intent == GlobalBag.TRACE_MUSIC_INTENT
+        assert GlobalBag.TRACE_MUSIC_PARAM_AUTHOR in params
+        assert params.get(GlobalBag.TRACE_MUSIC_PARAM_AUTHOR) == "Guns N' Roses"
+        assert GlobalBag.TRACE_MUSIC_PARAM_TITLE in params
+        assert params.get(GlobalBag.TRACE_MUSIC_PARAM_TITLE) == "You Could Be Mine"
+
+
