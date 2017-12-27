@@ -58,7 +58,6 @@ class FlaskManager:
 
     # Telegram integration init
     telegram_surface = TelegramSurface(yellowbot)
-    telegram_surface.init_python_anywhere()
 
     @staticmethod
     @app.route("/")
