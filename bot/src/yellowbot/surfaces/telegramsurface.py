@@ -12,6 +12,8 @@ class TelegramSurface(BaseInteractionSurface):
     """
     Allow YellowBot to interact with Telegram
     """
+    SURFACE_NAME = "Telegram"
+
     def __init__(self, yellowbot):
         BaseInteractionSurface.__init__(self, "Telegram")
         self.yellowbot = yellowbot
@@ -24,11 +26,13 @@ class TelegramSurface(BaseInteractionSurface):
         if not message:
             return
 
-        # Right now, does a simple echo of the message
-        self._send_telegram_chat_message(message.channel_id, "You said '{}'".format(message.text))
-
-        # intent, params = self.yellow_bot.infer_intent_and_params(message)
-        # return self.yellow_bot.echo_message(message)
+        intent, params = self.yellow_bot.infer_intent_and_params(message)
+        if intent:
+            text = self.yellowbot.process_intent(intent, params)
+            self._send_telegram_chat_message(message.channel_id, text)
+        else:
+            # Right now, does a simple echo of the message
+            self._send_telegram_chat_message(message.channel_id, "You said '{}'".format(message.text))
 
     def send_message(self, message):
         self.telegram_bot.sendMessage(message.channel_id, message.text)
@@ -87,7 +91,7 @@ class TelegramSurface(BaseInteractionSurface):
         if "message" in update:
             text = update["message"]["text"]
             chat_id = update["message"]["chat"]["id"]
-            message = SurfaceMessage(chat_id, text)
+            message = SurfaceMessage(TelegramSurface.SURFACE_NAME, chat_id, text)
             return message
         return None
 

@@ -19,4 +19,8 @@ class MusicGear(BaseGear):
         BaseGear.__init__(self, MusicGear.__name__, self.INTENTS)
 
     def process_intent(self, intent, params):
-        return "Music subsystem here, at your command"
+        return "Sorry, I still don't know how to keep track of {} by {}".format(
+            params[GlobalBag.TRACE_MUSIC_PARAM_TITLE],
+            params[GlobalBag.TRACE_MUSIC_PARAM_AUTHOR]
+        )
+
