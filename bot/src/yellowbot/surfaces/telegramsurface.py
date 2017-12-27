@@ -25,7 +25,7 @@ class TelegramSurface(BaseInteractionSurface):
             return
 
         # Right now, does a simple echo of the message
-        self._send_telegram_chat_message(message.channe_id, "You said '{}'".format(message.text))
+        self._send_telegram_chat_message(message.channel_id, "You said '{}'".format(message.text))
 
         # intent, params = self.yellow_bot.infer_intent_and_params(message)
         # return self.yellow_bot.echo_message(message)
