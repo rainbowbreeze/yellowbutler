@@ -1,22 +1,37 @@
 """
 Class to interact with Telegram surface
 """
-
-from yellowbot.yellowbot import YellowBot
 import telepot
 import urllib3
 
+from yellowbot.surfaces.baseinteractionsurface import BaseInteractionSurface
+from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
-class TelegramSurface:
+
+class TelegramSurface(BaseInteractionSurface):
     """
     Allow YellowBot to interact with Telegram
     """
     def __init__(self, yellowbot):
+        BaseInteractionSurface.__init__(self, "Telegram")
         self.yellowbot = yellowbot
         # Reads the Telegram auth token from configuration
         self.telegram_bot = telepot.Bot(self.yellowbot.get_config("telegram_authorization_token"))
         self._init_pythonanywhere()
         self._set_webhook()
+
+    def receive_message(self, message):
+        if not message:
+            return
+
+        # Right now, does a simple echo of the message
+        self._send_telegram_chat_message(message.channe_id, "You said '{}'".format(message.text))
+
+        # intent, params = self.yellow_bot.infer_intent_and_params(message)
+        # return self.yellow_bot.echo_message(message)
+
+    def send_message(self, message):
+        self.telegram_bot.sendMessage(message.channel_id, message.text)
 
     def _init_pythonanywhere(self):
         """
@@ -61,30 +76,22 @@ class TelegramSurface:
                 new_webhook_url,
                 max_connections=1)
 
-    def process_update(self, update):
+    @staticmethod
+    def from_telegram_update_to_message(update):
         """
-        Process an update message from Telegram. It is what hits the webhook
+        Transform a Telegram update in a SurfaceMessage
 
-        :param: update
+        :param update: the Telegram update
         :return:
         """
         if "message" in update:
             text = update["message"]["text"]
             chat_id = update["message"]["chat"]["id"]
-            # chat_response = self._process_chat_message(text)
-            self._send_chat_message(chat_id, "You said '{}'".format(text))
+            message = SurfaceMessage(chat_id, text)
+            return message
+        return None
 
-    def _process_chat_message(self, message):
-        """
-        Process a generic message from Telegram
-        :param message:
-        :return:
-        """
-
-        intent, params = self.yellow_bot.infer_intent_and_params(message)
-        return self.yellow_bot.echo_message(message)
-
-    def _send_chat_message(self, chat_id, param):
+    def _send_telegram_chat_message(self, chat_id, param):
         """
         Send a message to Telegram
         :param chat_id:

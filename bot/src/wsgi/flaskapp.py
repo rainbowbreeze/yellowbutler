@@ -30,13 +30,11 @@ Useful links:
  Another resource
 
 """
-import telepot
-import urllib3
 from flask import Flask, request, make_response, jsonify
 from werkzeug.exceptions import abort, BadRequest
 
 from yellowbot.yellowbot import YellowBot
-from yellowbot.telegramsurface import TelegramSurface
+from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 # Flask init
 app = Flask(__name__)
@@ -134,7 +132,8 @@ class FlaskManager:
     @app.route('/yellowbot/telegramwebhook/v1.0', methods=["POST"])
     def telegram_webhook():
         update = request.get_json()
-        FlaskManager.telegram_surface.process_update(update)
+        surface_message = TelegramSurface.from_telegram_update_to_message(update)
+        FlaskManager.telegram_surface.receive_message(surface_message)
         return "OK"
 
 
