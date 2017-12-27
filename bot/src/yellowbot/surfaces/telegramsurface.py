@@ -26,7 +26,7 @@ class TelegramSurface(BaseInteractionSurface):
         if not message:
             return
 
-        intent, params = self.yellow_bot.infer_intent_and_params(message)
+        intent, params = self.yellowbot.infer_intent_and_params(message)
         if intent:
             text = self.yellowbot.process_intent(intent, params)
             self._send_telegram_chat_message(message.channel_id, text)
