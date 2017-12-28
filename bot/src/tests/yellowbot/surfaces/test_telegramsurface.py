@@ -4,7 +4,6 @@ Tests TelegramSurface class
 from unittest import TestCase
 
 from yellowbot.surfaces.telegramsurface import TelegramSurface
-from yellowbot.yellowbot import YellowBot
 
 
 class TestTelegramSurface(TestCase):
@@ -16,7 +15,4 @@ class TestTelegramSurface(TestCase):
             test_mode=True)
 
     def tearDown(self):
-        pass
-
-    def test_receive_message(self):
         pass
