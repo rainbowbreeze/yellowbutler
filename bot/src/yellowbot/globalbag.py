@@ -10,6 +10,8 @@ class GlobalBag:
     Bag for global static vars
     """
 
+    EASYNIDO_INTENT = "easynido"
+
     # Echo message gear
     ECHO_MESSAGE_INTENT = "echo_message"
     ECHO_MESSAGE_PARAM_MESSAGE = "message"
