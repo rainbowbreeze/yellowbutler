@@ -16,14 +16,17 @@ class NluEngine:
         """
         Given a sentence, infers intent and arguments
 
-        :param message: the sentence to understand, as a string
+        :param message: the sentence to understand
+        :type message: str
+
         :return: intent as string and arguments as a collection of values
+        :rtype: str, dict
         """
         # Initial checks
         if message is None: return None, None
 
         intent = None
-        params = {}
+        params = {}  # A dict, not a set (unordered collection of unique items, use set() to initialize)
 
         # Checks for echo intent
         headers = ["echo", "repeat", "say"]

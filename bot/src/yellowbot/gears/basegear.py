@@ -16,9 +16,11 @@ class BaseGear:
         Return True is the gear can process the intent, otherwise False
 
         :param intent: the intent to process
-        :return: True is this gear is able to process the intent
-        """
+        :type intent: str
 
+        :return: True is this gear is able to process the intent
+        :rtype: bool
+        """
         # Do a ignore case comparison, maybe there is a more pythonic way to accomplish that
         for accepted_intent in self._gear_intents:
             if accepted_intent.lower() == intent.lower():
@@ -30,7 +32,10 @@ class BaseGear:
         Check if parameters are enough to process the intent or something is missing
 
         :param params:
-        :return:
+        :type params: dict
+
+        :return: True if all the mandatory params are present, otherwise False
+        :rtype: bool
         """
         raise ValueError("Parameters check for gear {} not implemented".format(self._gear_name))
 
@@ -39,9 +44,12 @@ class BaseGear:
         Process the intent. Need to be implemented in every subclass
 
         :param intent:
+        :type intent: str
+
         :param params:
-        :return:
+        :type params: dict
+
+        :return: a message with the result of the processing
+        :rtype: str
         """
         raise ValueError("Intent processing for gear {} not implemented".format(self._gear_name))
-
-

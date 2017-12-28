@@ -16,6 +16,7 @@ class BaseInteractionSurface:
         """
 
         :param surface_name: name of this interaction surface
+        :type surface_name: str
         """
         self._surface_name = surface_name
 
@@ -24,15 +25,21 @@ class BaseInteractionSurface:
         Send a message to the surface. Has to be implemented in derived
          classes
 
-        :param message: a SurfaceMessage to send
-        :return:
+        :param message: a message to send
+        :type message: SurfaceMessage
+
+        :return: TDB
         """
         raise ValueError("The surface {} cannot send a message".format(self._surface_name))
 
     def can_handle_surface(self, surface_id):
         """
         Check if this surface can handle messages directed to a given surface
+
         :param surface_id: the target surface id
+        :type surface_id: str
+
         :return: True if the surface is able, otherwise false
+        :rtype: bool
         """
         return surface_id == self._surface_name

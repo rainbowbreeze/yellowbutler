@@ -33,13 +33,17 @@ class YellowBot:
         Init the bot
 
         :param nlu_engine: engine to use to extract intent and arguments
+        :type nlu_engine: NluEngine
+
         :param config_file: config file with several values. By default, the
-                            file yellowbotconfig.json in the same folder of
-                            this file is used, but feel free to point to any
-                            other file. If only the file name is used, the
-                            assumption it is in the same folder of this file
+        file yellowbotconfig.json in the same folder of this file is used,
+        but feel free to point to any other file. If only the file name is
+        used, the assumption it is in the same folder of this file
+        :type config_file: str
+
         :param test_mode: class instance created for test purposes, some
         features are disabled
+        :type test_mode: bool
         """
 
         # Load the config file
@@ -105,8 +109,12 @@ class YellowBot:
         """
         Read a value from the configuration, throwing an error if it doesn't exist
         :param key_to_read: the key to read
+        :type key_to_read: str
+
         :param throw_error: if False, doesn't throw an error, but return None instead
-        :return:
+        :type throw_error: bool
+
+        :return: the object associated wit the config key
         """
         try:
             return self._config[key_to_read]
@@ -120,9 +128,13 @@ class YellowBot:
     def is_client_authorized(self, key):
         """
         Checks if the key is among the ones authorized to use the bot
+
         :param key: the key to check for authorization. Authorized keys are
-               generally listed in the config file
+        generally listed in the config file
+        :type key: str
+
         :return: True if the key is authorized, otherwise False
+        :rtype: bool
         """
         if not key:
             return False
@@ -137,15 +149,19 @@ class YellowBot:
         Substitutes old authorization keys with new ones. Useful for testing
         purposes
         :param new_keys: new keys to use
-        :return:
+        :type new_keys: str
         """
         self._config["authorized_keys"] = new_keys
 
     def add_interaction_surface(self, interaction_surface):
         """
         Add a new interaction surface
-        :param interaction_surface:
+
+        :param interaction_surface: the surface to add
+        :type interaction_surface: BaseInteractionSurface
+
         :return: True if the interface has been added, otherwise false
+        :rtype: bool
         """
         self._surfaces.append(interaction_surface)
         return True
@@ -155,8 +171,10 @@ class YellowBot:
         Process a message that hits one of the interaction surface.
         Use this method when YellowBot acts as a chatbot
 
-        :param message: a SurfaceMessage with the message received
-        :return:
+        :param message: the message received that needs to be handled
+        :type message: SurfaceMessage
+
+        :return: TBD
         """
         if not message:
             return
@@ -195,10 +213,14 @@ class YellowBot:
         something similar
 
         :param intent: the intent to execute
-        :param params: a json object with all the intent's required params
-        :return: a message with the result of the processing
-        """
+        :type intent: str
 
+        :param params: a json object with all the intent's required params
+        :type params: dict
+
+        :return: a message with the result of the processing
+        :rtype: str
+        """
         # Check if any of the registered gears is able to process the intent
         gear = None
         for working_gear in self._gears:
