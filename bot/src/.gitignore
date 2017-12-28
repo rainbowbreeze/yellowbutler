@@ -93,3 +93,7 @@ ENV/
 
 # Ignore configuration files
 *config.json
+
+# Ignore DB files
+*_db.json
+
