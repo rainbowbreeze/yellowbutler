@@ -1,15 +1,22 @@
 {
+  // Keys that grant access to YellowBot services. Have to be used in
+  //  the API call inside a X-Authorization header field
   "authorized_keys":[
     "test_key_1",
     "test_key_2"
   ],
 
+  // Define if the app is running hosted on PythonAnywhere
   "running_on_pythonanywhere": false,
 
+  // API address, base domain (without the /)
   "base_vps_address": "https://YOUR_PYTHONANYWHERE_USERNAME.pythonanywhere.com",
+  // API address, everything after the base domain
   "base_api_address": "/YOUR_BOT_NAME/api/v1.0",
 
+  // Telegram bot webhook, everything after the base domain
   "telegram_lurch_webhook_url_relative": "/YOUR_BOT_NAME/api/v1.0/YOUR_TELEGRAM_BOT_NAME",
+  // Telegram bot API key
   "telegram_lurch_authorization_token": "YOUR_AUTHORIZATION_TOKEN"
 
 }

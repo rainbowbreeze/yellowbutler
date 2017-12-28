@@ -15,3 +15,8 @@ pytest
 # Database (3.7.0)
 tinydb
 # ---
+
+# Misc
+json_minify
+# ---
+

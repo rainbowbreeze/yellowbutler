@@ -4,6 +4,9 @@ Main class
 import json
 import os
 
+
+from json_minify import json_minify
+
 from yellowbot.datastoreservice import DatastoreService
 from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
@@ -81,7 +84,8 @@ class YellowBot:
         # Now if has the file and full path with configurations
         if os.path.isfile(full_config_path):
             with open(full_config_path, 'r') as f:
-                self._config = json.load(f)
+                json_with_comment = open(full_config_path).read()
+                self._config = json.loads(json_minify(json_with_comment))
         else:
             raise ValueError("Cannot find configuration file {}".format(full_config_path))
         # Checks if the config files has real values
