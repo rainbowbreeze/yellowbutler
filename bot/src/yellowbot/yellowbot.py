@@ -41,7 +41,7 @@ class YellowBot:
         self._register_gears()
 
         # Assign the NLU engine
-        if not nlu_engine:
+        if nlu_engine is None:
             self.nlu_engine = nlu_engine
         else:
              self.nlu_engine = NluEngine()
