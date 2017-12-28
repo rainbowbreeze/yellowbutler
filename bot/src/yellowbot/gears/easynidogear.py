@@ -19,3 +19,11 @@ class EasyNidoGear(BaseGear):
 
     def process_intent(self, intent, params):
         pass
+
+    def parse_webservice_data(self, html_to_parse):
+        """
+        Given the html to parse, retrieve the different activities
+        :param html_to_parse:
+        :return:
+        """
+        return None
