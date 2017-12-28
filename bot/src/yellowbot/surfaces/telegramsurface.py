@@ -65,7 +65,7 @@ class TelegramSurface(BaseInteractionSurface):
         #  Otherwise, as soon as there is call to set the webhook when Flask
         #  is running locally, the command fails because of the proxy settings
         #  with urllib3.exceptions.ProxyError
-        if running_on_pythonanywhere:
+        if not running_on_pythonanywhere:
             return
 
         # You can leave this bit out if you're using a paid PythonAnywhere account
