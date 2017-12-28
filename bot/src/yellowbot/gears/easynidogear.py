@@ -11,8 +11,13 @@ class EasyNidoGear(BaseGear):
     """
     INTENTS = [GlobalBag.EASYNIDO_INTENT]
 
-    def __init__(self):
+    def __init__(self, datastore_service):
+        """
+
+        :param datastore_service: service to manage persistent storage of data
+        """
         BaseGear.__init__(self, EasyNidoGear.__name__, self.INTENTS)
+        self._datastore = datastore_service
 
     def _check_parameters(self, params):
         return True

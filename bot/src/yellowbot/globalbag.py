@@ -10,6 +10,7 @@ class GlobalBag:
     Bag for global static vars
     """
 
+    # EasyNido gear
     EASYNIDO_INTENT = "easynido"
 
     # Echo message gear
@@ -28,4 +29,5 @@ class GlobalBag:
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
 
-
+    # Database file name
+    DATABASE_FILE = "yellowbot_db.json"

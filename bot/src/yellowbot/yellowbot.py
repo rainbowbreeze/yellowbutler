@@ -4,6 +4,8 @@ Main class
 import json
 import os
 
+from yellowbot.datastoreservice import DatastoreService
+from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
 from yellowbot.gears.kindergartengear import KindergartenGear
@@ -37,6 +39,13 @@ class YellowBot:
         features are disabled
         """
 
+        # Load the config file
+        self._load_config_file(config_file)
+
+        # Creates the datastore service
+        db_filename = os.path.join(os.path.dirname(__file__), GlobalBag.DATABASE_FILE)
+        self._datastore = DatastoreService(db_filename)
+
         # Register gears
         self._gears = []
         self._register_gears()
@@ -46,9 +55,6 @@ class YellowBot:
             self.nlu_engine = NluEngine()
         else:
             self.nlu_engine = nlu_engine
-
-        # Load the config file
-        self._load_config_file(config_file)
 
         # Registers the interaction surface
         running_on_pythonanywhere = self.get_config("running_on_pythonanywhere", throw_error=False)
@@ -89,6 +95,7 @@ class YellowBot:
         self._gears.append(MusicGear())
         self._gears.append(KindergartenGear())
         self._gears.append(EchoMessageGear())
+        self._gears.append(EasyNidoGear(self._datastore))
 
     def get_config(self, key_to_read, throw_error=True):
         """
