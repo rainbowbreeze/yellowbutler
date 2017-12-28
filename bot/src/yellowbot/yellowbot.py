@@ -9,6 +9,7 @@ from yellowbot.gears.musicgear import MusicGear
 from yellowbot.gears.kindergartengear import KindergartenGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.nluengine import NluEngine
+from yellowbot.surfaces.surfacemessage import SurfaceMessage
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 
@@ -42,9 +43,9 @@ class YellowBot:
 
         # Assign the NLU engine
         if nlu_engine is None:
-            self.nlu_engine = nlu_engine
+            self.nlu_engine = NluEngine()
         else:
-             self.nlu_engine = NluEngine()
+            self.nlu_engine = nlu_engine
 
         # Load the config file
         self._load_config_file(config_file)
@@ -129,6 +130,15 @@ class YellowBot:
         """
         self._config["authorized_keys"] = new_keys
 
+    def add_interaction_surface(self, interaction_surface):
+        """
+        Add a new interaction surface
+        :param interaction_surface:
+        :return: True if the interface has been added, otherwise false
+        """
+        self._surfaces.append(interaction_surface)
+        return True
+
     def receive_message(self, message):
         """
         Process a message that hits one of the interaction surface.
@@ -141,26 +151,32 @@ class YellowBot:
             return
 
         # First, find how to process the message
-        intent, params = self.nlu_engine.infer_intent_and_args(message)
+        intent, params = self.nlu_engine.infer_intent_and_args(message.text)
         # If an intent is matched, process the intent and return the result
         #  of the operation
+
+        # Finds the surface for sending the message
+        surface = None
+        for working_surface in self._surfaces:
+            if working_surface.can_handle_surface(message.surface_id):
+                surface = working_surface
+                break
+
         if intent:
-            text = self._yellowbot.process_intent(intent, params)
-            return self._send_telegram_chat_message(message.channel_id, text)
-
-        # Fallback call
+            text = self.process_intent(intent, params)
         else:
-            # Does a simple echo of the message
-            return self._send_telegram_chat_message(message.channel_id, "You said '{}'".format(message.text))
+            # Fallback call: Does a simple echo of the message
+            text = "You said '{}'".format(message.text)
 
-
-    def infer_intent_and_params(self, chat_message):
-        """
-        Find intent and arguments from a chat message.
-
-        :param chat_message: the chat message to understand, as a string
-        :return:
-        """
+        if surface is not None:
+            # Creates a new message and dispatch it
+            return surface.send_message(SurfaceMessage(
+                message.surface_id,
+                message.channel_id,
+                text
+            ))
+        else:
+            raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))
 
     def process_intent(self, intent, params):
         """
