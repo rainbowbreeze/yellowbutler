@@ -23,5 +23,7 @@ class GlobalBag:
     KINDERGARTEN_INTENT_CHECK = "kindergarten_check"
     KINDERGARTEN_INTENT_REPORT = "kindergarten_report"
 
+    # Interaction surfaces
+    SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
 
 

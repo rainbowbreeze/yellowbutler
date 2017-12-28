@@ -16,7 +16,7 @@ class NluEngine:
         """
         Given a sentence, infers intent and arguments
 
-        :param message: the sentence to understand
+        :param message: the sentence to understand, as a string
         :return: intent as string and arguments as a collection of values
         """
         # Initial checks

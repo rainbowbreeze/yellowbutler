@@ -7,7 +7,9 @@ import os
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
 from yellowbot.gears.kindergartengear import KindergartenGear
+from yellowbot.globalbag import GlobalBag
 from yellowbot.nluengine import NluEngine
+from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 
 class YellowBot:
@@ -17,8 +19,9 @@ class YellowBot:
     DEFAULT_CONFIG_FILE = "yellowbotconfig.json"
 
     def __init__(self,
-                 nlu_engine = NluEngine(),
-                 config_file = DEFAULT_CONFIG_FILE
+                 nlu_engine=None,
+                 config_file=DEFAULT_CONFIG_FILE,
+                 test_mode=False
                  ):
         """
         Init the bot
@@ -29,6 +32,8 @@ class YellowBot:
                             this file is used, but feel free to point to any
                             other file. If only the file name is used, the
                             assumption it is in the same folder of this file
+        :param test_mode: class instance created for test purposes, some
+        features are disabled
         """
 
         # Register gears
@@ -36,10 +41,25 @@ class YellowBot:
         self._register_gears()
 
         # Assign the NLU engine
-        self.nlu_engine = nlu_engine
+        if not nlu_engine:
+            self.nlu_engine = nlu_engine
+        else:
+             self.nlu_engine = NluEngine()
 
         # Load the config file
         self._load_config_file(config_file)
+
+        # Registers the interaction surface
+        running_on_pythonanywhere = self.get_config("running_on_pythonanywhere", throw_error=False)
+        self._surfaces = []
+        # Telegram bot Lurch
+        self._surfaces.append(TelegramSurface(
+            GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
+            self.get_config("telegram_lurch_authorization_token"),
+            self.get_config("base_vps_address") + self.get_config("telegram_lurch_webhook_url_relative"),
+            running_on_pythonanywhere=running_on_pythonanywhere,
+            test_mode=test_mode
+        ))
 
     def _load_config_file(self, config_file):
         # Load config file
@@ -109,16 +129,38 @@ class YellowBot:
         """
         self._config["authorized_keys"] = new_keys
 
-    def infer_intent_and_params(self, chat_message):
+    def receive_message(self, message):
         """
-        Find intent and arguments from a chat message. Use this method when YellowBot
-        acts as a chatbot
+        Process a message that hits one of the interaction surface.
+        Use this method when YellowBot acts as a chatbot
 
-        :param chat_message:
+        :param message: a SurfaceMessage with the message received
         :return:
         """
-        return self.nlu_engine.infer_intent_and_args(chat_message)
-        pass
+        if not message:
+            return
+
+        # First, find how to process the message
+        intent, params = self.nlu_engine.infer_intent_and_args(message)
+        # If an intent is matched, process the intent and return the result
+        #  of the operation
+        if intent:
+            text = self._yellowbot.process_intent(intent, params)
+            return self._send_telegram_chat_message(message.channel_id, text)
+
+        # Fallback call
+        else:
+            # Does a simple echo of the message
+            return self._send_telegram_chat_message(message.channel_id, "You said '{}'".format(message.text))
+
+
+    def infer_intent_and_params(self, chat_message):
+        """
+        Find intent and arguments from a chat message.
+
+        :param chat_message: the chat message to understand, as a string
+        :return:
+        """
 
     def process_intent(self, intent, params):
         """

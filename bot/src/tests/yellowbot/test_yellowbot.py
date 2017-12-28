@@ -18,7 +18,7 @@ class TestYellowBot(TestCase):
         """
         # The file is under the same directory of this test class
         config_path = os.path.join(os.path.dirname(__file__), "yellowbotconfig_test.json")
-        self.yb = YellowBot(config_file=config_path)
+        self.yb = YellowBot(config_file=config_path, test_mode=True)
 
     def tearDown(self):
         pass

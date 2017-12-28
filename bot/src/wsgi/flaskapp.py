@@ -33,11 +33,17 @@ Useful links:
 from flask import Flask, request, make_response, jsonify
 from werkzeug.exceptions import abort, BadRequest
 
+from yellowbot.globalbag import GlobalBag
 from yellowbot.yellowbot import YellowBot
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 # Flask init
 app = Flask(__name__)
+
+yellowbot = YellowBot()
+# Base address for all the API calls
+FLASK_BASE_API_ADDRESS = yellowbot.get_config("base_api_address")
+FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_url_relative")
 
 # Logging to unix log utils
 # See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
@@ -48,22 +54,16 @@ class FlaskManager:
      that more than defining them as global functions (the usual way you can
      find in tutorials)
     """
-    # Basic address for all the API calls
-    BASIC_ADDRESS = '/yellowbot/api/v1.0'
-
-    # Yellowbot init
-    yellowbot = YellowBot()
-
-    # Telegram integration init
-    telegram_surface = TelegramSurface(yellowbot)
 
     @staticmethod
     @app.route("/")
     def hello_world():
-        return "YellowBot here, happy to serve :)"
+        return "YellowBot here, happy to serve at {} :)".format(
+            FLASK_BASE_API_ADDRESS
+        )
 
     @staticmethod
-    @app.route('{}/intent'.format(BASIC_ADDRESS), methods=['POST'])
+    @app.route('{}/intent'.format(FLASK_BASE_API_ADDRESS), methods=['POST'])
     def process_intent():
         """
         Process and intent with given parameters
@@ -87,7 +87,7 @@ class FlaskManager:
         auth_key = request.headers.get("X-Authorization")
 
         # None or invalid auth key
-        if not FlaskManager.yellowbot.is_client_authorized(auth_key):
+        if not yellowbot.is_client_authorized(auth_key):
             abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
 
         # Extract the intent from the request
@@ -119,7 +119,7 @@ class FlaskManager:
 
         # Pass everything to the bot
         try:
-            message = FlaskManager.yellowbot.process_intent(intent, params)  # Process the intent
+            message = yellowbot.process_intent(intent, params)  # Process the intent
             return make_response(jsonify(message=message), 200)
         except Exception as e:
             # If something goes wrong, like missing parameters or errors in
@@ -129,11 +129,13 @@ class FlaskManager:
             )
 
     @staticmethod
-    @app.route('/yellowbot/telegramwebhook/v1.0', methods=["POST"])
+    @app.route(FLASK_TELEGRAM_BOT_LURCH_WEBHOOK, methods=["POST"])
     def telegram_webhook():
         update = request.get_json()
-        surface_message = TelegramSurface.from_telegram_update_to_message(update)
-        FlaskManager.telegram_surface.receive_message(surface_message)
+        surface_message = TelegramSurface.from_telegram_update_to_message(
+            GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
+            update)
+        yellowbot.receive_message(surface_message)
         return "OK"
 
 

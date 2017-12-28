@@ -37,11 +37,11 @@ class TestFlaskApp(TestCase):
     def test_rootUrl(self):
         response = self.app.get("/", follow_redirects=True)
         assert 200 == response.status_code
-        assert b"YellowBot here, happy to serve :)" in response.get_data()
+        assert b"YellowBot here, happy to serve at /yellowbot/api/v1.0 :)" in response.get_data()
 
     def test_authorization(self):
         # Injects new auth keys
-        FlaskManager.yellowbot.change_authorized_keys(["auth_for_tests_1", "auth_for_tests_2"])
+        flaskapp.yellowbot.change_authorized_keys(["auth_for_tests_1", "auth_for_tests_2"])
 
         data = {
             "intent": "test_intent",
@@ -50,7 +50,7 @@ class TestFlaskApp(TestCase):
 
         # No auth header at all
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             data=json.dumps(data), # Has to be dumped
             content_type="application/json", # Has to be specified
             follow_redirects=True
@@ -59,7 +59,7 @@ class TestFlaskApp(TestCase):
 
         # Not valid key passed in auth header
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "test_key_1"},
             data=json.dumps(data), # Has to be dumped
             content_type="application/json", # Has to be specified
@@ -69,7 +69,7 @@ class TestFlaskApp(TestCase):
 
         # Valid key passed in auth header
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
             data=json.dumps(data), # Has to be dumped
             content_type="application/json", # Has to be specified
@@ -79,7 +79,7 @@ class TestFlaskApp(TestCase):
 
         # Valid key passed in auth header
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_2"},
             data=json.dumps(data), # Has to be inside dumps
             content_type="application/json", # Has to be specified
@@ -89,11 +89,11 @@ class TestFlaskApp(TestCase):
 
     def test_BadAndGoodRequests(self):
         # Injects new auth keys
-        FlaskManager.yellowbot.change_authorized_keys(["auth_for_tests_1"])
+        flaskapp.yellowbot.change_authorized_keys(["auth_for_tests_1"])
 
         # no json at all
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
             follow_redirects=True
         )
@@ -105,7 +105,7 @@ class TestFlaskApp(TestCase):
 
         # Missing json, but content_type specified
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
             content_type="application/json",
             follow_redirects=True
@@ -116,7 +116,7 @@ class TestFlaskApp(TestCase):
 
         # json is OK, but intent field is missing
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
             content_type="application/json",
             data=json.dumps({
@@ -130,7 +130,7 @@ class TestFlaskApp(TestCase):
 
         # Only intent, but good because parameters are not required
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
             content_type="application/json",
             data=json.dumps({
@@ -147,7 +147,7 @@ class TestFlaskApp(TestCase):
             "intent": GlobalBag.ECHO_MESSAGE_INTENT,
         }
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
             data=json.dumps(data),
             content_type="application/json",
@@ -163,7 +163,7 @@ class TestFlaskApp(TestCase):
             "params": {"zzzz": "Good morning"}
         }
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
             data=json.dumps(data),
             content_type="application/json",
@@ -179,7 +179,7 @@ class TestFlaskApp(TestCase):
             "params": {GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE: "Good morning"}
         }
         response = self.app.post(
-            "{}/intent".format(FlaskManager.BASIC_ADDRESS),
+            "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
             data=json.dumps(data),
             content_type="application/json",

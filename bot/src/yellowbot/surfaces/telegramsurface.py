@@ -10,38 +10,54 @@ from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 class TelegramSurface(BaseInteractionSurface):
     """
-    Allow YellowBot to interact with Telegram
+    Allow YellowBot to interact with Telegram.
+
+    Each instance of this class correspond to a bot managed in Telegram
+
+    Even if there are multiple bots, the logic to manage then is all
+     centralised in one YellowBot: think bots and "limited" instances of
+     YellowBot, that have their own names and configurations in Telegram,
+     but all bring to the same "brain" under the hood
     """
-    SURFACE_NAME = "Telegram"
 
-    def __init__(self, yellowbot):
-        BaseInteractionSurface.__init__(self, "Telegram")
-        self.yellowbot = yellowbot
-        # Reads the Telegram auth token from configuration
-        self.telegram_bot = telepot.Bot(self.yellowbot.get_config("telegram_authorization_token"))
-        self._init_pythonanywhere()
-        self._set_webhook()
+    def __init__(self,
+                 surface_name,
+                 auth_token,
+                 webhook_url,
+                 running_on_pythonanywhere=False,
+                 test_mode=False):
+        """
+        Create the surface and initialize the elements
 
-    def receive_message(self, message):
+        :param surface_name: a name that identify uniquely the Telegram bot
+        connected with this surface instance
+        :param auth_token: Telegram authorization token for the connected bot
+        :param webhook_url: webhook url for the connected bot
+        :param running_on_pythonanywhere: the whole app is running locally, so no need
+        to set
+        :param test_mode: class instance created for test purposes, some
+        features are disabled
+        """
+        BaseInteractionSurface.__init__(self, surface_name)
+        # Initialise and interact with Telegram only if not in test mode
+        if not test_mode:
+            self._init_pythonanywhere(running_on_pythonanywhere)
+            self.telegram_bot = telepot.Bot(auth_token)
+            self._set_webhook(webhook_url)
+
+    def send_message(self, message):
         if not message:
             return
 
-        intent, params = self.yellowbot.infer_intent_and_params(message)
-        if intent:
-            text = self.yellowbot.process_intent(intent, params)
-            self._send_telegram_chat_message(message.channel_id, text)
-        else:
-            # Right now, does a simple echo of the message
-            self._send_telegram_chat_message(message.channel_id, "You said '{}'".format(message.text))
+        return self.telegram_bot.sendMessage(message.channel_id, message.text)
 
-    def send_message(self, message):
-        self.telegram_bot.sendMessage(message.channel_id, message.text)
-
-    def _init_pythonanywhere(self):
+    def _init_pythonanywhere(self, running_on_pythonanywhere):
         """
         Call it once to initialize Telegram library to interact with
          PythonAnywhere
 
+        :param running_on_pythonanywhere: if the whole app is hosted and
+        running on PythonAnywhere
         :return:
         """
         # If run in production (so, not run locally), sets the PythonAnywhere
@@ -49,8 +65,7 @@ class TelegramSurface(BaseInteractionSurface):
         #  Otherwise, as soon as there is call to set the webhook when Flask
         #  is running locally, the command fails because of the proxy settings
         #  with urllib3.exceptions.ProxyError
-        running_locally = self.yellowbot.get_config("running_locally", throw_error=False)
-        if running_locally:
+        if running_on_pythonanywhere:
             return
 
         # You can leave this bit out if you're using a paid PythonAnywhere account
@@ -62,8 +77,13 @@ class TelegramSurface(BaseInteractionSurface):
             urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
         # end of the stuff that's only needed for free accounts
 
-    def _set_webhook(self):
-        # Sets the webhook url, reading it from configuration
+    def _set_webhook(self, new_webhook_url):
+        """
+        Sets the bot webhook url
+        :param new_webhook_url:
+        :return:
+        """
+
         # Sometimes there is an exception
         #    telepot.exception.TooManyRequestsError: ('Too Many Requests: retry after 1', 429 ...
         #  It's because there is a limit on how often the webhook is set.
@@ -72,7 +92,6 @@ class TelegramSurface(BaseInteractionSurface):
         # If there is an urllib3.exceptions.ProxyError error, is because the
         #  PythonAnyWhere configuration: don't do it
         webhook_info = self.telegram_bot.getWebhookInfo()
-        new_webhook_url = self.yellowbot.get_config('telegram_webhook_url')
         # With get, it also checks for the existence of the key in the dict.
         #  If it doesn't exists, return None
         if webhook_info.get('url') != new_webhook_url:
@@ -81,26 +100,18 @@ class TelegramSurface(BaseInteractionSurface):
                 max_connections=1)
 
     @staticmethod
-    def from_telegram_update_to_message(update):
+    def from_telegram_update_to_message(surface_name, update):
         """
         Transform a Telegram update in a SurfaceMessage
 
+        :param surface_name: the telegram bot that originated the update
         :param update: the Telegram update
         :return:
         """
         if "message" in update:
             text = update["message"]["text"]
             chat_id = update["message"]["chat"]["id"]
-            message = SurfaceMessage(TelegramSurface.SURFACE_NAME, chat_id, text)
+            message = SurfaceMessage(surface_name, chat_id, text)
             return message
-        return None
-
-    def _send_telegram_chat_message(self, chat_id, param):
-        """
-        Send a message to Telegram
-        :param chat_id:
-        :param param:
-        :return:
-        """
-        self.telegram_bot.sendMessage(chat_id, param)
-        pass
+        else:
+            return None

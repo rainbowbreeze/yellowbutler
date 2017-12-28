@@ -2,5 +2,14 @@
   "authorized_keys":[
     "test_key_1",
     "test_key_2"
-  ]
+  ],
+
+  "running_on_pythonanywhere": false,
+
+  "base_vps_address": "https://YOUR_PYTHONANYWHERE_USERNAME.pythonanywhere.com",
+  "base_api_address": "/YOUR_BOT_NAME/api/v1.0",
+
+  "telegram_lurch_webhook_url_relative": "/YOUR_BOT_NAME/api/v1.0/YOUR_TELEGRAM_BOT_NAME",
+  "telegram_lurch_authorization_token": "YOUR_AUTHORIZATION_TOKEN"
+
 }

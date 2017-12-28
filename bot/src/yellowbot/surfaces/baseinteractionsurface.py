@@ -19,16 +19,6 @@ class BaseInteractionSurface:
         """
         self._surface_name = surface_name
 
-    def receive_message(self, message):
-        """
-        Process a message that hits the interaction surface. Has to be
-         implemented in derived classes
-
-        :param message:
-        :return:
-        """
-        raise ValueError("The surface {} cannot receive a message".format(self._surface_name))
-
     def send_message(self, message):
         """
         Send a message to the surface. Has to be implemented in derived
