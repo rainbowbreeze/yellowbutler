@@ -1,7 +1,11 @@
 """
 Implement a datastore service
 
-Currently it uses tinydb, but it's transparent to the outside world
+Currently it uses TinyDB, but it's transparent (more or less) to the outside world
+ https://pypi.python.org/pypi/tinydb/
+
+Examples
+ https://github.com/msiemens/tinydb
 """
 from tinydb import TinyDB, Query
 
@@ -20,6 +24,7 @@ class DatastoreService():
 
         :param document: the document to insert
         :returns: the inserted document's ID
+        :rtype:
         """
         self._db.insert(document)
 
@@ -41,5 +46,6 @@ class DatastoreService():
         """
         Returns a query object to perform queries in the data
         :return:
+        :rtype: Query
         """
         return Query()

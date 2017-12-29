@@ -1,0 +1,103 @@
+<script>
+  lastPage = 50;
+</script>
+				<div class="col-xs-12 prn pln">
+			<div class="giorno-row">
+				<em>Venerdì 15 Dicembre 2017</em>
+			</div>
+		</div>
+		<div class="col-xs-12 ptn pbn prn pln">
+
+
+											<div class="row mrn mln att-di-bordo color3">
+      		<div class="col-xs-2 ora prn">
+      			15:30      			<div class="tipo-att">
+      				<i class="fa icon-merenda"></i>
+      			</div>
+      		</div>
+      		<div class="col-xs-10 info prn pls">
+      			<span class="titolo-att">
+      											Spuntino      				      				<span class="testo-gray pull-right"><em class="testo-lightgray" style="font-weight:lighter;font-size:14px;">
+      					      						Ed. Asilo Nido e Scuola dell'Infanzia Piedini      					      				</em></span>
+      			</span>
+      			<span class="testo-black">Ho mangiato <strong>Pane</strong> - Finita la porzione</span>      		</div>
+      	</div>
+
+	</div>
+			<div class="col-xs-12 ptn pbn prn pln">
+
+
+											<div class="row mrn mln att-di-bordo color6">
+      		<div class="col-xs-2 ora prn">
+      			13:00      			<div class="tipo-att">
+      				<i class="fa icon-bambini"></i>
+      			</div>
+      		</div>
+      		<div class="col-xs-10 info prn pls">
+      			<span class="titolo-att">
+      											Riposino      				      				<span class="testo-gray pull-right"><em class="testo-lightgray" style="font-weight:lighter;font-size:14px;">
+      					      						Ed. Asilo Nido e Scuola dell'Infanzia Piedini      					      				</em></span>
+      			</span>
+      			<span class="testo-black">Ha riposato dalle <strong>13:00</strong> alle <strong>15:00</strong></span>      		</div>
+      	</div>
+
+	</div>
+			<div class="col-xs-12 ptn pbn prn pln">
+
+
+											<div class="row mrn mln att-di-bordo color1">
+      		<div class="col-xs-2 ora prn">
+      			09:50      			<div class="tipo-att">
+      				<i class="fa icon-timer"></i>
+      			</div>
+      		</div>
+      		<div class="col-xs-10 info prn pls">
+      			<span class="titolo-att">
+      											Presenza - Entrata      				      				<span class="testo-gray pull-right"><em class="testo-lightgray" style="font-weight:lighter;font-size:14px;">
+      					      						Ed. Asilo Nido e Scuola dell'Infanzia Piedini      					      				</em></span>
+      			</span>
+      			      		</div>
+      	</div>
+
+	</div>
+				<div class="col-xs-12 prn pln">
+			<div class="giorno-row">
+				<em>Giovedì 14 Dicembre 2017</em>
+			</div>
+		</div>
+		<div class="col-xs-12 ptn pbn prn pln">
+
+
+											<div class="row mrn mln att-di-bordo color3">
+      		<div class="col-xs-2 ora prn">
+      			16:21      			<div class="tipo-att">
+      				<i class="fa icon-pranzo"></i>
+      			</div>
+      		</div>
+      		<div class="col-xs-10 info prn pls">
+      			<span class="titolo-att">
+      											Pranzo      				      				<span class="testo-gray pull-right"><em class="testo-lightgray" style="font-weight:lighter;font-size:14px;">
+      					      						Ed. Asilo Nido e Scuola dell'Infanzia Piedini      					      				</em></span>
+      			</span>
+      			<span class="testo-black"><strong>Pasta al pesto</strong> - Finita la porzione</span><br><span class="testo-black"><strong>Tortino di nasello con patate</strong> - Finita la porzione</span><br><span class="testo-black"><strong>pomodori</strong> - Finita la porzione</span><br><span class="testo-black"><strong>Arancia</strong> - Finita la porzione</span><br>      		</div>
+      	</div>
+
+	</div>
+			<div class="col-xs-12 ptn pbn prn pln">
+
+
+											<div class="row mrn mln att-di-bordo color1">
+      		<div class="col-xs-2 ora prn">
+      			09:25      			<div class="tipo-att">
+      				<i class="fa icon-timer"></i>
+      			</div>
+      		</div>
+      		<div class="col-xs-10 info prn pls">
+      			<span class="titolo-att">
+      											Presenza - Entrata      				      				<span class="testo-gray pull-right"><em class="testo-lightgray" style="font-weight:lighter;font-size:14px;">
+      					      						Ed. Asilo Nido e Scuola dell'Infanzia Piedini      					      				</em></span>
+      			</span>
+      			      		</div>
+      	</div>
+
+	</div>

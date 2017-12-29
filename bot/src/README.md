@@ -58,6 +58,8 @@ Copy the project
  git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
  cd yellowbutler/bot/src
  mkvirtualenv --python=/usr/bin/python3.6 yellowbutler-venv
+  later or, to activate the virtual env: workon yellowbutler-venv
+
  pip install -r requirements.txt
  (virtualenv created under /home/yellowbutler/.virtualenvs/yellowbutler-venv, as per command output)
  
