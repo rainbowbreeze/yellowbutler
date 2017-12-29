@@ -110,7 +110,14 @@ Test the app
  flask run
  (if run with python wsgi/flaskapp.py, it doesn't work)
 
- 
+Deploy the app
+ Changed app.yaml adding the right module name, using dotted notation
+ gcloud app deploy
+ fingers crossed
+ gcloud app browse
+ To see logs in the Cloud Console: https://console.cloud.google.com/gcr/builds/adf5a006-f112-4dc4-9d59-86ed1d99b37b?project=yellowbutler-190521
+
+
 
  
 Create a new webapp

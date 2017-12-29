@@ -16,6 +16,10 @@ pytest
 tinydb
 # ---
 
+# Google App Engine
+gunicorn
+# ---
+
 # Misc
 json_minify
 beautifulsoup4
