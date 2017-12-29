@@ -30,6 +30,8 @@ Useful links:
  Another resource
 
 """
+import logging
+
 from flask import Flask, request, make_response, jsonify
 from werkzeug.exceptions import abort, BadRequest
 
@@ -145,6 +147,20 @@ class FlaskManager:
         yellowbot.receive_message(surface_message)
         return "OK"
 
+    @staticmethod
+    @app.errorhandler(500)
+    def server_error(e):
+        logging.exception('An error occurred during a request.')
+        return """
+        An internal error occurred: <pre>{}</pre>
+        See logs for full stacktrace.
+        """.format(e), 500
+
 
 if __name__ == '__main__':
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Google App Engine. See entrypoint in app.yaml.
+    #
+    # For PythonAnywhere, please configure the WSGI file on the webapp
+    #  as per quickstart tutorial
     app.run(debug=True)
