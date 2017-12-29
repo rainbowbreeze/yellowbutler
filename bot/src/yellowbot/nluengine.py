@@ -29,7 +29,8 @@ class NluEngine:
         params = {}  # A dict, not a set (unordered collection of unique items, use set() to initialize)
 
         # Check for EasyNido intent
-        if message.lower().startswith("Asilo"):
+        headers = ["asilo", "/asilo"]
+        if any(message.lower().startswith(header) for header in headers):
             intent = GlobalBag.EASYNIDO_INTENT
             return intent, params
 
