@@ -19,5 +19,6 @@ tinydb
 # Misc
 json_minify
 beautifulsoup4
+requests
 # ---
 

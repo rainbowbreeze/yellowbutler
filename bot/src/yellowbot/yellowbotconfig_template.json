@@ -1,16 +1,28 @@
 {
+  // Keys that grant access to YellowBot services. Have to be used in
+  //  the API call inside a X-Authorization header field
   "authorized_keys":[
     "put_your_authorized_key_value_here_1",
     "put_your_authorized_key_value_here_2"
   ],
 
+  // Define if the app is running hosted on PythonAnywhere
   "running_on_pythonanywhere": false,
 
+  // API address, base domain (without the /)
   "base_vps_address": "https://YOUR_PYTHONANYWHERE_USERNAME.pythonanywhere.com",
+  // API address, everything after the base domain
   "base_api_address": "/YOUR_BOT_NAME/api/v1.0",
 
+  // Telegram bot webhook, everything after the base domain
   "telegram_lurch_webhook_url_relative": "/YOUR_BOT_NAME/api/v1.0/YOUR_TELEGRAM_BOT_NAME",
-  "telegram_lurch_authorization_token": "YOUR_AUTHORIZATION_TOKEN"
+  // Telegram bot API key
+  "telegram_lurch_authorization_token": "YOUR_AUTHORIZATION_TOKEN",
+
+  // EasyNido gear parameters
+  "easynido_username": "username",
+  "easynido_password": "password",
+  "easynido_idbambino": "idbambino"
 
 
 }

@@ -103,7 +103,12 @@ class YellowBot:
         self._gears.append(MusicGear())
         self._gears.append(KindergartenGear())
         self._gears.append(EchoMessageGear())
-        self._gears.append(EasyNidoGear(self._datastore))
+        self._gears.append(EasyNidoGear(
+            self._datastore,
+            self.get_config("easynido_username"),
+            self.get_config("easynido_password"),
+            self.get_config("easynido_idbambino")
+        ))
 
     def get_config(self, key_to_read, throw_error=True):
         """
