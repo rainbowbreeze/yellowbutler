@@ -95,6 +95,8 @@ https://cloud.google.com/appengine/docs/flexible/python/quickstart
 https://console.cloud.google.com/projectselector/appengine/create?lang=flex_python&st=true&_ga=2.125561612.704564983.1514577758-1153595002.1514577758
 create project yellowbutler
 
+pip install --upgrade google-cloud-storage
+
 Copy the project
  Open a CloudShell
    rainbowbreeze_dev@yellowbutler-190521
@@ -112,7 +114,9 @@ Test the app
 
 Deploy the app
  Changed app.yaml adding the right module name, using dotted notation
- gcloud app deploy
+  entrypoint: gunicorn -b :$PORT wsgi.flaskapp:app
+ added gunicorn to requirements.txt and rerun 
+ gcloud app deploy -v [YOUR_VERSION_ID]
  fingers crossed
  gcloud app browse
  To see logs in the Cloud Console: https://console.cloud.google.com/gcr/builds/adf5a006-f112-4dc4-9d59-86ed1d99b37b?project=yellowbutler-190521

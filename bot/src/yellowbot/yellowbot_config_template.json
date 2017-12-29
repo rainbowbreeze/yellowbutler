@@ -6,8 +6,8 @@
     "put_your_authorized_key_value_here_2"
   ],
 
-  // Define if the app is running hosted on PythonAnywhere
-  "running_on_pythonanywhere": false,
+  // Define if the app is running hosted on PythonAnywhere with a free account
+  "running_on_pythonanywhere_free": false,
 
   // API address, base domain (without the /)
   "base_vps_address": "https://YOUR_PYTHONANYWHERE_USERNAME.pythonanywhere.com",

@@ -62,7 +62,7 @@ class YellowBot:
             self.nlu_engine = nlu_engine
 
         # Registers the interaction surface
-        running_on_pythonanywhere = self.get_config("running_on_pythonanywhere", throw_error=False)
+        running_on_pythonanywhere = self.get_config("running_on_pythonanywhere_free", throw_error=False)
         self._surfaces = []
         # Telegram bot Lurch
         self._surfaces.append(TelegramSurface(
