@@ -83,6 +83,38 @@ To test:
 curl -X POST https://yellowbutler.pythonanywhere.com/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
 (remember to authorize the key in the config file, and reload the webapp)
 
+DAMN!!!
+https://help.pythonanywhere.com/pages/403ForbiddenError/
+https://www.pythonanywhere.com/whitelist/
+PythonAnywhere is a no way choice, unfortunately :(
+
+
+** APPENGINE
+https://cloud.google.com/appengine/docs/flexible/python/quickstart
+
+https://console.cloud.google.com/projectselector/appengine/create?lang=flex_python&st=true&_ga=2.125561612.704564983.1514577758-1153595002.1514577758
+create project yellowbutler
+
+Copy the project
+ Open a CloudShell
+   rainbowbreeze_dev@yellowbutler-190521
+   /home/rainbowbreeze_dev
+ git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
+ cd yellowbutler/bot/src
+ virtualenv --python=python3.4 venv
+ source venv/bin/activate
+ pip install -r requirements.txt
+ 
+Test the app
+ export FLASK_APP=wsgi/flaskapp.py
+ flask run
+ (if run with python wsgi/flaskapp.py, it doesn't work)
+
+ 
+
+ 
+Create a new webapp
+
 
 ** LOGGING
 
