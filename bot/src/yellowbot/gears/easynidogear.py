@@ -56,38 +56,40 @@ class EasyNidoGear(BaseGear):
         # Useful links on requests library
         #  How to deal with session: http://docs.python-requests.org/en/master/user/advanced/
         #  How to deal with cookies: http://docs.python-requests.org/en/master/api/#api-cookies
+        try:
+            # This will make sure the session is closed as soon as the with block
+            #  is exited, even if unhandled exceptions occurred.
+            with requests.session() as session:
+                # Login
+                r = session.post(
+                    "https://easynido.it/login",
+                    data={
+                        'email': self._username,
+                        'pwd': self._password
+                    }
+                )
+                # if the login fail, result.url is https://easynido.it/it/login
+                login_success = r.ok and "https://easynido.it/familiare/bacheca" == r.url
 
-        # This will make sure the session is closed as soon as the with block
-        #  is exited, even if unhandled exceptions occurred.
-        with requests.session() as session:
-            # Login
-            r = session.post(
-                "https://easynido.it/login",
-                data={
-                    'email': self._username,
-                    'pwd': self._password
-                }
-            )
-            # if the login fail, result.url is https://easynido.it/it/login
-            login_success = r.ok and "https://easynido.it/familiare/bacheca" == r.url
+                if not login_success:
+                    return None
 
-            if not login_success:
-                return None
-
-            # Get data
-            r = session.post(
-                "https://easynido.it/genitore/diarioBordocontent",
-                data={
-                    'idbambino': self._idbambino,
-                    'data': "",
-                    'mod': "tutto",
-                    'page': 1,
-                    'maxRecords': 6
-                }
-            )
-            if r.ok and r.text and r.text.startswith("<script>"):
-                # finally, we have the information we need
-                return r.text
+                # Get data
+                r = session.post(
+                    "https://easynido.it/genitore/diarioBordocontent",
+                    data={
+                        'idbambino': self._idbambino,
+                        'data': "",
+                        'mod': "tutto",
+                        'page': 1,
+                        'maxRecords': 6
+                    }
+                )
+                if r.ok and r.text and r.text.startswith("<script>"):
+                    # finally, we have the information we need
+                    return r.text
+        except:
+            return None
 
         return None
 

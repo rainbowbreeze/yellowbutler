@@ -69,6 +69,7 @@ class TelegramSurface(BaseInteractionSurface):
             return
 
         # You can leave this bit out if you're using a paid PythonAnywhere account
+        # https://help.pythonanywhere.com/pages/403ForbiddenError/
         proxy_url = "http://proxy.server:3128"
         telepot.api._pools = {
             'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
