@@ -39,7 +39,11 @@ class EasyNidoGear(BaseGear):
         return True
 
     def process_intent(self, intent, params):
-        pass
+        webservice_data = self._obtain_webservice_data()
+        if not webservice_data:
+            return "Something wrong happened query the kindergarten service ¯\_(ツ)_/¯ "
+        else:
+            return self.parse_webservice_data(webservice_data)
 
     def _obtain_webservice_data(self):
         """

@@ -28,13 +28,10 @@ class NluEngine:
         intent = None
         params = {}  # A dict, not a set (unordered collection of unique items, use set() to initialize)
 
-        # Checks for echo intent
-        headers = ["echo", "repeat", "say"]
-        # if any(message.lower().startswith(header) for header in headers):  # skip standard headers
-        for header in headers:
-            if message.lower().startswith(header):
-                intent = GlobalBag.ECHO_MESSAGE_INTENT
-                params[GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE] = message[len(header):].strip()
+        # Check for EasyNido intent
+        if message.lower().startswith("Asilo"):
+            intent = GlobalBag.EASYNIDO_INTENT
+            return intent, params
 
         # Checks for Music Trace intent
         # Find SoundHound word
@@ -48,6 +45,16 @@ class NluEngine:
             intent = GlobalBag.TRACE_MUSIC_INTENT
             params[GlobalBag.TRACE_MUSIC_PARAM_TITLE] = title
             params[GlobalBag.TRACE_MUSIC_PARAM_AUTHOR] = author
+            return intent, params
+
+        # Checks for echo intent
+        headers = ["echo", "repeat", "say"]
+        # if any(message.lower().startswith(header) for header in headers):  # skip standard headers
+        for header in headers:
+            if message.lower().startswith(header):
+                intent = GlobalBag.ECHO_MESSAGE_INTENT
+                params[GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE] = message[len(header):].strip()
+                return intent, params
 
         # Checks for other intents
 

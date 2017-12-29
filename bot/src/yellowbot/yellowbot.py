@@ -200,7 +200,7 @@ class YellowBot:
             text = self.process_intent(intent, params)
         else:
             # Fallback call: Does a simple echo of the message
-            text = "You said '{}'".format(message.text)
+            text = "I don't know how to process what you said: '{}'".format(message.text)
 
         if surface is not None:
             # Creates a new message and dispatch it
