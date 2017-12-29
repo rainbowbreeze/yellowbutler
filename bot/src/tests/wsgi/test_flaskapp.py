@@ -17,13 +17,15 @@ Another clever way to manage json in the testing is here
   creating custom json fields, something they don't have because everything
   is manager using data field of BaseResponse, and content_type header
 """
+
 from unittest import TestCase
 
-from flask import json, jsonify
+from flask import json
 
 from wsgi import flaskapp
-from wsgi.flaskapp import FlaskManager
 from yellowbot.globalbag import GlobalBag
+
+# Remember about the test environment setup in __init__.py file of this module
 
 
 class TestFlaskApp(TestCase):

@@ -31,3 +31,7 @@ class GlobalBag:
 
     # Database file name
     DATABASE_FILE = "yellowbot_db.json"
+
+    # Quick and dirty way to setup a proper test environment
+    TEST_ENVIRONMENT = False
+

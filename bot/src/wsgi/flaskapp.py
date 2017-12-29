@@ -37,16 +37,23 @@ from yellowbot.globalbag import GlobalBag
 from yellowbot.yellowbot import YellowBot
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
+
 # Flask init
 app = Flask(__name__)
 
-yellowbot = YellowBot()
+
+# Allow to setup a test environment. It's dirty and I don't like it, but
+#  it works.
+# Used to avoid error like too many requests for Telegram webhook check etc
+yellowbot = YellowBot(test_mode=GlobalBag.TEST_ENVIRONMENT)
+
 # Base address for all the API calls
 FLASK_BASE_API_ADDRESS = yellowbot.get_config("base_api_address")
 FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_url_relative")
 
 # Logging to unix log utils
 # See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
+
 
 class FlaskManager:
     """
