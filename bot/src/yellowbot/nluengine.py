@@ -31,7 +31,7 @@ class NluEngine:
         # Check for EasyNido intent
         headers = ["asilo", "/asilo"]
         if any(message.lower().startswith(header) for header in headers):
-            intent = GlobalBag.EASYNIDO_INTENT
+            intent = GlobalBag.EASYNIDO_INTENT_REPORT
             return intent, params
 
         # Checks for Music Trace intent

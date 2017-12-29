@@ -18,7 +18,7 @@ class TestYellowBot(TestCase):
          with authorized keys
         """
         # The file is under the same directory of this test class
-        config_path = os.path.join(os.path.dirname(__file__), "yellowbotconfig_test.json")
+        config_path = os.path.join(os.path.dirname(__file__), "yellowbot_config_test.json")
         self._yellowbot = YellowBot(config_file=config_path, test_mode=True)
         self._test_surface = FakeInteractionSurface()
         assert self._yellowbot.add_interaction_surface(self._test_surface)

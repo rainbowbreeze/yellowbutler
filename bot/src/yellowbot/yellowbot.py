@@ -11,7 +11,6 @@ from yellowbot.datastoreservice import DatastoreService
 from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
-from yellowbot.gears.kindergartengear import KindergartenGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.nluengine import NluEngine
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
@@ -22,11 +21,10 @@ class YellowBot:
     """
     The Yellow bot core class. Orchestrate the connections between the external world and the gears
     """
-    DEFAULT_CONFIG_FILE = "yellowbotconfig.json"
 
     def __init__(self,
                  nlu_engine=None,
-                 config_file=DEFAULT_CONFIG_FILE,
+                 config_file=GlobalBag.CONFIG_FILE,
                  test_mode=False
                  ):
         """
@@ -36,7 +34,7 @@ class YellowBot:
         :type nlu_engine: NluEngine
 
         :param config_file: config file with several values. By default, the
-        file yellowbotconfig.json in the same folder of this file is used,
+        file yellowbot_config.json in the same folder of this file is used,
         but feel free to point to any other file. If only the file name is
         used, the assumption it is in the same folder of this file
         :type config_file: str
@@ -101,7 +99,6 @@ class YellowBot:
         Registers all the gears in the bot
         """
         self._gears.append(MusicGear())
-        self._gears.append(KindergartenGear())
         self._gears.append(EchoMessageGear())
         self._gears.append(EasyNidoGear(
             self._datastore,

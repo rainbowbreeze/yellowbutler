@@ -12,7 +12,7 @@ class EasyNidoGear(BaseGear):
     """
     Checks for EasyNido data
     """
-    INTENTS = [GlobalBag.EASYNIDO_INTENT]
+    INTENTS = [GlobalBag.EASYNIDO_INTENT_REPORT]
 
     def __init__(self, datastore_service, email, password, idbambino):
         """

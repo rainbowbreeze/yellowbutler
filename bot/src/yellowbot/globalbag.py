@@ -11,7 +11,8 @@ class GlobalBag:
     """
 
     # EasyNido gear
-    EASYNIDO_INTENT = "easynido"
+    EASYNIDO_INTENT_CHECK = "easynido_check"
+    EASYNIDO_INTENT_REPORT = "easynido_report"
 
     # Echo message gear
     ECHO_MESSAGE_INTENT = "echo_message"
@@ -22,15 +23,12 @@ class GlobalBag:
     TRACE_MUSIC_PARAM_TITLE = "title"
     TRACE_MUSIC_PARAM_AUTHOR = "author"
 
-    # Kindergarten gear
-    KINDERGARTEN_INTENT_CHECK = "kindergarten_check"
-    KINDERGARTEN_INTENT_REPORT = "kindergarten_report"
-
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
 
     # Database file name
     DATABASE_FILE = "yellowbot_db.json"
+    CONFIG_FILE = "yellowbot_config.json"
 
     # Quick and dirty way to setup a proper test environment
     TEST_ENVIRONMENT = False
