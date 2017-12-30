@@ -98,6 +98,10 @@ class TestFlaskApp(TestCase):
                 'text': "Random message text",
                 'chat': {
                     'id': "non_valid_id_and_auth_key"
+                },
+                'from': {
+                    'id': "random_user_id",
+                    'first_name': "User_First_Name"
                 }
             }
         }

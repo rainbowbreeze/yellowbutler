@@ -146,17 +146,18 @@ class FlaskManager:
         auth_key = TelegramSurface.from_telegram_update_to_auth_key(update)
         # None or invalid auth key
         if not yellowbot.is_client_authorized(auth_key):
-            # abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
             yellowbot.send_message(SurfaceMessage(
                 GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
                 "185752881",
-                "Invalid auth_key #{}# received from user {}-{}, with text ##{}##".format(
+                "Invalid auth_key #{}# of type {} received from user {}-{}, with text ##{}##".format(
                     auth_key,
+                    type(auth_key),
                     update["message"]["from"]["id"],
                     update["message"]["from"]["first_name"],
                     update["message"]["text"]
                 )
             ))
+            # abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
 
         # Extract the message from the
         surface_message = TelegramSurface.from_telegram_update_to_message(
