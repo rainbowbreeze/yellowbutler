@@ -149,6 +149,8 @@ class TelegramSurface(BaseInteractionSurface):
         """
 
         if "message" in update:
-            return update["message"]["chat"]["id"]
+            # Auth_key has to be a string, while id is an integer.
+            #  Reference at https://core.telegram.org/bots/api#user
+            return "{}".format(update["message"]["from"]["id"])
         else:
             return None

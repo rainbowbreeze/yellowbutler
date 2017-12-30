@@ -8,7 +8,7 @@ Conventions:
   different ways the bot could be reached, different checks are performed
  When an API request is received, Authorization code has to be passed in the
   X-Authorization field in request headers
- When a Telegram request is received, chat_id is used as authorization code
+ When a Telegram request is received, user id is used as authorization code
  If the client is not authorizes, an HTTP 401 status code is returned
 
  When an error is returned, the response has the error status code set to 400
@@ -146,10 +146,11 @@ class FlaskManager:
         auth_key = TelegramSurface.from_telegram_update_to_auth_key(update)
         # None or invalid auth key
         if not yellowbot.is_client_authorized(auth_key):
+            # Send an alert message to admin channel
             yellowbot.send_message(SurfaceMessage(
                 GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
                 "185752881",
-                "Invalid auth_key #{}# of type {} received from user {}-{}, with text ##{}##".format(
+                "Invalid auth_key #{}# received from user {}-{}, with text ##{}##".format(
                     auth_key,
                     type(auth_key),
                     update["message"]["from"]["id"],
@@ -157,7 +158,7 @@ class FlaskManager:
                     update["message"]["text"]
                 )
             ))
-            # abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+            abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
 
         # Extract the message from the
         surface_message = TelegramSurface.from_telegram_update_to_message(

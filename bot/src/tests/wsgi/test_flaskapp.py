@@ -91,16 +91,16 @@ class TestFlaskApp(TestCase):
 
     def test_authorizationForTelegram(self):
         # Injects new auth keys
-        flaskapp.yellowbot.change_authorized_keys(["auth_for_telegram_1"])
+        flaskapp.yellowbot.change_authorized_keys(["1234567890"])
 
         telegram_data = {
             'message': {
                 'text': "Random message text",
                 'chat': {
-                    'id': "non_valid_id_and_auth_key"
+                    'id': 2312321
                 },
                 'from': {
-                    'id': "random_user_id",
+                    'id': 123456,
                     'first_name': "User_First_Name"
                 }
             }
@@ -116,7 +116,7 @@ class TestFlaskApp(TestCase):
         assert 401 == response.status_code
 
         # Valid key passed in auth header
-        telegram_data["message"]["chat"]["id"] = "auth_for_telegram_1"
+        telegram_data["message"]["from"]["id"] = 1234567890
         response = self.app.post(
             flaskapp.FLASK_TELEGRAM_BOT_LURCH_WEBHOOK,
             data=json.dumps(telegram_data), # Has to be dumped
