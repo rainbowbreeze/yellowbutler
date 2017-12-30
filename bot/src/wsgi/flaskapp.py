@@ -152,7 +152,6 @@ class FlaskManager:
                 "185752881",
                 "Invalid auth_key #{}# received from user {}-{}, with text ##{}##".format(
                     auth_key,
-                    type(auth_key),
                     update["message"]["from"]["id"],
                     update["message"]["from"]["first_name"],
                     update["message"]["text"]
