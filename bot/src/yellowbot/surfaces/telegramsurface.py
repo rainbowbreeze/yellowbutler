@@ -31,33 +31,43 @@ class TelegramSurface(BaseInteractionSurface):
 
         :param surface_name: a name that identify uniquely the Telegram bot
         connected with this surface instance
+        :type surface_name: str
+
         :param auth_token: Telegram authorization token for the connected bot
+        :type auth_token: str
+
         :param webhook_url: webhook url for the connected bot
+        :type webhook_url: str
+
         :param running_on_pythonanywhere: the whole app is running locally, so no need
         to set
+        :type running_on_pythonanywhere: bool
+
         :param test_mode: class instance created for test purposes, some
         features are disabled
+        :type test_mode: bool
         """
         BaseInteractionSurface.__init__(self, surface_name)
         # Initialise and interact with Telegram only if not in test mode
-        if not test_mode:
+        self._test_mode = test_mode
+        if not self._test_mode:
             self._init_pythonanywhere(running_on_pythonanywhere)
             self.telegram_bot = telepot.Bot(auth_token)
             self._set_webhook(webhook_url)
 
     def send_message(self, message):
-        if not message:
+        # Do not send empty message or message while testing
+        if not message or self._test_mode:
             return
-
         return self.telegram_bot.sendMessage(message.channel_id, message.text)
 
-    def _init_pythonanywhere(self, running_on_pythonanywhere):
+    def _init_pythonanywhere(self, running_on_pythonanywhere_free):
         """
         Call it once to initialize Telegram library to interact with
          PythonAnywhere
 
-        :param running_on_pythonanywhere: if the whole app is hosted and
-        running on PythonAnywhere
+        :param running_on_pythonanywhere_free: if the whole app is hosted and
+        running on PythonAnywhere with free account
         :return:
         """
         # If run in production (so, not run locally), sets the PythonAnywhere
@@ -65,7 +75,7 @@ class TelegramSurface(BaseInteractionSurface):
         #  Otherwise, as soon as there is call to set the webhook when Flask
         #  is running locally, the command fails because of the proxy settings
         #  with urllib3.exceptions.ProxyError
-        if not running_on_pythonanywhere:
+        if not running_on_pythonanywhere_free:
             return
 
         # You can leave this bit out if you're using a paid PythonAnywhere account
@@ -82,8 +92,11 @@ class TelegramSurface(BaseInteractionSurface):
         """
         Sets the bot webhook url
         :param new_webhook_url:
-        :return:
+        :type new_webhook_url: str
         """
+
+        if self._test_mode:
+            return
 
         # Sometimes there is an exception
         #    telepot.exception.TooManyRequestsError: ('Too Many Requests: retry after 1', 429 ...
@@ -106,13 +119,36 @@ class TelegramSurface(BaseInteractionSurface):
         Transform a Telegram update in a SurfaceMessage
 
         :param surface_name: the telegram bot that originated the update
+        :type surface_name: str
+
         :param update: the Telegram update
-        :return:
+        :type update: dict
+
+        :return: The message generated from the update, otherwise None if
+        the update is not a text message
+        :rtype: SurfaceMessage
         """
         if "message" in update:
             text = update["message"]["text"]
             chat_id = update["message"]["chat"]["id"]
             message = SurfaceMessage(surface_name, chat_id, text)
             return message
+        else:
+            return None
+
+    @staticmethod
+    def from_telegram_update_to_auth_key(update):
+        """
+        From a Telegram update, generates the authorization key
+
+        :param update: the Telegram update
+        :type update: dict
+
+        :return: the authorization code generated
+        :rtype: str
+        """
+
+        if "message" in update:
+            return update["message"]["chat"]["id"]
         else:
             return None

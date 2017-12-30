@@ -33,7 +33,7 @@ class TestYellowBot(TestCase):
         assert self._yellowbot.is_client_authorized("test_key_2")
         assert not self._yellowbot.is_client_authorized("test_key_3")
 
-    def test_messageGearAsIntent(self):
+    def test_processIntentWithEchoMessageGear(self):
         assert "My message" == self._yellowbot.process_intent(
             GlobalBag.ECHO_MESSAGE_INTENT,
             {GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE:"My message"})
@@ -42,7 +42,7 @@ class TestYellowBot(TestCase):
             GlobalBag.ECHO_MESSAGE_INTENT,
             {GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE:""})
 
-    def test_messageGearAsMessage(self):
+    def test_receiveMessageForEchoMessageGear(self):
         message = SurfaceMessage(
             FakeInteractionSurface.SURFACE_ID,
             "Test_Channel",

@@ -4,15 +4,15 @@
 Conventions:
  Base APIs are exposed using the address https://_hostname_/yellowbutler/api/v1.0/
 
- Authorization code in the request is passed in the X-Authorization field
-  in headers
+ This class shields the bot from unauthorized access. Based on the
+  different ways the bot could be reached, different checks are performed
+ When an API request is received, Authorization code has to be passed in the
+  X-Authorization field in request headers
+ When a Telegram request is received, chat_id is used as authorization code
  If the client is not authorizes, an HTTP 401 status code is returned
 
- When an error is returned, the response body is a json, with the error
-  status code 400 and the message field with explanation of the error code
-
-Basic code to deal with Telegram: https://blog.pythonanywhere.com/148/
-
+ When an error is returned, the response has the error status code set to 400
+  and the body is a json, with a message field with explanation of the error code
 
 Useful links:
  A way to forge custom about responses for the abort method
@@ -27,8 +27,7 @@ Useful links:
       )
   )
 
- Another resource
-
+ Basic code to deal with Telegram: https://blog.pythonanywhere.com/148/
 """
 import logging
 
@@ -141,6 +140,14 @@ class FlaskManager:
     @app.route(FLASK_TELEGRAM_BOT_LURCH_WEBHOOK, methods=["POST"])
     def telegram_webhook():
         update = request.get_json()
+
+        # Checks if the message is authorized
+        auth_key = TelegramSurface.from_telegram_update_to_auth_key(update)
+        # None or invalid auth key
+        if not yellowbot.is_client_authorized(auth_key):
+            abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+
+        # Extract the message from the
         surface_message = TelegramSurface.from_telegram_update_to_message(
             GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
             update)

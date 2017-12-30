@@ -181,30 +181,36 @@ class YellowBot:
         if not message:
             return
 
-        # First, find how to process the message
+        # Checks for authorization
+
+        # Then, finds how to process the message
         intent, params = self.nlu_engine.infer_intent_and_args(message.text)
         # If an intent is matched, process the intent and return the result
         #  of the operation
 
-        # Finds the surface for sending the message
+        if intent:
+            response_text = self.process_intent(intent, params)
+        else:
+            # Fallback call: Does a simple echo of the message
+            response_text = "I don't know how to process what you said: '{}'".format(message.text)
+
+        # If there is nothing as response text, well... Job is done!
+        if not response_text:
+            return
+
+        # Finds the surface for sending the result message
         surface = None
         for working_surface in self._surfaces:
             if working_surface.can_handle_surface(message.surface_id):
                 surface = working_surface
                 break
 
-        if intent:
-            text = self.process_intent(intent, params)
-        else:
-            # Fallback call: Does a simple echo of the message
-            text = "I don't know how to process what you said: '{}'".format(message.text)
-
         if surface is not None:
             # Creates a new message and dispatch it
             return surface.send_message(SurfaceMessage(
                 message.surface_id,
                 message.channel_id,
-                text
+                response_text
             ))
         else:
             raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))

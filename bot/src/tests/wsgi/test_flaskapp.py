@@ -41,7 +41,7 @@ class TestFlaskApp(TestCase):
         assert 200 == response.status_code
         assert b"YellowBot here, happy to serve at /yellowbot/api/v1.0 :)" in response.get_data()
 
-    def test_authorization(self):
+    def test_authorizationForIntent(self):
         # Injects new auth keys
         flaskapp.yellowbot.change_authorized_keys(["auth_for_tests_1", "auth_for_tests_2"])
 
@@ -89,7 +89,39 @@ class TestFlaskApp(TestCase):
         )
         assert 200 == response.status_code
 
-    def test_BadAndGoodRequests(self):
+    def test_authorizationForTelegram(self):
+        # Injects new auth keys
+        flaskapp.yellowbot.change_authorized_keys(["auth_for_telegram_1"])
+
+        telegram_data = {
+            'message': {
+                'text': "Random message text",
+                'chat': {
+                    'id': "non_valid_id_and_auth_key"
+                }
+            }
+        }
+
+        # Not valid key passed in auth header
+        response = self.app.post(
+            flaskapp.FLASK_TELEGRAM_BOT_LURCH_WEBHOOK,
+            data=json.dumps(telegram_data), # Has to be dumped
+            content_type="application/json", # Has to be specified
+            follow_redirects=True
+        )
+        assert 401 == response.status_code
+
+        # Valid key passed in auth header
+        telegram_data["message"]["chat"]["id"] = "auth_for_telegram_1"
+        response = self.app.post(
+            flaskapp.FLASK_TELEGRAM_BOT_LURCH_WEBHOOK,
+            data=json.dumps(telegram_data), # Has to be dumped
+            content_type="application/json", # Has to be specified
+            follow_redirects=True
+        )
+        assert 200 == response.status_code
+
+    def test_BadAndGoodRequestsForIntent(self):
         # Injects new auth keys
         flaskapp.yellowbot.change_authorized_keys(["auth_for_tests_1"])
 
