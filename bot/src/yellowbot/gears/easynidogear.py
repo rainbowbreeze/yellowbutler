@@ -164,11 +164,12 @@ class EasyNidoGear(BaseGear):
             activity_block = root.find("div", class_="att-di-bordo")
             if activity_block is not None:
                 for time in activity_block.find("div", class_="col-xs-2 ora prn").stripped_strings:
-                    events.append(" {}".format(time))
+                    #events.append(" {}".format(time))
+                    pass
                 for activity in activity_block.find_all("div", class_="col-xs-10 info prn pls"):
                     for act_title in activity.find("span", class_="titolo-att").stripped_strings:
                         if not act_title.startswith("Ed. "):
-                            events.append("  {}".format(act_title))
+                            events.append(" {}: {}".format(time, act_title))
                     for act_detail in activity.find_all("span", class_="testo-black"):
                         events.append("   {}".format(act_detail.get_text()))
 

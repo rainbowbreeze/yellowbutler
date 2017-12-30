@@ -14,7 +14,7 @@ DB_FILE_NAME = os.path.join(os.path.dirname(__file__), "test_db.json")
 
 class TestEasyNidoGear(TestCase):
     def setUp(self):
-        self._testdata1 = open(TESTDATA_FILENAME.format("5")).read()
+        self._testdata1 = open(TESTDATA_FILENAME.format("1")).read()
         datastore = DatastoreService(DB_FILE_NAME)
         self._gear = EasyNidoGear(datastore, "username", "password", "idbambino")
 
