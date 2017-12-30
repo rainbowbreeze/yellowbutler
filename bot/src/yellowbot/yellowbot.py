@@ -168,6 +168,22 @@ class YellowBot:
         self._surfaces.append(interaction_surface)
         return True
 
+    def send_message(self, message):
+        """
+        Send a message to one of the interaction surfaces.
+        Use this method when YellowBot acts as a chatbot
+
+        :param message: the message received that needs to be handled
+        :type message: SurfaceMessage
+        """
+        # Finds the surface for sending the result message
+        surface = self._find_intraction_surface_for_id(message.surface_id)
+        if surface is not None:
+            # Creates a new message and dispatch it
+            return surface.send_message(message)
+        else:
+            raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))
+
     def receive_message(self, message):
         """
         Process a message that hits one of the interaction surface.
@@ -199,12 +215,7 @@ class YellowBot:
             return
 
         # Finds the surface for sending the result message
-        surface = None
-        for working_surface in self._surfaces:
-            if working_surface.can_handle_surface(message.surface_id):
-                surface = working_surface
-                break
-
+        surface = self._find_intraction_surface_for_id(message.surface_id)
         if surface is not None:
             # Creates a new message and dispatch it
             return surface.send_message(SurfaceMessage(
@@ -214,6 +225,22 @@ class YellowBot:
             ))
         else:
             raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))
+
+    def _find_intraction_surface_for_id(self, surface_id):
+        """
+        Find an interaction surface given its ID
+
+        :param surface_id: id of the surface to search
+        :type surface_id: str
+
+        :return: The requested surface, otherwise None
+        :rtype: BaseInteractionSurface
+        """
+        for working_surface in self._surfaces:
+            if working_surface.can_handle_surface(surface_id):
+                return working_surface
+                break
+        return None
 
     def process_intent(self, intent, params):
         """
