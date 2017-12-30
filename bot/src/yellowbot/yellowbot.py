@@ -101,7 +101,6 @@ class YellowBot:
         self._gears.append(MusicGear())
         self._gears.append(EchoMessageGear())
         self._gears.append(EasyNidoGear(
-            self._datastore,
             self.get_config("easynido_username"),
             self.get_config("easynido_password"),
             self.get_config("easynido_idbambino")

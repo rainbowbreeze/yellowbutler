@@ -14,11 +14,8 @@ class EasyNidoGear(BaseGear):
     """
     INTENTS = [GlobalBag.EASYNIDO_INTENT_REPORT]
 
-    def __init__(self, datastore_service, email, password, idbambino):
+    def __init__(self, email, password, idbambino):
         """
-
-        :param datastore_service: service to manage persistent storage of data
-        :type datastore_service: DatastoreService
 
         :param email: user email
         :type email: str
@@ -30,7 +27,6 @@ class EasyNidoGear(BaseGear):
         :type idbambino: str
         """
         BaseGear.__init__(self, EasyNidoGear.__name__, self.INTENTS)
-        self._datastore = datastore_service
         self._username = email
         self._password = password
         self._idbambino = idbambino
@@ -176,5 +172,4 @@ class EasyNidoGear(BaseGear):
             # Move to the next block, the one with an activity
             root = root.next_sibling
 
-        print("\n".join(events))
         return "\n".join(events)
