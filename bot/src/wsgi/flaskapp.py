@@ -150,7 +150,11 @@ class FlaskManager:
             yellowbot.send_message(SurfaceMessage(
                 GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
                 "185752881",
-                "Invalid auth_key request received {}".format(auth_key)
+                "Invalid auth_key request received #{}# from user {}-{}".format(
+                    auth_key,
+                    update["message"]["from"]["id"],
+                    update["message"]["from"]["first_name"]
+                )
             ))
 
         # Extract the message from the
