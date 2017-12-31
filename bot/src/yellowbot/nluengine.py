@@ -35,18 +35,31 @@ class NluEngine:
             return intent, params
 
         # Checks for Music Trace intent
-        # Find SoundHound word
+        # SoundHound word is the word trigger
         if message.lower().find("soundhound") > 0:
-            # Finds the author and title, with Italian message
-            end_pos = message.find("https://")
-            title_and_author = message[36:end_pos-1].strip()
-            end_pos = title_and_author.find(" di ")
-            title = title_and_author[:end_pos].strip()
-            author = title_and_author[end_pos+4:].strip()
-            intent = GlobalBag.TRACE_MUSIC_INTENT
-            params[GlobalBag.TRACE_MUSIC_PARAM_TITLE] = title
-            params[GlobalBag.TRACE_MUSIC_PARAM_AUTHOR] = author
-            return intent, params
+            # Finds the author and title, with Italian or English message
+            if message.lower().startswith("appena usato"):
+                # Italian language
+                begin_search_string = "Appena usato SoundHound per trovare "
+                separator_string = " di "
+            elif message.lower().startswith("just used"):
+                # English language
+                begin_search_string = "Just used SoundHound to find "
+                separator_string = " by "
+            else:
+                # Unknown language
+                begin_search_string = None
+
+            if begin_search_string:
+                end_pos = message.find("https://")
+                title_and_author = message[len(begin_search_string):end_pos-1].strip()
+                end_pos = title_and_author.find(separator_string)
+                title = title_and_author[:end_pos].strip()
+                author = title_and_author[end_pos + len(separator_string):].strip()
+                intent = GlobalBag.TRACE_MUSIC_INTENT
+                params[GlobalBag.TRACE_MUSIC_PARAM_TITLE] = title
+                params[GlobalBag.TRACE_MUSIC_PARAM_AUTHOR] = author
+                return intent, params
 
         # Checks for echo intent
         headers = ["echo", "repeat", "say"]

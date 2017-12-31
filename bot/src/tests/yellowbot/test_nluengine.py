@@ -42,4 +42,11 @@ class TestNluEngine(TestCase):
         assert GlobalBag.TRACE_MUSIC_PARAM_TITLE in params
         assert params.get(GlobalBag.TRACE_MUSIC_PARAM_TITLE) == "You Could Be Mine"
 
+        sentence = "Just used SoundHound to find Who Do You Love? by George Thorogood https://bnc.lt/Scoe/PKD7kWbXRG"
+        intent, params = self.nlu_engine.infer_intent_and_args(sentence)
+        assert intent == GlobalBag.TRACE_MUSIC_INTENT
+        assert GlobalBag.TRACE_MUSIC_PARAM_AUTHOR in params
+        assert params.get(GlobalBag.TRACE_MUSIC_PARAM_AUTHOR) == "George Thorogood"
+        assert GlobalBag.TRACE_MUSIC_PARAM_TITLE in params
+        assert params.get(GlobalBag.TRACE_MUSIC_PARAM_TITLE) == "Who Do You Love?"
 
