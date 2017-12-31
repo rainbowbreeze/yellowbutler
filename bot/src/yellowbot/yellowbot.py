@@ -13,6 +13,7 @@ from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.nluengine import NluEngine
+from yellowbot.surfaces.notifyadminsurface import NotifyAdminSurface
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
@@ -51,6 +52,10 @@ class YellowBot:
         db_filename = os.path.join(os.path.dirname(__file__), GlobalBag.DATABASE_FILE)
         self._datastore = DatastoreService(db_filename)
 
+        # Registers the interaction surface
+        self._surfaces = {}
+        self._register_interaction_surfaces(test_mode)
+
         # Register gears
         self._gears = []
         self._register_gears()
@@ -60,18 +65,6 @@ class YellowBot:
             self.nlu_engine = NluEngine()
         else:
             self.nlu_engine = nlu_engine
-
-        # Registers the interaction surface
-        running_on_pythonanywhere = self.get_config("running_on_pythonanywhere_free", throw_error=False)
-        self._surfaces = []
-        # Telegram bot Lurch
-        self._surfaces.append(TelegramSurface(
-            GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
-            self.get_config("telegram_lurch_authorization_token"),
-            self.get_config("base_vps_address") + self.get_config("telegram_lurch_webhook_url_relative"),
-            running_on_pythonanywhere=running_on_pythonanywhere,
-            test_mode=test_mode
-        ))
 
     def _load_config_file(self, config_file):
         # Load config file
@@ -93,6 +86,36 @@ class YellowBot:
         # Checks if the config files has real values
         if len(self._config.keys()) == 0:
             raise ValueError("Empty configuration file {}".format(full_config_path))
+
+    def _register_interaction_surfaces(self, test_mode):
+        """
+        Registers all the notification surfaces
+
+        :param test_mode: class instance created for test purposes, some
+        features are disabled
+        :type test_mode: bool
+
+        """
+        running_on_pythonanywhere = self.get_config("running_on_pythonanywhere_free", throw_error=False)
+
+        # NotifyAdmin surface
+        self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN] = NotifyAdminSurface(
+            GlobalBag.SURFACE_NOTIFY_ADMIN,
+            self.get_config("telegram_notifyadmin_authorization_token"),
+            self.get_config("telegram_notifyadmin_chat"),
+            running_on_pythonanywhere=running_on_pythonanywhere,
+            test_mode=test_mode
+        )
+
+        # Telegram bot Lurch
+        self._surfaces[GlobalBag.SURFACE_TELEGRAM_BOT_LURCH] = TelegramSurface(
+            GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
+            self.get_config("telegram_lurch_authorization_token"),
+            self.get_config("base_vps_address") + self.get_config("telegram_lurch_webhook_url_relative"),
+            running_on_pythonanywhere=running_on_pythonanywhere,
+            test_mode=test_mode
+        )
+
 
     def _register_gears(self):
         """
@@ -154,34 +177,54 @@ class YellowBot:
         """
         self._config["authorized_keys"] = new_keys
 
-    def add_interaction_surface(self, interaction_surface):
+    def add_interaction_surface(self, key, interaction_surface):
         """
         Add a new interaction surface
 
+        :param key: the key to assign to the interaction surface
+        :type key: str
+
         :param interaction_surface: the surface to add
         :type interaction_surface: BaseInteractionSurface
-
-        :return: True if the interface has been added, otherwise false
-        :rtype: bool
         """
-        self._surfaces.append(interaction_surface)
-        return True
+        self._surfaces[key] = interaction_surface
 
     def send_message(self, message):
         """
-        Send a message to one of the interaction surfaces.
+        Sends a message to one of the interaction surfaces.
         Use this method when YellowBot acts as a chatbot
 
         :param message: the message received that needs to be handled
         :type message: SurfaceMessage
         """
         # Finds the surface for sending the result message
-        surface = self._find_intraction_surface_for_id(message.surface_id)
+        surface = self._surfaces[message.surface_id] if message.surface_id in self._surfaces else None
         if surface is not None:
             # Creates a new message and dispatch it
             return surface.send_message(message)
         else:
             raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))
+
+    def notify_admin(self, text):
+        """
+        Sends a notification to the admin. Use in very few cases and, under
+         the hood, use a dedicated interaction surface targeting a special
+         channel used by admin
+
+        :param text: the message to send
+        :type text: str
+        :return:
+        """
+        # Finds the surface for sending the result message
+        surface = self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN]\
+            if GlobalBag.SURFACE_NOTIFY_ADMIN in self._surfaces\
+            else None
+        if surface is not None:
+            # Creates a new message and dispatch it
+            message = surface.forge_notification(text)
+            return surface.send_message(message)
+        else:
+            raise ValueError("Cannot find a surface to process message for {}".format(GlobalBag.SURFACE_NOTIFY_ADMIN))
 
     def receive_message(self, message):
         """
@@ -214,7 +257,7 @@ class YellowBot:
             return
 
         # Finds the surface for sending the result message
-        surface = self._find_intraction_surface_for_id(message.surface_id)
+        surface = self._surfaces[message.surface_id] if message.surface_id in self._surfaces else None
         if surface is not None:
             # Creates a new message and dispatch it
             return surface.send_message(SurfaceMessage(
@@ -224,22 +267,6 @@ class YellowBot:
             ))
         else:
             raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))
-
-    def _find_intraction_surface_for_id(self, surface_id):
-        """
-        Find an interaction surface given its ID
-
-        :param surface_id: id of the surface to search
-        :type surface_id: str
-
-        :return: The requested surface, otherwise None
-        :rtype: BaseInteractionSurface
-        """
-        for working_surface in self._surfaces:
-            if working_surface.can_handle_surface(surface_id):
-                return working_surface
-                break
-        return None
 
     def process_intent(self, intent, params):
         """

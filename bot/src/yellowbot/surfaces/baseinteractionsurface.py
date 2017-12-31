@@ -31,15 +31,3 @@ class BaseInteractionSurface:
         :return: TDB
         """
         raise ValueError("The surface {} cannot send a message".format(self._surface_name))
-
-    def can_handle_surface(self, surface_id):
-        """
-        Check if this surface can handle messages directed to a given surface
-
-        :param surface_id: the target surface id
-        :type surface_id: str
-
-        :return: True if the surface is able, otherwise false
-        :rtype: bool
-        """
-        return surface_id == self._surface_name

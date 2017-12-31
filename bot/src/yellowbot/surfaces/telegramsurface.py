@@ -17,7 +17,7 @@ class TelegramSurface(BaseInteractionSurface):
     Even if there are multiple bots, the logic to manage then is all
      centralised in one YellowBot: think bots and "limited" instances of
      YellowBot, that have their own names and configurations in Telegram,
-     but all bring to the same "brain" under the hood
+     but are all part of the same "brain" under the hood
     """
 
     def __init__(self,
@@ -91,11 +91,11 @@ class TelegramSurface(BaseInteractionSurface):
     def _set_webhook(self, new_webhook_url):
         """
         Sets the bot webhook url
-        :param new_webhook_url:
+        :param new_webhook_url: new webhook to register for the bot
         :type new_webhook_url: str
         """
 
-        if self._test_mode:
+        if self._test_mode or not new_webhook_url:
             return
 
         # Sometimes there is an exception

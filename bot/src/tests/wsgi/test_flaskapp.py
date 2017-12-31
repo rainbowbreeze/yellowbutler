@@ -113,7 +113,8 @@ class TestFlaskApp(TestCase):
             content_type="application/json", # Has to be specified
             follow_redirects=True
         )
-        assert 401 == response.status_code
+        assert 200 == response.status_code
+        assert b"Not authorized" == response.data
 
         # Valid key passed in auth header
         telegram_data["message"]["from"]["id"] = 1234567890
@@ -124,6 +125,7 @@ class TestFlaskApp(TestCase):
             follow_redirects=True
         )
         assert 200 == response.status_code
+        assert b"OK" == response.data
 
     def test_BadAndGoodRequestsForIntent(self):
         # Injects new auth keys

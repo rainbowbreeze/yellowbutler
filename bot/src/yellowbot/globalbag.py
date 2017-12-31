@@ -25,6 +25,7 @@ class GlobalBag:
 
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
+    SURFACE_NOTIFY_ADMIN = "NotifyAdmin"  # Notification channel for admin
 
     # Database file name
     DATABASE_FILE = "yellowbot_db.json"

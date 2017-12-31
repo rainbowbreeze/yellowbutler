@@ -21,7 +21,10 @@ class TestYellowBot(TestCase):
         config_path = os.path.join(os.path.dirname(__file__), "yellowbot_config_test.json")
         self._yellowbot = YellowBot(config_file=config_path, test_mode=True)
         self._test_surface = FakeInteractionSurface()
-        assert self._yellowbot.add_interaction_surface(self._test_surface)
+        # Add a test interaction surface
+        self._yellowbot.add_interaction_surface(
+            FakeInteractionSurface.SURFACE_ID,
+            self._test_surface)
 
     def tearDown(self):
         pass
@@ -49,6 +52,9 @@ class TestYellowBot(TestCase):
             "Echo My message")
         self._yellowbot.receive_message(message)
         assert "My message" == self._test_surface.last_message
+
+    def test_notifyAdmin(self):
+        pass
 
 
 class FakeInteractionSurface(BaseInteractionSurface):

@@ -35,7 +35,6 @@ from flask import Flask, request, make_response, jsonify
 from werkzeug.exceptions import abort, BadRequest
 
 from yellowbot.globalbag import GlobalBag
-from yellowbot.surfaces.surfacemessage import SurfaceMessage
 from yellowbot.yellowbot import YellowBot
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
@@ -57,123 +56,125 @@ FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_
 # See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
 
 
-class FlaskManager:
+@app.route("/")
+def hello_world():
+    return "YellowBot here, happy to serve at {} :)".format(
+        FLASK_BASE_API_ADDRESS
+    )
+
+
+@app.route('{}/intent'.format(FLASK_BASE_API_ADDRESS), methods=['POST'])
+def process_intent():
     """
-    Class to gather all the flask routes as class's static methods. I like
-     that more than defining them as global functions (the usual way you can
-     find in tutorials)
+    Process and intent with given parameters
+
+    :return:
     """
 
-    @staticmethod
-    @app.route("/")
-    def hello_world():
-        return "YellowBot here, happy to serve at {} :)".format(
-            FLASK_BASE_API_ADDRESS
+    # Request object format reference can be found at
+    #  http://flask.pocoo.org/docs/0.12/api/#incoming-request-data
+
+    # print('******** NEW REQ *******************')
+    # print(request.headers)
+    # print('***************************')
+    # print(request.data)
+    # print('***************************')
+    # print("Is json? {}".format(request.is_json))
+    # # print(request.get_json())  # Can create errors if the request is not properly json made
+    # print('******** END REQ *******************')
+
+    # Find the authorization key
+    auth_key = request.headers.get("X-Authorization")
+
+    # None or invalid auth key
+    if not yellowbot.is_client_authorized(auth_key):
+        abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+
+    # Extract the intent from the request
+    if not request.is_json:
+        abort(make_response(
+            jsonify(message="No json data in the request"), 400)
+        )
+    # This conversion can fail if content_type is set to application/json
+    #  but body is empty, so it needs to be handled in the proper way
+    #  Method reference is here: http://flask.pocoo.org/docs/0.12/api/#flask.Request.get_json
+    try:
+        # silent=True doesn't raise any error
+        json_payload = request.get_json()
+    except BadRequest:
+        abort(make_response(
+            jsonify(message="Invalid json body, cannot parse it"), 400)
+        )
+    # No intent field in the request
+    if "intent" not in json_payload:
+        abort(make_response(
+            jsonify(message="Missing intent field in the request"), 400)
+        )
+    intent = request.json["intent"]
+    # Extract the parameters from the request
+    if "params" in request.json:
+        params = request.json["params"]
+    else:
+        params = {}
+
+    # Pass everything to the bot
+    try:
+        message = yellowbot.process_intent(intent, params)  # Process the intent
+        return make_response(jsonify(message=message), 200)
+    except Exception as e:
+        # If something goes wrong, like missing parameters or errors in
+        #  the gear process, flow falls here
+        abort(make_response(
+            jsonify(message=e.args[0]), 400)
         )
 
-    @staticmethod
-    @app.route('{}/intent'.format(FLASK_BASE_API_ADDRESS), methods=['POST'])
-    def process_intent():
-        """
-        Process and intent with given parameters
 
-        :return:
-        """
+@app.route(FLASK_TELEGRAM_BOT_LURCH_WEBHOOK, methods=["POST"])
+def telegram_webhook():
+    update = request.get_json()
 
-        # Request object format reference can be found at
-        #  http://flask.pocoo.org/docs/0.12/api/#incoming-request-data
-
-        # print('******** NEW REQ *******************')
-        # print(request.headers)
-        # print('***************************')
-        # print(request.data)
-        # print('***************************')
-        # print("Is json? {}".format(request.is_json))
-        # # print(request.get_json())  # Can create errors if the request is not properly json made
-        # print('******** END REQ *******************')
-
-        # Find the authorization key
-        auth_key = request.headers.get("X-Authorization")
-
-        # None or invalid auth key
-        if not yellowbot.is_client_authorized(auth_key):
-            abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
-
-        # Extract the intent from the request
-        if not request.is_json:
-            abort(make_response(
-                jsonify(message="No json data in the request"), 400)
+    # Checks if the message is authorized
+    auth_key = TelegramSurface.from_telegram_update_to_auth_key(update)
+    # None or invalid auth key
+    if not yellowbot.is_client_authorized(auth_key):
+        # Send an alert message to admin channel
+        yellowbot.notify_admin(
+            "Invalid auth_key #{}# received from user {}-{}, with text ##{}##".format(
+                auth_key,
+                update["message"]["from"]["id"],
+                update["message"]["from"]["first_name"],
+                update["message"]["text"]
             )
-        # This conversion can fail if content_type is set to application/json
-        #  but body is empty, so it needs to be handled in the proper way
-        #  Method reference is here: http://flask.pocoo.org/docs/0.12/api/#flask.Request.get_json
-        try:
-            # silent=True doesn't raise any error
-            json_payload = request.get_json()
-        except BadRequest:
-            abort(make_response(
-                jsonify(message="Invalid json body, cannot parse it"), 400)
-            )
-        # No intent field in the request
-        if "intent" not in json_payload:
-            abort(make_response(
-                jsonify(message="Missing intent field in the request"), 400)
-            )
-        intent = request.json["intent"]
-        # Extract the parameters from the request
-        if "params" in request.json:
-            params = request.json["params"]
-        else:
-            params = {}
-
-        # Pass everything to the bot
-        try:
-            message = yellowbot.process_intent(intent, params)  # Process the intent
-            return make_response(jsonify(message=message), 200)
-        except Exception as e:
-            # If something goes wrong, like missing parameters or errors in
-            #  the gear process, flow falls here
-            abort(make_response(
-                jsonify(message=e.args[0]), 400)
-            )
-
-    @staticmethod
-    @app.route(FLASK_TELEGRAM_BOT_LURCH_WEBHOOK, methods=["POST"])
-    def telegram_webhook():
-        update = request.get_json()
-
-        # Checks if the message is authorized
-        auth_key = TelegramSurface.from_telegram_update_to_auth_key(update)
-        # None or invalid auth key
-        if not yellowbot.is_client_authorized(auth_key):
-            # Send an alert message to admin channel
-            yellowbot.send_message(SurfaceMessage(
-                GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
-                "185752881",
-                "Invalid auth_key #{}# received from user {}-{}, with text ##{}##".format(
-                    auth_key,
-                    update["message"]["from"]["id"],
-                    update["message"]["from"]["first_name"],
-                    update["message"]["text"]
-                )
-            ))
-            abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
-
-        # Extract the message from the
+        )
+        # Send an 200, otherwise with 401 or other error codes Telegram
+        #  keeps sending the message over and over. But in the data field
+        #  of the response the message of unauthorized access is put
+        # abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+        return make_response("Not authorized", 200)
+    else:
+        # Extract the message from the Telegram update
         surface_message = TelegramSurface.from_telegram_update_to_message(
             GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
             update)
+        # And process it
         yellowbot.receive_message(surface_message)
-        return "OK"
+        return "OK", 200  # It seems to using make_response()
 
-    @staticmethod
-    @app.errorhandler(500)
-    def server_error(e):
-        logging.exception('An error occurred during a request.')
-        return """
-        An internal error occurred: <pre>{}</pre>
-        See logs for full stacktrace.
-        """.format(e), 500
+    # So Telegram stay quite and there is no other error
+
+
+@app.errorhandler(500)
+def server_error(e):
+    """
+    Manage uncaught exception
+
+    For 500 error, see docs at http://flask.pocoo.org/docs/0.12/api/#flask.Flask.handle_exception
+    """
+    logging.exception('An error occurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
 
 
 if __name__ == '__main__':
