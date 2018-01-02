@@ -92,8 +92,10 @@ ENV/
 .idea
 
 # Ignore configuration files
-*config.json
+*_config.json
 
 # Ignore DB files
 *_db.json
 
+# Ignore task files
+*_tasks.json
