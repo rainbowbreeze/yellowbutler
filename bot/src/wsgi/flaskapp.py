@@ -143,7 +143,16 @@ def process_intent():
 
 
 @app.route(FLASK_TELEGRAM_BOT_LURCH_WEBHOOK, methods=["POST"])
-def telegram_webhook():
+def telegram_webhook_lurch():
+    """
+    Webhook for LurchBot on Telegram.
+    Once the request is received, is routed to the YellowBot in a separate
+     thread
+
+    :return: 200 as status code and OK as message, regardless the
+    result of the operation. Otherwise Telegram will keep sending
+    the same message over and over
+    """
     update = request.get_json()
 
     # Checks if the message is authorized
