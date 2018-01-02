@@ -57,10 +57,13 @@ class TestYellowBot(TestCase):
 
 
     def test_notifyAdmin(self):
-        # Register a test notify admin surface
+        # Mock the notify admin surface
         notify_surface = FakeNotfyAdminInteractionSurface(GlobalBag.SURFACE_NOTIFY_ADMIN, "Notify_Test")
         self._yellowbot.add_interaction_surface(GlobalBag.SURFACE_NOTIFY_ADMIN, notify_surface)
         self._yellowbot.notify_admin("Test notification message")
+        # Nothing in the other interaction surfaces
+        assert None == self._test_surface.last_message
+        # And the right message in mocked the nofify admin surface
         assert "Notify_Test" == notify_surface.last_message.channel_id
         assert "Test notification message" == notify_surface.last_message.text
 
