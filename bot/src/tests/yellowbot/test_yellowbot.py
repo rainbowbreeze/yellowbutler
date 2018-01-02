@@ -7,6 +7,7 @@ import os
 
 from yellowbot.globalbag import GlobalBag
 from yellowbot.surfaces.baseinteractionsurface import BaseInteractionSurface
+from yellowbot.surfaces.notifyadminsurface import NotifyAdminSurface
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 from yellowbot.yellowbot import YellowBot
 
@@ -20,7 +21,7 @@ class TestYellowBot(TestCase):
         # The file is under the same directory of this test class
         config_path = os.path.join(os.path.dirname(__file__), "yellowbot_config_test.json")
         self._yellowbot = YellowBot(config_file=config_path, test_mode=True)
-        self._test_surface = FakeInteractionSurface()
+        self._test_surface = FakeInteractionSurface(FakeInteractionSurface.SURFACE_ID)
         # Add a test interaction surface
         self._yellowbot.add_interaction_surface(
             FakeInteractionSurface.SURFACE_ID,
@@ -51,21 +52,58 @@ class TestYellowBot(TestCase):
             "Test_Channel",
             "Echo My message")
         self._yellowbot.receive_message(message)
-        assert "My message" == self._test_surface.last_message
+        assert "Test_Channel" == self._test_surface.last_message.channel_id
+        assert "My message" == self._test_surface.last_message.text
+
 
     def test_notifyAdmin(self):
-        pass
+        # Register a test notify admin surface
+        notify_surface = FakeNotfyAdminInteractionSurface(GlobalBag.SURFACE_NOTIFY_ADMIN, "Notify_Test")
+        self._yellowbot.add_interaction_surface(GlobalBag.SURFACE_NOTIFY_ADMIN, notify_surface)
+        self._yellowbot.notify_admin("Test notification message")
+        assert "Notify_Test" == notify_surface.last_message.channel_id
+        assert "Test notification message" == notify_surface.last_message.text
 
 
 class FakeInteractionSurface(BaseInteractionSurface):
     """
     Surface to check if messages have really been sent
+    Cannot call it TestInteractionSurface, otherwise tests will be execute
+     on this class too
     """
     SURFACE_ID = "Test_Surface"
 
-    def __init__(self):
-        BaseInteractionSurface.__init__(self, FakeInteractionSurface.SURFACE_ID)
+    def __init__(self, surface_id):
+        """
+        Test surface
+
+        :param surface_id: id of the surface to use
+        :type surface_id: str
+        """
+        BaseInteractionSurface.__init__(self, surface_id)
         self.last_message = None
 
     def send_message(self, message):
-        self.last_message = message.text
+        self.last_message = message
+
+
+class FakeNotfyAdminInteractionSurface(NotifyAdminSurface):
+    """
+    Surface to check if messages have really been sent
+    Cannot call it TestInteractionSurface, otherwise tests will be execute
+     on this class too
+    """
+    SURFACE_ID = "Test_Surface"
+
+    def __init__(self, surface_id, channel_id):
+        """
+        Test surface
+
+        :param surface_id: id of the surface to use
+        :type surface_id: str
+        """
+        NotifyAdminSurface.__init__(self, surface_id, channel_id)
+        self.last_message = None
+
+    def send_message(self, message):
+        self.last_message = message

@@ -15,6 +15,7 @@ from yellowbot.globalbag import GlobalBag
 from yellowbot.nluengine import NluEngine
 from yellowbot.surfaces.notifyadminsurface import NotifyAdminSurface
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
+from yellowbot.surfaces.telegramnotifyadminsurface import TelegramNotifyAdminSurface
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 
@@ -99,7 +100,7 @@ class YellowBot:
         running_on_pythonanywhere = self.get_config("running_on_pythonanywhere_free", throw_error=False)
 
         # NotifyAdmin surface
-        self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN] = NotifyAdminSurface(
+        self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN] = TelegramNotifyAdminSurface(
             GlobalBag.SURFACE_NOTIFY_ADMIN,
             self.get_config("telegram_notifyadmin_authorization_token"),
             self.get_config("telegram_notifyadmin_chat"),
@@ -208,7 +209,7 @@ class YellowBot:
     def notify_admin(self, text):
         """
         Sends a notification to the admin. Use in very few cases and, under
-         the hood, use a dedicated interaction surface targeting a special
+         the hood, uses a dedicated interaction surface targeting a special
          channel used by admin
 
         :param text: the message to send
