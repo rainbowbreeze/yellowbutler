@@ -136,7 +136,7 @@ class TelegramSurface(BaseInteractionSurface):
                 return message
             else:
                 return None
-        except KeyError:
+        except KeyError as e:
             return None
 
     @staticmethod

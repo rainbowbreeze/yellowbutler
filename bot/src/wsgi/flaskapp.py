@@ -57,7 +57,7 @@ FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_
 # See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
 
 
-def send_message_thread(yellobot, message):
+def receive_message_thread(yellobot, message):
     """
     Thead function to send messages to YellowBot
 
@@ -177,21 +177,13 @@ def telegram_webhook():
         surface_message = TelegramSurface.from_telegram_update_to_message(
             GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
             update)
-        # And process it
-
-        if not surface_message:
-            return "Meh", 200  # It seems to using make_response()
-
-        # Run in the same thread for the tests
-        if GlobalBag.TEST_ENVIRONMENT:
-            # Pass everything to the bot
-            yellowbot.receive_message(surface_message)
-            return "OK", 200  # It seems to using make_response()
-        # Run in separate thread
-        else:
-            t = threading.Thread(name="Intent", target=send_message_thread, args=(yellowbot, surface_message))
-            t.start()
-            return make_response(jsonify(message="OK"), 200)
+        # And process it on a separate thread
+        t = threading.Thread(
+            name="Intent",
+            target=receive_message_thread,
+            args=(yellowbot, surface_message))
+        t.start()
+        return make_response("OK", 200)
 
 
 @app.errorhandler(500)
