@@ -55,7 +55,6 @@ class TestYellowBot(TestCase):
         assert "Test_Channel" == self._test_surface.last_message.channel_id
         assert "My message" == self._test_surface.last_message.text
 
-
     def test_notifyAdmin(self):
         # Mock the notify admin surface
         notify_surface = FakeNotfyAdminInteractionSurface(GlobalBag.SURFACE_NOTIFY_ADMIN, "Notify_Test")

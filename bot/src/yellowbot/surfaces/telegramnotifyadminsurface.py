@@ -15,6 +15,7 @@ class TelegramNotifyAdminSurface(NotifyAdminSurface, TelegramSurface):
                  chat_id,
                  running_on_pythonanywhere,
                  test_mode=False):
+        NotifyAdminSurface.__init__(self, surface_name, chat_id)
         TelegramSurface.__init__(
             self,
             surface_name,
@@ -22,4 +23,3 @@ class TelegramNotifyAdminSurface(NotifyAdminSurface, TelegramSurface):
             webhook_url="",
             running_on_pythonanywhere=running_on_pythonanywhere,
             test_mode=test_mode)
-        NotifyAdminSurface.__init__(self, surface_name, chat_id)
