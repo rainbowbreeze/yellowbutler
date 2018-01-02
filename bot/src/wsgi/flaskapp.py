@@ -30,6 +30,7 @@ Useful links:
  Basic code to deal with Telegram: https://blog.pythonanywhere.com/148/
 """
 import logging
+import threading
 
 from flask import Flask, request, make_response, jsonify
 from werkzeug.exceptions import abort, BadRequest
@@ -55,6 +56,24 @@ FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_
 # Logging to unix log utils
 # See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
 
+def run_intent_thread(yellowbot, intent, params):
+    """
+
+    :param yellowbot:
+    :param intent:
+    :param params:
+    :return:
+    """
+    pass
+
+def send_message_thread(yellobot, message):
+    """
+
+    :param yellobot:
+    :param message:
+    :return:
+    """
+    pass
 
 @app.route("/")
 def hello_world():
@@ -117,7 +136,6 @@ def process_intent():
     else:
         params = {}
 
-    # Pass everything to the bot
     try:
         message = yellowbot.process_intent(intent, params)  # Process the intent
         return make_response(jsonify(message=message), 200)
@@ -157,10 +175,17 @@ def telegram_webhook():
             GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
             update)
         # And process it
-        yellowbot.receive_message(surface_message)
-        return "OK", 200  # It seems to using make_response()
 
-    # So Telegram stay quite and there is no other error
+        # Run in the same thread for the tests
+        if GlobalBag.TEST_ENVIRONMENT:
+            # Pass everything to the bot
+            yellowbot.receive_message(surface_message)
+            return "OK", 200  # It seems to using make_response()
+        # Run in separate thread
+        else:
+            t = threading.Thread(name="Intent", target=send_message_thread, args=(yellowbot, surface_message))
+            t.start()
+            return make_response(jsonify(message="OK"), 200)
 
 
 @app.errorhandler(500)
