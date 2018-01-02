@@ -56,24 +56,19 @@ FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_
 # Logging to unix log utils
 # See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
 
-def run_intent_thread(yellowbot, intent, params):
-    """
-
-    :param yellowbot:
-    :param intent:
-    :param params:
-    :return:
-    """
-    pass
 
 def send_message_thread(yellobot, message):
     """
+    Thead function to send messages to YellowBot
 
     :param yellobot:
-    :param message:
-    :return:
+    :type yellobot: YellowBot
+
+    :param message: the message to send
+    :type message: SurfaceMessage
     """
-    pass
+    yellowbot.receive_message(message)
+
 
 @app.route("/")
 def hello_world():
