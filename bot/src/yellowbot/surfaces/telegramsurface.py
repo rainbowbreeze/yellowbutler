@@ -128,12 +128,15 @@ class TelegramSurface(BaseInteractionSurface):
         the update is not a text message
         :rtype: SurfaceMessage
         """
-        if "message" in update:
-            text = update["message"]["text"]
-            chat_id = update["message"]["chat"]["id"]
-            message = SurfaceMessage(surface_name, chat_id, text)
-            return message
-        else:
+        try:
+            if "message" in update:
+                text = update["message"]["text"]
+                chat_id = update["message"]["chat"]["id"]
+                message = SurfaceMessage(surface_name, chat_id, text)
+                return message
+            else:
+                return None
+        except KeyError:
             return None
 
     @staticmethod
@@ -148,9 +151,16 @@ class TelegramSurface(BaseInteractionSurface):
         :rtype: str
         """
 
-        if "message" in update:
-            # Auth_key has to be a string, while id is an integer.
-            #  Reference at https://core.telegram.org/bots/api#user
-            return "{}".format(update["message"]["from"]["id"])
-        else:
+        try:
+            if "message" in update:
+                # Auth_key has to be a string, while id is an integer.
+                #  Reference at https://core.telegram.org/bots/api#user
+                return "{}".format(update["message"]["from"]["id"])
+            else:
+                return None
+        except KeyError:
+            # Wrong or missing fields
+            return None
+        except TypeError:
+            # Wrong types in the fields
             return None

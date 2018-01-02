@@ -149,27 +149,38 @@ def telegram_webhook():
     # Checks if the message is authorized
     auth_key = TelegramSurface.from_telegram_update_to_auth_key(update)
     # None or invalid auth key
+
     if not yellowbot.is_client_authorized(auth_key):
         # Send an alert message to admin channel
-        yellowbot.notify_admin(
-            "Invalid auth_key #{}# received from user {}-{}, with text ##{}##".format(
-                auth_key,
-                update["message"]["from"]["id"],
-                update["message"]["from"]["first_name"],
-                update["message"]["text"]
+        try:
+            yellowbot.notify_admin(
+                "Invalid auth_key #{}# received from user {}-{}, with text ##{}##".format(
+                    auth_key,
+                    update["message"]["from"]["id"],
+                    update["message"]["from"]["first_name"],
+                    update["message"]["text"]
+                )
             )
-        )
-        # Send an 200, otherwise with 401 or other error codes Telegram
-        #  keeps sending the message over and over. But in the data field
-        #  of the response the message of unauthorized access is put
-        # abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
-        return make_response("Not authorized", 200)
+        except KeyError:
+            # Any other error is re-raised after the finally clause has been executed
+            # Look at https://docs.python.org/3.6/tutorial/errors.html#defining-clean-up-actions
+            pass
+        finally:
+            # Send an 200, otherwise with 401 or other error codes Telegram
+            #  keeps sending the message over and over. But in the data field
+            #  of the response the message of unauthorized access is put
+            # abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+            return make_response("Not authorized", 200)
+
     else:
         # Extract the message from the Telegram update
         surface_message = TelegramSurface.from_telegram_update_to_message(
             GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
             update)
         # And process it
+
+        if not surface_message:
+            return "Meh", 200  # It seems to using make_response()
 
         # Run in the same thread for the tests
         if GlobalBag.TEST_ENVIRONMENT:
