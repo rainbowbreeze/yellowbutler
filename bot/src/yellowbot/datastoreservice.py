@@ -16,6 +16,11 @@ class DatastoreService():
     """
 
     def __init__(self, file_name):
+        """
+
+        :param file_name: file name where data are persisted
+        :type file_name: str
+        """
         self._db = TinyDB(file_name)
 
     def write(self, document):

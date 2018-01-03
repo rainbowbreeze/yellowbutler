@@ -1,6 +1,7 @@
 """
 Test datastore service
 """
+
 from unittest import TestCase
 
 import os
@@ -10,7 +11,7 @@ from yellowbot.datastoreservice import DatastoreService
 DB_FILE_NAME = os.path.join(os.path.dirname(__file__), "test_db.json")
 
 
-class test_DatastoreService(TestCase):
+class TestDatastoreService(TestCase):
     def setUp(self):
         self._service = DatastoreService(DB_FILE_NAME)
         pass

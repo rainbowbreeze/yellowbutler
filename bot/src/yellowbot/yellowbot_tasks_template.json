@@ -1,0 +1,17 @@
+[
+  // Template file to define tasks processed by the scheduler
+  {
+    "name": "name_of_first_task",
+    "when": "06:00 AM CET",
+    "intent": "name_of_the_intent",
+    "params": {
+      "param_key_1": "param_value_1",
+      "param_key_2": "param_value_2"
+    },
+    "surface_id": "name_of_the_surface_for_results",
+    "surface_channel_id": "id_of_the_channel",
+    "surface_text": "text_for_the_message"
+  }
+]
+
+

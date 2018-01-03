@@ -68,7 +68,14 @@ class YellowBot:
             self.nlu_engine = nlu_engine
 
     def _load_config_file(self, config_file):
-        # Load config file
+        """
+        Load config key/value pairs from a file
+        :param config_file: name of the file. Can be full path or, otherwise,
+        same folder of this class is considered
+        :type config_file: str
+
+        :return:
+        """
         self._config = {}
         if not os.path.isfile(config_file):
             # Folder where this file is, can work also without the abspath,

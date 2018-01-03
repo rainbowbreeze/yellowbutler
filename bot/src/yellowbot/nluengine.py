@@ -1,5 +1,5 @@
 """
-From sentences in natural language, derive intents and arguments
+From sentences in natural language, derive intents and parameters
 """
 from yellowbot.globalbag import GlobalBag
 

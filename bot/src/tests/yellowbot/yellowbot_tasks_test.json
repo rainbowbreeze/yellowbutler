@@ -1,0 +1,33 @@
+[
+  // File for scheduler service tests
+  {
+    "name": "test_task_name_1",
+    "when": "06:00 AM CET",
+    "intent": "name_of_the_intent_1",
+    "params": {
+      "param_key_1": "param_value_1",
+      "param_key_2": "param_value_2"
+    },
+    "surface_id": "surface_id_1",
+    "surface_channel_id": "surface_channel_id_1",
+    "surface_text": "text_for_the_message_1"
+  },
+  {
+    "name": "test_task_name_2",
+    "when": "08:00 PM CET",
+    "intent": "name_of_the_intent_2",
+    "params": {
+      "param_key_3": "param_value_3"
+    },
+    "surface_id": "surface_id_2",
+    "surface_channel_id": "channel_id_2"
+  },
+
+  {
+    "name": "test_task_name_3",
+    "when": "03:00 PM CET",
+    "intent": "name_of_the_intent_3"
+  }
+]
+
+
