@@ -57,7 +57,7 @@ class TestYellowBot(TestCase):
 
     def test_notifyAdmin(self):
         # Mock the notify admin surface
-        notify_surface = FakeNotfyAdminInteractionSurface(GlobalBag.SURFACE_NOTIFY_ADMIN, "Notify_Test")
+        notify_surface = FakeNotifyAdminInteractionSurface(GlobalBag.SURFACE_NOTIFY_ADMIN, "Notify_Test")
         self._yellowbot.add_interaction_surface(GlobalBag.SURFACE_NOTIFY_ADMIN, notify_surface)
         self._yellowbot.notify_admin("Test notification message")
         # Nothing in the other interaction surfaces
@@ -89,7 +89,7 @@ class FakeInteractionSurface(BaseInteractionSurface):
         self.last_message = message
 
 
-class FakeNotfyAdminInteractionSurface(NotifyAdminSurface):
+class FakeNotifyAdminInteractionSurface(NotifyAdminSurface):
     """
     Surface to check if messages have really been sent
     Cannot call it TestInteractionSurface, otherwise tests will be execute

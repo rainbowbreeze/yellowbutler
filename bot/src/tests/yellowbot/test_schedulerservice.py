@@ -17,6 +17,10 @@ class TestSchedulerService(TestCase):
     def tearDown(self):
         pass
 
+    def test_noTasksFile(self):
+        with self.assertRaises(ValueError):
+            SchedulerService("non_existing_file")
+
     def test_readTasks(self):
         tasks = self._scheduler.get_tasks()
         assert 3 == len(tasks)
