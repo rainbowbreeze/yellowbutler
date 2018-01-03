@@ -30,6 +30,10 @@ class TestYellowBot(TestCase):
     def tearDown(self):
         pass
 
+    def test_noConfigFileExceptionRaised(self):
+        with self.assertRaises(ValueError):
+            YellowBot(config_file="non_existing_file.json")
+
     def test_isAuthorized(self):
         assert not self._yellowbot.is_client_authorized(None)
         assert not self._yellowbot.is_client_authorized("Random key")

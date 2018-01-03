@@ -4,6 +4,7 @@ Scheduler service, to run specific tasks at specific times
 import json
 import os
 
+import time
 from json_minify import json_minify
 
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
@@ -14,6 +15,23 @@ class SchedulerTask():
     Define a task processed by the scheduler
     """
     def __init__(self, name, when, intent, params, surface_id, surface_channel_id, surface_text):
+        """
+        Create a new task for the scheduler service
+        :param name:
+        :type name: str
+        :param when:
+        :type when: time
+        :param intent:
+        :type intent: str
+        :param params:
+        :type params: dict
+        :param surface_id:
+        :type surface_id: str
+        :param surface_channel_id:
+        :type surface_channel_id: str
+        :param surface_text:
+        :type surface_text: str
+        """
         self.name = name
         self.when = when
         self.intent = intent
@@ -79,7 +97,7 @@ class SchedulerService():
                 for task_dict in tasks:
                     task = SchedulerTask(
                         task_dict['name'],
-                        task_dict['when'],
+                        time.strptime(task_dict['when'], "%H:%M %Z"),
                         task_dict['intent'],
                         task_dict['params'] if 'params' in task_dict else None,
                         task_dict['surface_id'] if 'surface_id' in task_dict else None,

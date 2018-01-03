@@ -4,7 +4,7 @@
     // Mandatory, name of the task
     "name": "name_of_first_task",
     // Mandatory, at what time the task is triggered
-    "when": "06:00 AM CET",
+    "when": "06:00 CET",
     // Mandatory, intent launched by the task
     "intent": "name_of_the_intent",
     // Optional: parameters associated to the intent, depends on the intent
@@ -23,7 +23,7 @@
   // Only the very mandatory fields
   {
     "name": "test_task_name",
-    "when": "03:00 PM CET",
+    "when": "15:00 UTC",
     "intent": "name_of_the_intent_not_using_params_and_with_no_output"
   }
 

@@ -4,6 +4,8 @@ Test scheduler service
 import os
 from unittest import TestCase
 
+import time
+
 from yellowbot.schedulerservice import SchedulerService
 
 TASKS_FILE_NAME = os.path.join(os.path.dirname(__file__), "yellowbot_tasks_test.json")
@@ -17,7 +19,7 @@ class TestSchedulerService(TestCase):
     def tearDown(self):
         pass
 
-    def test_noTasksFile(self):
+    def test_noTasksFileExceptionRaised(self):
         with self.assertRaises(ValueError):
             SchedulerService("non_existing_file")
 
@@ -26,7 +28,7 @@ class TestSchedulerService(TestCase):
         assert 3 == len(tasks)
         task = tasks[0]
         assert "test_task_name_1" == task.name
-        assert "06:00 AM CET" == task.when
+        assert time.strptime("06:00 CET", "%H:%M %Z") == task.when
         assert "name_of_the_intent_1" == task.intent
         assert "param_value_1" == task.params['param_key_1']
         assert "param_value_2" == task.params['param_key_2']
@@ -35,7 +37,7 @@ class TestSchedulerService(TestCase):
         assert "text_for_the_message_1" == task.surface.text
         task = tasks[1]
         assert "test_task_name_2" == task.name
-        assert "08:00 PM CET" == task.when
+        assert time.strptime("20:00 CET", "%H:%M %Z") == task.when
         assert "name_of_the_intent_2" == task.intent
         assert "param_value_3" == task.params['param_key_3']
         assert "surface_id_2" == task.surface.surface_id
@@ -43,7 +45,7 @@ class TestSchedulerService(TestCase):
         assert None is task.surface.text
         task = tasks[2]
         assert "test_task_name_3" == task.name
-        assert "03:00 PM CET" == task.when
+        assert time.strptime("15:00 UTC", "%H:%M %Z") == task.when
         assert "name_of_the_intent_3" == task.intent
         assert None is task.params
         assert None is task.surface
