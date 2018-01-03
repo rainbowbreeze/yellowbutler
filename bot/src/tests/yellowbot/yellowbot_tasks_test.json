@@ -1,5 +1,7 @@
 [
   // File for scheduler service tests
+
+  // A complete task with all the fields
   {
     "name": "test_task_name_1",
     "when": "06:00 AM CET",
@@ -12,6 +14,8 @@
     "surface_channel_id": "surface_channel_id_1",
     "surface_text": "text_for_the_message_1"
   },
+
+  // A good mix between optional fields
   {
     "name": "test_task_name_2",
     "when": "08:00 PM CET",
@@ -23,6 +27,7 @@
     "surface_channel_id": "channel_id_2"
   },
 
+  // Only the very mandatory fields
   {
     "name": "test_task_name_3",
     "when": "03:00 PM CET",
