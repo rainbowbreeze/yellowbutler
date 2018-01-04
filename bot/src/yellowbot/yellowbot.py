@@ -251,14 +251,14 @@ class YellowBot:
         :return: TBD
         """
         if not message:
+            self._logger.info("A message was received, but has no data inside")
             return
 
-        # Checks for authorization
-
-        # Then, finds how to process the message
+        # Finds how to process the message
         intent, params = self._nlu_engine.infer_intent_and_args(message.text)
         # If an intent is matched, process the intent and return the result
         #  of the operation
+        self._logger.info("The message received triggered the intent %s", intent)
 
         if intent:
             response_text = self.process_intent(intent, params)
@@ -297,14 +297,18 @@ class YellowBot:
         :rtype: str
         """
         # Check if any of the registered gears is able to process the intent
+        self._logger.info("Finding a gear to process intent %s", intent)
         gear = None
         for working_gear in self._gears:
             if working_gear.can_process_intent(intent):
                 gear = working_gear
                 break
+
+        # And process it, if a gear has been found
         if gear is not None:
             return gear.process_intent(intent, params)
         else:
+            self._logger.info("No gear found to process intent %s", intent)
             return "No gear to process your intent"
 
     def tick_scheduler(self):
