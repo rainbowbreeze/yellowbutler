@@ -114,5 +114,9 @@ class TestSchedulerService(TestCase):
         assert 1 == len(res_tasks)
         assert "task_01:30+02:30" == res_tasks[0].name
 
+    def test_getCurrentHour(self):
+        #print(self._scheduler.get_current_hour())
+        pass
+
 
 

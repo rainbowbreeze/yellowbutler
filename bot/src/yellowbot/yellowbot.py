@@ -225,15 +225,15 @@ class YellowBot:
         :return:
         """
         # Finds the surface for sending the result message
-        surface = self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN]\
+        admin_surface = self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN]\
             if GlobalBag.SURFACE_NOTIFY_ADMIN in self._surfaces\
             else None
-        if surface is not None:
+        if admin_surface is not None:
             # Creates a new message and dispatch it
-            message = surface.forge_notification(text)
-            return surface.send_message(message)
+            message = admin_surface.forge_notification(text)
+            return admin_surface.send_message(message)
         else:
-            raise ValueError("Cannot find a surface to process message for {}".format(GlobalBag.SURFACE_NOTIFY_ADMIN))
+            raise ValueError("Cannot find an admin surface to process message for {}".format(GlobalBag.SURFACE_NOTIFY_ADMIN))
 
     def receive_message(self, message):
         """
@@ -312,9 +312,9 @@ class YellowBot:
         """
 
         # Extracts the current time, only the hour part
-        check_time = None
+        check_time = self._scheduler.get_current_hour()
 
-        # Checks for tasks
+        # Checks for tasks scheduled for the current hour
         tasks = self._scheduler.find_tasks_for_time(check_time)
 
         # Executes them

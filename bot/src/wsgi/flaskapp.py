@@ -142,14 +142,22 @@ def process_intent():
         )
 
 
-@app.route('{}/scheduler'.format(FLASK_BASE_API_ADDRESS), methods=['POST'])
+@app.route('{}/scheduler'.format(FLASK_BASE_API_ADDRESS), methods=['GET'])
 def process_scheduler():
     """
-    Called by the scheduler, triggers a check in the scheduler
+    Called by the App Engine job scheduler, triggers a check in the scheduler
     :return: The code should return an HTTP status code within the range
     200–299 to indicate success. Any other code indicates that the task failed.
     """
-    pass
+
+    # Find the authorization key
+    auth_key = request.headers.get("X-Authorization")
+    # None or invalid auth key
+    if not yellowbot.is_client_authorized(auth_key):
+        abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+
+    yellowbot.tick_scheduler()
+    return make_response("OK", 200)
 
 
 @app.route(FLASK_TELEGRAM_BOT_LURCH_WEBHOOK, methods=["POST"])

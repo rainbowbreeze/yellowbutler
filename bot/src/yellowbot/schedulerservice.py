@@ -14,7 +14,14 @@ from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 class SchedulerTask():
     """
-    Define a task processed by the scheduler
+    Define a task processed by the scheduler.
+
+    All the time are in the format HH:mmZZ, ISO_8601, https://en.wikipedia.org/wiki/ISO_8601#Times
+     Examples:
+      19:30+00
+      01:34+02:00
+      23:32-09
+      etc
     """
     def __init__(self,
                  name,
@@ -118,6 +125,16 @@ class SchedulerService():
 
         else:
             raise ValueError("Cannot find tasks file {}".format(full_tasks_path))
+
+    def get_current_hour(self):
+        """
+        Returns current UTC time, where minutes are always 00
+        :return:
+        """
+        current_time = arrow.utcnow().format("HH:mmZZ")
+        return "{}00{}".format(
+            current_time[:3],
+            current_time[5:])
 
     def find_tasks_for_time(self, execution_time):
         """
