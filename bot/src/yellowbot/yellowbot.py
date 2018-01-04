@@ -11,6 +11,7 @@ from yellowbot.datastoreservice import DatastoreService
 from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
+from yellowbot.gears.weathergear import WeatherGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.nluengine import NluEngine
@@ -137,6 +138,7 @@ class YellowBot:
         """
         self._gears.append(MusicGear())
         self._gears.append(EchoMessageGear())
+        self._gears.append(WeatherGear())
         self._gears.append(EasyNidoGear(
             self.get_config("easynido_username"),
             self.get_config("easynido_password"),
