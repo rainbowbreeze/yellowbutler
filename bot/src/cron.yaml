@@ -6,5 +6,5 @@ cron:
 
 - description: "daily summary job"
   url: /yellowbot/api/v1.0/scheduler
-  schedule: Monday,Tuesday, Wednesday, Thursday, Friday 18:47
+  schedule: eveery day 18:47
   timezone: CET
