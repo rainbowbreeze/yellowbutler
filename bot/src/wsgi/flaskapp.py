@@ -36,13 +36,17 @@ from flask import Flask, request, make_response, jsonify
 from werkzeug.exceptions import abort, BadRequest
 
 from yellowbot.globalbag import GlobalBag
+from yellowbot.loggingservice import LoggingService
 from yellowbot.yellowbot import YellowBot
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 
+# Init logging
+LoggingService.init()
+_logger = LoggingService.get_logger("flaskapp")
+
 # Flask init
 app = Flask(__name__)
-
 
 # Allow to setup a test environment. It's dirty and I don't like it, but
 #  it works.
@@ -107,6 +111,8 @@ def process_intent():
     # # print(request.get_json())  # Can create errors if the request is not properly json made
     # print('******** END REQ *******************')
 
+    _logger.info("API call for Intent arrived")
+
     # Find the authorization key
     auth_key = request.headers.get("X-Authorization")
 
@@ -141,12 +147,14 @@ def process_intent():
     else:
         params = {}
 
+    _logger.info("Routing call for intent %s", intent)
     try:
         message = yellowbot.process_intent(intent, params)  # Process the intent
         return make_response(jsonify(message=message), 200)
     except Exception as e:
         # If something goes wrong, like missing parameters or errors in
         #  the gear process, flow falls here
+        _logger.warning("Error %s processing intent %s", e.__class__, e.args[0])
         abort(make_response(
             jsonify(message=e.args[0]), 400)
         )
@@ -160,12 +168,15 @@ def process_scheduler():
     200–299 to indicate success. Any other code indicates that the task failed.
     """
 
+    _logger.info("API call for Scheduler arrived")
+
     # Find the authorization key
     auth_key = request.headers.get("X-Authorization")
     # None or invalid auth key
     if not yellowbot.is_client_authorized(auth_key):
         abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
 
+    _logger.info("Routing call for scheduler")
     t = threading.Thread(
         name="Scheduler",
         target=tick_scheduler_thread,
@@ -185,6 +196,8 @@ def telegram_webhook_lurch():
     result of the operation. Otherwise Telegram will keep sending
     the same message over and over
     """
+    _logger.info("API call for Telegram Lurch bot arrived")
+
     update = request.get_json()
 
     # Checks if the message is authorized
@@ -214,6 +227,7 @@ def telegram_webhook_lurch():
             return make_response("Not authorized", 200)
 
     else:
+        _logger.info("Routing call for Telegram Lurch bot")
         # Extract the message from the Telegram update
         surface_message = TelegramSurface.from_telegram_update_to_message(
             GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
@@ -234,7 +248,7 @@ def server_error(e):
 
     For 500 error, see docs at http://flask.pocoo.org/docs/0.12/api/#flask.Flask.handle_exception
     """
-    logging.exception('An error occurred during a request.')
+    _logger.exception('An error occurred during a request.')
     return """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.

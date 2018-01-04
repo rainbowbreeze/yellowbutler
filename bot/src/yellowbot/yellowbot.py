@@ -12,6 +12,7 @@ from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
 from yellowbot.globalbag import GlobalBag
+from yellowbot.loggingservice import LoggingService
 from yellowbot.nluengine import NluEngine
 from yellowbot.schedulerservice import SchedulerService
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
@@ -46,6 +47,11 @@ class YellowBot:
         features are disabled
         :type test_mode: bool
         """
+
+        # Create the logger and initialise it
+        self._logger = LoggingService.get_logger(__name__)
+        self._logger.debug("YellowBot starting INFO")
+        self._logger.info("YellowBot starting INFO")
 
         # Load the config file
         self._load_config_file(config_file)
