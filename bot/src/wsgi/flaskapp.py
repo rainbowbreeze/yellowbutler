@@ -63,7 +63,7 @@ FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_
 
 def receive_message_thread(yellowbot, message):
     """
-    Thead function to send messages to YellowBot
+    Thread function to send messages to YellowBot
 
     :param yellowbot:
     :type yellowbot: YellowBot
@@ -76,7 +76,7 @@ def receive_message_thread(yellowbot, message):
 
 def tick_scheduler_thread(yellowbot):
     """
-    Thead function to launch the scheduler service in YellowBot
+    Therad function to launch the scheduler service in YellowBot
 
     :param yellowbot:
     :type yellowbot: YellowBot
@@ -165,9 +165,8 @@ def process_scheduler():
     """
     Called by the App Engine job scheduler, triggers a check in the scheduler
     :return: The code should return an HTTP status code within the range
-    200–299 to indicate success. Any other code indicates that the task failed.
+    200-299 to indicate success. Any other code indicates that the task failed.
     """
-
     _logger.info("API call for Scheduler arrived")
 
     # Find the authorization key
@@ -180,7 +179,7 @@ def process_scheduler():
     t = threading.Thread(
         name="Scheduler",
         target=tick_scheduler_thread,
-        args=(yellowbot,))  # Final , is the disambiguate a tuple of parameters instead of a string
+        args=(yellowbot,))  # Final , is to disambiguate a tuple of parameters instead of a string
     t.start()
     return make_response("OK", 200)
 
@@ -202,9 +201,10 @@ def telegram_webhook_lurch():
 
     # Checks if the message is authorized
     auth_key = TelegramSurface.from_telegram_update_to_auth_key(update)
-    # None or invalid auth key
 
+    # None or invalid auth key
     if not yellowbot.is_client_authorized(auth_key):
+        _logger.info("Notify admin about the unauthorized access from Telegram")
         # Send an alert message to admin channel
         try:
             yellowbot.notify_admin(
@@ -218,7 +218,7 @@ def telegram_webhook_lurch():
         except KeyError:
             # Any other error is re-raised after the finally clause has been executed
             # Look at https://docs.python.org/3.6/tutorial/errors.html#defining-clean-up-actions
-            pass
+            _logger.error("Message from Telegram Lurch does not have the right fields\n %s", update)
         finally:
             # Send an 200, otherwise with 401 or other error codes Telegram
             #  keeps sending the message over and over. But in the data field

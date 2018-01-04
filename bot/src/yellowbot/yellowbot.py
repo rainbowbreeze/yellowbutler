@@ -50,8 +50,7 @@ class YellowBot:
 
         # Create the logger and initialise it
         self._logger = LoggingService.get_logger(__name__)
-        self._logger.debug("YellowBot starting INFO")
-        self._logger.info("YellowBot starting INFO")
+        self._logger.info("YellowBot is starting")
 
         # Load the config file
         self._load_config_file(config_file)
@@ -319,13 +318,18 @@ class YellowBot:
 
         # Extracts the current time, only the hour part
         check_time = self._scheduler.get_current_hour()
+        self._logger.info("Processing scheduler for time %s", check_time)
 
         # Checks for tasks scheduled for the current hour
         tasks = self._scheduler.find_tasks_for_time(check_time)
 
-        # Executes them
-        for task in tasks:
-            result = self.process_intent(task.intent, task.params)
-            if result is not None and task.surface is not None:
-                task.surface.text = result
-                self.send_message(task.surface)
+        if 0 == len(tasks):
+            self._logger.info("No scheduled tasks found to process at the given time")
+        else:
+            # Executes them
+            for task in tasks:
+                self._logger.info("Executing scheduler task %s", task.name)
+                result = self.process_intent(task.intent, task.params)
+                if result is not None and task.surface is not None:
+                    task.surface.text = result
+                    self.send_message(task.surface)
