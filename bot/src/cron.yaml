@@ -1,0 +1,10 @@
+cron:
+- description: "daily summary job"
+  url: /yellowbot/api/v1.0/scheduler
+  schedule: every day at 7:00
+  timezone: CET
+
+- description: "daily summary job"
+  url: /yellowbot/api/v1.0/scheduler
+  schedule: every Monday,Tuesday, Wednesday, Thursday, Friday 18:46
+  timezone: CET
