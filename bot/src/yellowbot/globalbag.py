@@ -29,7 +29,10 @@ class GlobalBag:
 
     # Database file name
     DATABASE_FILE = "yellowbot_db.json"
+    # File with the configurations
     CONFIG_FILE = "yellowbot_config.json"
+    # File with the tasks for the scheduler service
+    SCHEDULER_FILE = "yellowbot_tasks.json"
 
     # Quick and dirty way to setup a proper test environment
     TEST_ENVIRONMENT = False

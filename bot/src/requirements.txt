@@ -2,12 +2,6 @@
 flask
 # ---
 
-# Telegram part
-urllib3
-telepot
-# ---
-
-
 # Test
 pytest
 # ---
@@ -20,9 +14,20 @@ tinydb
 gunicorn
 # ---
 
-# Misc
-json_minify
+# EasyNido gear
 beautifulsoup4
 requests
+# ---
+
+# Telegram support
+urllib3
+telepot
+# ---
+
+# Misc
+# To parse json files for configuration, tasks etc
+json_minify
+# For date and time management
+arrow
 # ---
 

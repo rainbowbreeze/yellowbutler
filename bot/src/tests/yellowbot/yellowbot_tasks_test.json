@@ -1,10 +1,11 @@
 [
   // File for scheduler service tests
+  // Time format: https://en.wikipedia.org/wiki/ISO_8601#Times
 
   // A complete task with all the fields
   {
     "name": "test_task_name_1",
-    "when": "06:00 CET",
+    "when": "06:00+00",
     "intent": "name_of_the_intent_1",
     "params": {
       "param_key_1": "param_value_1",
@@ -18,7 +19,7 @@
   // A good mix between optional fields
   {
     "name": "test_task_name_2",
-    "when": "20:00 CET",
+    "when": "20:00+04",
     "intent": "name_of_the_intent_2",
     "params": {
       "param_key_3": "param_value_3"
@@ -30,7 +31,7 @@
   // Only the very mandatory fields
   {
     "name": "test_task_name_3",
-    "when": "15:00 UTC",
+    "when": "15:00+03:30",
     "intent": "name_of_the_intent_3"
   }
 ]

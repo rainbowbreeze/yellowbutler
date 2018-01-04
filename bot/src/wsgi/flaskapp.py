@@ -142,6 +142,16 @@ def process_intent():
         )
 
 
+@app.route('{}/scheduler'.format(FLASK_BASE_API_ADDRESS), methods=['POST'])
+def process_scheduler():
+    """
+    Called by the scheduler, triggers a check in the scheduler
+    :return: The code should return an HTTP status code within the range
+    200–299 to indicate success. Any other code indicates that the task failed.
+    """
+    pass
+
+
 @app.route(FLASK_TELEGRAM_BOT_LURCH_WEBHOOK, methods=["POST"])
 def telegram_webhook_lurch():
     """

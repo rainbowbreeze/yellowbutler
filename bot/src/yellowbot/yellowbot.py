@@ -13,7 +13,7 @@ from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.nluengine import NluEngine
-from yellowbot.surfaces.notifyadminsurface import NotifyAdminSurface
+from yellowbot.schedulerservice import SchedulerService
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 from yellowbot.surfaces.telegramnotifyadminsurface import TelegramNotifyAdminSurface
 from yellowbot.surfaces.telegramsurface import TelegramSurface
@@ -26,6 +26,7 @@ class YellowBot:
 
     def __init__(self,
                  nlu_engine=None,
+                 scheduler=None,
                  config_file=GlobalBag.CONFIG_FILE,
                  test_mode=False
                  ):
@@ -57,15 +58,15 @@ class YellowBot:
         self._surfaces = {}
         self._register_interaction_surfaces(test_mode)
 
-        # Register gears
+        # Registers gears
         self._gears = []
         self._register_gears()
 
-        # Assign the NLU engine
-        if nlu_engine is None:
-            self.nlu_engine = NluEngine()
-        else:
-            self.nlu_engine = nlu_engine
+        # Assigns the NLU engine
+        self._nlu_engine = nlu_engine if nlu_engine is not None else NluEngine()
+
+        # Assigns the scheduler service
+        self._scheduler = scheduler if scheduler is not None else SchedulerService(GlobalBag.SCHEDULER_FILE)
 
     def _load_config_file(self, config_file):
         """
@@ -110,7 +111,7 @@ class YellowBot:
         self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN] = TelegramNotifyAdminSurface(
             GlobalBag.SURFACE_NOTIFY_ADMIN,
             self.get_config("telegram_notifyadmin_authorization_token"),
-            self.get_config("telegram_notifyadmin_chat"),
+            self.get_config("telegram_notifyadmin_chat_id"),
             running_on_pythonanywhere=running_on_pythonanywhere,
             test_mode=test_mode
         )
@@ -250,7 +251,7 @@ class YellowBot:
         # Checks for authorization
 
         # Then, finds how to process the message
-        intent, params = self.nlu_engine.infer_intent_and_args(message.text)
+        intent, params = self._nlu_engine.infer_intent_and_args(message.text)
         # If an intent is matched, process the intent and return the result
         #  of the operation
 
@@ -301,3 +302,24 @@ class YellowBot:
         else:
             return "No gear to process your intent"
 
+    def tick_scheduler(self):
+        """
+        Check for tasks to run for the scheduler service and, in case,
+         executes them.
+
+        Right now, only the hour is taken into account
+        :return:
+        """
+
+        # Extracts the current time, only the hour part
+        check_time = None
+
+        # Checks for tasks
+        tasks = self._scheduler.find_tasks_for_time(check_time)
+
+        # Executes them
+        for task in tasks:
+            result = self.process_intent(task.intent, task.params)
+            if result is not None and task.surface is not None:
+                task.surface.text = result
+                self.send_message(task.surface)

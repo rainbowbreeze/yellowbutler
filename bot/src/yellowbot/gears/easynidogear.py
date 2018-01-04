@@ -1,5 +1,10 @@
 """
 Gear to analyse results from Easynido
+
+Dependencies
+* beautifulsoup4
+* requests
+
 """
 import requests
 from bs4 import BeautifulSoup
