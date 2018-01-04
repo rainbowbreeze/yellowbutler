@@ -234,10 +234,12 @@ class YellowBot:
             if GlobalBag.SURFACE_NOTIFY_ADMIN in self._surfaces\
             else None
         if admin_surface is not None:
+            self._logger.info("Notify admin about %s", text)
             # Creates a new message and dispatch it
             message = admin_surface.forge_notification(text)
             return admin_surface.send_message(message)
         else:
+            self._logger.info("Cannot notify admin about %s", text)
             raise ValueError("Cannot find an admin surface to process message for {}".format(GlobalBag.SURFACE_NOTIFY_ADMIN))
 
     def receive_message(self, message):
