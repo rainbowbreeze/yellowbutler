@@ -57,17 +57,27 @@ FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_
 # See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
 
 
-def receive_message_thread(yellobot, message):
+def receive_message_thread(yellowbot, message):
     """
     Thead function to send messages to YellowBot
 
-    :param yellobot:
-    :type yellobot: YellowBot
+    :param yellowbot:
+    :type yellowbot: YellowBot
 
     :param message: the message to send
     :type message: SurfaceMessage
     """
     yellowbot.receive_message(message)
+
+
+def tick_scheduler_thread(yellowbot):
+    """
+    Thead function to launch the scheduler service in YellowBot
+
+    :param yellowbot:
+    :type yellowbot: YellowBot
+    """
+    yellowbot.tick_scheduler()
 
 
 @app.route("/")
@@ -156,7 +166,11 @@ def process_scheduler():
     if not yellowbot.is_client_authorized(auth_key):
         abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
 
-    yellowbot.tick_scheduler()
+    t = threading.Thread(
+        name="Scheduler",
+        target=tick_scheduler_thread,
+        args=(yellowbot,))  # Final , is the disambiguate a tuple of parameters instead of a string
+    t.start()
     return make_response("OK", 200)
 
 
