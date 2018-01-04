@@ -131,7 +131,6 @@ class YellowBot:
             test_mode=test_mode
         )
 
-
     def _register_gears(self):
         """
         Registers all the gears in the bot
