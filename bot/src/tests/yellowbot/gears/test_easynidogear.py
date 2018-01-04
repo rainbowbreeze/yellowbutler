@@ -21,11 +21,10 @@ class TestEasyNidoGear(TestCase):
         pass
 
     def test_parseData(self):
-        pass
-
         # Uncomment to show parsing result, but test will fail
         #parsed = self._gear.parse_webservice_data(self._testdata1)
         #print(parsed)
         #assert 2 == 1
+        pass
 
 

@@ -1,5 +1,5 @@
 """
-Test for the NLU engine
+Test for Music gear
 """
 from unittest import TestCase
 

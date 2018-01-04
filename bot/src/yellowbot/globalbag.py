@@ -23,6 +23,10 @@ class GlobalBag:
     TRACE_MUSIC_PARAM_TITLE = "title"
     TRACE_MUSIC_PARAM_AUTHOR = "author"
 
+    # Weather forecast
+    WEATHER_FORECAST_INTENT = "weather_forecast"
+    WEATHER_FORECAST_PARAM_LOCATION = "location"
+
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
     SURFACE_NOTIFY_ADMIN = "NotifyAdmin"  # Notification channel for admin
