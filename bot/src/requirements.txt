@@ -19,10 +19,6 @@ beautifulsoup4
 requests
 # ---
 
-# Weather gear
-weather-api
-# ---
-
 # Telegram support
 urllib3
 telepot
