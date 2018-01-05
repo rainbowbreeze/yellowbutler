@@ -52,6 +52,7 @@ class TelegramSurface(BaseInteractionSurface):
         self._test_mode = test_mode
         if not self._test_mode:
             self._init_pythonanywhere(running_on_pythonanywhere)
+            self._fix_connection_reset_error()
             self.telegram_bot = telepot.Bot(auth_token)
             self._set_webhook(webhook_url)
 
@@ -87,6 +88,21 @@ class TelegramSurface(BaseInteractionSurface):
         telepot.api._onetime_pool_spec = (
             urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
         # end of the stuff that's only needed for free accounts
+
+    def _fix_connection_reset_error(self):
+        """
+        Tries to fix ConnectionResetError: [Errno 104] Connection reset by peer.
+        It happens first time a request is sent to the bot via Telegram,
+         and the bot doesn't reply, but the request is processed. Simply,
+         the telepot library is unable to send a reply to Telegram
+
+
+        Reference on https://github.com/nickoala/telepot/issues/87#issuecomment-235173302
+        :return:
+        """
+        telepot.api._pools = {
+            'default': urllib3.PoolManager(num_pools=3, maxsize=10, retries=3, timeout=30),
+        }
 
     def _set_webhook(self, new_webhook_url):
         """
@@ -164,3 +180,4 @@ class TelegramSurface(BaseInteractionSurface):
         except TypeError:
             # Wrong types in the fields
             return None
+
