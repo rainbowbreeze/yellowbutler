@@ -1,10 +1,11 @@
 cron:
-- description: "daily summary job"
-  url: /yellowbot/api/v1.0/scheduler
-  schedule: every day 07:00
-  timezone: CET
 
-- description: "daily summary job"
+- description: "Daily summary job"
+  url: /yellowbot/api/v1.0/scheduler
+  schedule: every day 07:01
+  timezone: Europe/Rome
+
+- description: "End of day reporting"
   url: /yellowbot/api/v1.0/scheduler
   schedule: every day 18:05
-  timezone: CET
+  timezone: Europe/Rome

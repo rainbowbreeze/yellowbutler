@@ -169,11 +169,16 @@ def process_scheduler():
     """
     _logger.info("API call for Scheduler arrived")
 
-    # Find the authorization key
-    auth_key = request.headers.get("X-Authorization")
-    # None or invalid auth key
-    if not yellowbot.is_client_authorized(auth_key):
-        abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+    # AppEngine special auth key?
+    # See at https://cloud.google.com/appengine/docs/flexible/python/scheduling-jobs-with-cron-yaml
+    #  section "Validating Cron Requests"
+    auth_key = request.headers.get("X-Appengine-Cron")
+    if not auth_key:
+        # Find the authorization key using the usual way
+        auth_key = request.headers.get("X-Authorization")
+        # None or invalid auth key
+        if not yellowbot.is_client_authorized(auth_key):
+            abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
 
     _logger.info("Routing call for scheduler")
     t = threading.Thread(
