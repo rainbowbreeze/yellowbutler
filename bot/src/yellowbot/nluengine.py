@@ -34,6 +34,15 @@ class NluEngine:
             intent = GlobalBag.EASYNIDO_INTENT_REPORT
             return intent, params
 
+        # Check for weather intent
+        headers = ["weather", "meteo", "tempo"]
+        for header in headers:
+            if message.lower().startswith(header):
+                intent = GlobalBag.WEATHER_FORECAST_INTENT
+                location_name = message[len(header):].strip()
+                params[GlobalBag.WEATHER_FORECAST_PARAM_LOCATION] = location_name
+                return intent, params
+
         # Checks for Music Trace intent
         # SoundHound word is the word trigger
         if message.lower().find("soundhound") > 0:

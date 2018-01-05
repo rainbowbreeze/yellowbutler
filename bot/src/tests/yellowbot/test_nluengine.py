@@ -50,3 +50,15 @@ class TestNluEngine(TestCase):
         assert GlobalBag.TRACE_MUSIC_PARAM_TITLE in params
         assert params.get(GlobalBag.TRACE_MUSIC_PARAM_TITLE) == "Who Do You Love?"
 
+    def test_weather_rules(self):
+        sentence = "Weather Pavia"
+        intent, params = self.nlu_engine.infer_intent_and_args(sentence)
+        assert intent == GlobalBag.WEATHER_FORECAST_INTENT
+        assert GlobalBag.WEATHER_FORECAST_PARAM_LOCATION in params
+        assert params.get(GlobalBag.WEATHER_FORECAST_PARAM_LOCATION) == "Pavia"
+
+        sentence = "Meteo Milano, Italy"
+        intent, params = self.nlu_engine.infer_intent_and_args(sentence)
+        assert intent == GlobalBag.WEATHER_FORECAST_INTENT
+        assert GlobalBag.WEATHER_FORECAST_PARAM_LOCATION in params
+        assert params.get(GlobalBag.WEATHER_FORECAST_PARAM_LOCATION) == "Milano, Italy"
