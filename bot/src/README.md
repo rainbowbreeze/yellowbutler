@@ -137,6 +137,11 @@ gcloud config configurations activate yellowbot
 Reference: https://www.the-swamp.info/blog/configuring-gcloud-multiple-projects/
 
 
+** SCHEDULER
+Create a cron.yaml following https://cloud.google.com/appengine/docs/flexible/python/scheduling-jobs-with-cron-yaml
+gcloud app deploy cron.yaml --verbosity debug --quiet
+
+
  
 Create a new webapp
 
