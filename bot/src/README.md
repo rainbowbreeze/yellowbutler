@@ -122,6 +122,20 @@ Deploy the app
  To see logs in the Cloud Console: https://console.cloud.google.com/gcr/builds/adf5a006-f112-4dc4-9d59-86ed1d99b37b?project=yellowbutler-190521
 
 
+To deploy from local machine
+
+gcloud config configurations list
+ to check the active configuration and the list of configurations
+gcloud init
+ and select to create a new configuration to connect a new account to the project id
+once finished the usual command to deploy the app
+gcloud app deploy -v 1 --quiet
+
+gcloud config configurations activate yellowbot
+ to switch among configurations
+
+Reference: https://www.the-swamp.info/blog/configuring-gcloud-multiple-projects/
+
 
  
 Create a new webapp
