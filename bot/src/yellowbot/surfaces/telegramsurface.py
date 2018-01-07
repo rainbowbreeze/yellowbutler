@@ -4,6 +4,7 @@ Class to interact with Telegram surface
 import telepot
 import urllib3
 
+from yellowbot.loggingservice import LoggingService
 from yellowbot.surfaces.baseinteractionsurface import BaseInteractionSurface
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
@@ -49,10 +50,12 @@ class TelegramSurface(BaseInteractionSurface):
         """
         BaseInteractionSurface.__init__(self, surface_name)
         # Initialise and interact with Telegram only if not in test mode
+        self._logger = LoggingService.get_logger(__name__)
+
         self._test_mode = test_mode
         if not self._test_mode:
-            self._init_pythonanywhere(running_on_pythonanywhere)
             self._fix_connection_reset_error()
+            self._init_pythonanywhere(running_on_pythonanywhere)
             self.telegram_bot = telepot.Bot(auth_token)
             self._set_webhook(webhook_url)
 
@@ -100,9 +103,16 @@ class TelegramSurface(BaseInteractionSurface):
         Reference on https://github.com/nickoala/telepot/issues/87#issuecomment-235173302
         :return:
         """
+        self._logger.info("Applying ConnectionResetError fixes")
         telepot.api._pools = {
             'default': urllib3.PoolManager(num_pools=3, maxsize=10, retries=3, timeout=30),
         }
+
+        def force_independent_connection(req, **user_kw):
+            return None
+        telepot.api._which_pool = force_independent_connection
+
+        telepot.api._onetime_pool_spec = (urllib3.PoolManager, dict(num_pools=1, maxsize=1, retries=3, timeout=30))
 
     def _set_webhook(self, new_webhook_url):
         """
@@ -125,9 +135,10 @@ class TelegramSurface(BaseInteractionSurface):
         # With get, it also checks for the existence of the key in the dict.
         #  If it doesn't exists, return None
         if webhook_info.get('url') != new_webhook_url:
+            self._logger.info("Setting webhook to %s", new_webhook_url)
             self.telegram_bot.setWebhook(
                 new_webhook_url,
-                max_connections=1)
+                max_connections=2)
 
     @staticmethod
     def from_telegram_update_to_message(surface_name, update):

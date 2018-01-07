@@ -9,3 +9,13 @@ cron:
   url: /yellowbot/api/v1.0/scheduler
   schedule: every day 18:05
   timezone: Europe/Rome
+
+- description: "Test 1"
+  url: /yellowbot/api/v1.0/scheduler
+  schedule: every day 13:00
+  timezone: Europe/Rome
+
+- description: "Test 1"
+  url: /yellowbot/api/v1.0/scheduler
+  schedule: every day 16:00
+  timezone: Europe/Rome
