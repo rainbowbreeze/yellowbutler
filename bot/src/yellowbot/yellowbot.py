@@ -251,7 +251,7 @@ class YellowBot:
         :param message: the message received that needs to be handled
         :type message: SurfaceMessage
 
-        :return: TBD
+        :return: the interaction surface sending message operation result, TBD
         """
         if not message:
             self._logger.info("A message was received, but has no data inside")

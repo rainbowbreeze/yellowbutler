@@ -6,6 +6,7 @@ Requirements
 """
 from yellowbot.gears.basegear import BaseGear
 from yellowbot.globalbag import GlobalBag
+from yellowbot.loggingservice import LoggingService
 
 
 class EchoMessageGear(BaseGear):
@@ -18,13 +19,11 @@ class EchoMessageGear(BaseGear):
 
     def __init__(self):
         BaseGear.__init__(self, EchoMessageGear.__name__, self.INTENTS)
-
-    def _check_parameters(self, params):
-        return EchoMessageGear.PARAM_MESSAGE in params
+        self._logger = LoggingService.get_logger(__name__)
 
     def process_intent(self, intent, params):
-        if not self._check_parameters(params):
-            raise ValueError("Cannot find one of the following parameters: {}".format(EchoMessageGear.PARAM_MESSAGE))
+        if EchoMessageGear.PARAM_MESSAGE not in params:
+            return "Missing {} parameter in the request".format(EchoMessageGear.PARAM_MESSAGE)
 
         # Very simply gear: return the message passed as input
         return params.get(EchoMessageGear.PARAM_MESSAGE)

@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 
 from yellowbot.gears.basegear import BaseGear
 from yellowbot.globalbag import GlobalBag
+from yellowbot.loggingservice import LoggingService
 
 
 class EasyNidoGear(BaseGear):
@@ -35,9 +36,7 @@ class EasyNidoGear(BaseGear):
         self._username = email
         self._password = password
         self._idbambino = idbambino
-
-    def _check_parameters(self, params):
-        return True
+        self._logger = LoggingService.get_logger(__name__)
 
     def process_intent(self, intent, params):
         webservice_data = self._obtain_webservice_data()

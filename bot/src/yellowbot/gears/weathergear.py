@@ -26,9 +26,6 @@ class WeatherGear(BaseGear):
         BaseGear.__init__(self, WeatherGear.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
 
-    def _check_parameters(self, params):
-        return WeatherGear.PARAM_LOCATION in params
-
     def process_intent(self, intent, params):
         """
         How Yahoo weather works
@@ -45,6 +42,9 @@ class WeatherGear(BaseGear):
         :param params:
         :return:
         """
+        if WeatherGear.PARAM_LOCATION not in params:
+            return "Missing {} parameter in the request".format(WeatherGear.PARAM_LOCATION)
+
         location_name = params[WeatherGear.PARAM_LOCATION]
         self._logger.info("Searching weather condition for %s", location_name)
 

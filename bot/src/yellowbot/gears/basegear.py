@@ -27,18 +27,6 @@ class BaseGear:
                 return True
         return False
 
-    def _check_parameters(self, params):
-        """
-        Check if parameters are enough to process the intent or something is missing
-
-        :param params:
-        :type params: dict
-
-        :return: True if all the mandatory params are present, otherwise False
-        :rtype: bool
-        """
-        raise ValueError("Parameters check for gear {} not implemented".format(self._gear_name))
-
     def process_intent(self, intent, params):
         """
         Process the intent. Need to be implemented in every subclass
