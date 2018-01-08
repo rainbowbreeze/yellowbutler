@@ -12,10 +12,5 @@ cron:
 
 - description: "Test 1"
   url: /yellowbot/api/v1.0/scheduler
-  schedule: every day 13:00
-  timezone: Europe/Rome
-
-- description: "Test 1"
-  url: /yellowbot/api/v1.0/scheduler
-  schedule: every day 16:00
+  schedule: every day 15:00
   timezone: Europe/Rome
