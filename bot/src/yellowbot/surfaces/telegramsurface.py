@@ -1,6 +1,8 @@
 """
 Class to interact with Telegram surface
 """
+import logging
+
 import telepot
 import urllib3
 
@@ -20,6 +22,10 @@ class TelegramSurface(BaseInteractionSurface):
      YellowBot, that have their own names and configurations in Telegram,
      but are all part of the same "brain" under the hood
     """
+
+    # Define if fixes for various environments have been applied
+    _FIX_ConnectionResetError_APPLIED = False
+    _FIX_PythonAnywhereFree_APPLIED = False
 
     def __init__(self,
                  surface_name,
@@ -82,6 +88,11 @@ class TelegramSurface(BaseInteractionSurface):
         if not running_on_pythonanywhere_free:
             return
 
+        if TelegramSurface._FIX_PythonAnywhereFree_APPLIED:
+            return
+
+        self._logger.info("Applying PythonAnywhere Free fix")
+
         # You can leave this bit out if you're using a paid PythonAnywhere account
         # https://help.pythonanywhere.com/pages/403ForbiddenError/
         proxy_url = "http://proxy.server:3128"
@@ -92,6 +103,8 @@ class TelegramSurface(BaseInteractionSurface):
             urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
         # end of the stuff that's only needed for free accounts
 
+        TelegramSurface._FIX_PythonAnywhereFree_APPLIED = True
+
     def _fix_connection_reset_error(self):
         """
         Tries to fix ConnectionResetError: [Errno 104] Connection reset by peer.
@@ -99,20 +112,33 @@ class TelegramSurface(BaseInteractionSurface):
          and the bot doesn't reply, but the request is processed. Simply,
          the telepot library is unable to send a reply to Telegram
 
-
         Reference on https://github.com/nickoala/telepot/issues/87#issuecomment-235173302
+
+        I tried different combos for the settings (telepot.api._pools,
+         force_independent_connection and _onetime_pool_spec) and it seems
+         that only force_independent_connection is required to solve the issue
+        I'm leaving the code commented for future references and (hopefully
+          not) future issues
+
         :return:
         """
-        self._logger.info("Applying ConnectionResetError fixes")
-        telepot.api._pools = {
-            'default': urllib3.PoolManager(num_pools=3, maxsize=10, retries=3, timeout=30),
-        }
+
+        if TelegramSurface._FIX_ConnectionResetError_APPLIED:
+            return
+
+        self._logger.info("Applying ConnectionResetError fix")
+
+        # telepot.api._pools = {
+        #     'default': urllib3.PoolManager(num_pools=3, maxsize=10, retries=3, timeout=30),
+        # }
 
         def force_independent_connection(req, **user_kw):
-            return None
+           return None
         telepot.api._which_pool = force_independent_connection
 
-        telepot.api._onetime_pool_spec = (urllib3.PoolManager, dict(num_pools=1, maxsize=1, retries=3, timeout=30))
+        # telepot.api._onetime_pool_spec = (urllib3.PoolManager, dict(num_pools=1, maxsize=1, retries=3, timeout=30))
+
+        TelegramSurface._FIX_ConnectionResetError_APPLIED = True
 
     def _set_webhook(self, new_webhook_url):
         """
@@ -139,6 +165,8 @@ class TelegramSurface(BaseInteractionSurface):
             self.telegram_bot.setWebhook(
                 new_webhook_url,
                 max_connections=2)
+        else:
+            self._logger.info("Webhook is already set to %s", webhook_info.get('url'))
 
     @staticmethod
     def from_telegram_update_to_message(surface_name, update):
