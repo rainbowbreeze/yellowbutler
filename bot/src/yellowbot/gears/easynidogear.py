@@ -157,7 +157,7 @@ class EasyNidoGear(BaseGear):
             if day is not None:
                 # Day block, get the day
                 for day_text in day.stripped_strings:
-                    events.append(day_text)
+                    events.append("*{}*".format(day_text))
 
             # Second option: there is an activity sub-block inside this block
             # Same here, searching top-level class "col-xs-12 ptn pbn prn pln"
@@ -172,7 +172,7 @@ class EasyNidoGear(BaseGear):
                         if not act_title.startswith("Ed. "):
                             events.append(" {}: {}".format(time, act_title))
                     for act_detail in activity.find_all("span", class_="testo-black"):
-                        events.append("   {}".format(act_detail.get_text()))
+                        events.append("   _{}_".format(act_detail.get_text()))
 
             # Move to the next block, the one with an activity
             root = root.next_sibling
