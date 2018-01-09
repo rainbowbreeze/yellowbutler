@@ -193,9 +193,9 @@ class TestFlaskApp(TestCase):
             content_type="application/json",
             follow_redirects=True
         )
-        assert 400 == response.status_code
+        assert 200 == response.status_code
         assert "application/json" == response.mimetype
-        assert "Cannot find one of the following parameters: message" == json.loads(response.get_data())["message"]
+        assert "Missing message parameter in the request" == json.loads(response.get_data())["message"]
 
         # Good intent, but wrong parameters
         data = {
@@ -209,9 +209,9 @@ class TestFlaskApp(TestCase):
             content_type="application/json",
             follow_redirects=True
         )
-        assert 400 == response.status_code
+        assert 200 == response.status_code
         assert "application/json" == response.mimetype
-        assert "Cannot find one of the following parameters: message" == json.loads(response.get_data())["message"]
+        assert "Missing message parameter in the request" == json.loads(response.get_data())["message"]
 
         # Finally, Good intent and good parameters
         data = {

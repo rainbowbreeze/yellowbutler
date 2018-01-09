@@ -66,7 +66,7 @@ class YellowBot:
 
         # Registers gears
         self._gears = []
-        self._register_gears()
+        self._register_gears(test_mode)
 
         # Assigns the NLU engine
         self._nlu_engine = nlu_engine if nlu_engine is not None else NluEngine()
@@ -131,11 +131,18 @@ class YellowBot:
             test_mode=test_mode
         )
 
-    def _register_gears(self):
+    def _register_gears(self, test_mode):
         """
         Registers all the gears in the bot
+
+        :param test_mode: class instance created for test purposes, some
+        features are disabled
+        :type test_mode: bool
         """
-        self._gears.append(MusicGear())
+        self._gears.append(MusicGear(
+            self.get_config("tracemusic_destination_url"),
+            test_mode
+        ))
         self._gears.append(EchoMessageGear())
         self._gears.append(WeatherGear())
         self._gears.append(EasyNidoGear(

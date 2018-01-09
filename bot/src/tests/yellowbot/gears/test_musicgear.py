@@ -9,7 +9,7 @@ from yellowbot.globalbag import GlobalBag
 
 class TestMusicGear(TestCase):
     def setUp(self):
-        self._gear = MusicGear()
+        self._gear = MusicGear("test_url", True)
         pass
 
     def tearDown(self):
@@ -24,4 +24,4 @@ class TestMusicGear(TestCase):
             }
         )
 
-        assert "Sorry, I still don't know how to keep track of Title1 by Author1" == result
+        assert "Title1 by Author1 has been added" == result
