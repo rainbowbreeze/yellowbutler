@@ -118,6 +118,7 @@ def process_intent():
 
     # None or invalid auth key
     if not yellowbot.is_client_authorized(auth_key):
+        _logger.warning("Unauthorized access registered with key %s", auth_key)
         abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
 
     # Extract the intent from the request
