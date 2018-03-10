@@ -120,6 +120,7 @@ Deploy the app
  fingers crossed
  gcloud app browse
  To see logs in the Cloud Console: https://console.cloud.google.com/gcr/builds/adf5a006-f112-4dc4-9d59-86ed1d99b37b?project=yellowbutler-190521
+(gcloud app deploy -v 1 --quit)
 
 
 To deploy from local machine

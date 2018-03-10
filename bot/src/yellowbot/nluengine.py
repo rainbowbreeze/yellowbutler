@@ -51,17 +51,24 @@ class NluEngine:
                 # Italian language
                 begin_search_string = "Appena usato SoundHound per trovare "
                 separator_string = " di "
+                end_string = "https://"
+            elif message.lower().startswith("ho trovato "):
+                # English language
+                begin_search_string = "Ho trovato "
+                separator_string = " di "
+                end_string = " con SoundHound, credo che ti piacer"
             elif message.lower().startswith("just used"):
                 # English language
                 begin_search_string = "Just used SoundHound to find "
                 separator_string = " by "
+                end_string = "https://"
             else:
                 # Unknown language
                 begin_search_string = None
 
             if begin_search_string:
-                end_pos = message.find("https://")
-                title_and_author = message[len(begin_search_string):end_pos-1].strip()
+                end_pos = message.find(end_string)
+                title_and_author = message[len(begin_search_string):end_pos].strip()
                 end_pos = title_and_author.find(separator_string)
                 title = title_and_author[:end_pos].strip()
                 author = title_and_author[end_pos + len(separator_string):].strip()

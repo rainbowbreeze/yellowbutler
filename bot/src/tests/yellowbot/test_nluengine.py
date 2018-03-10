@@ -50,6 +50,15 @@ class TestNluEngine(TestCase):
         assert GlobalBag.TRACE_MUSIC_PARAM_TITLE in params
         assert params.get(GlobalBag.TRACE_MUSIC_PARAM_TITLE) == "Who Do You Love?"
 
+
+        sentence = "Ho trovato Highway Tune di Greta Van Fleet con SoundHound, credo che ti piacerà! https://bnc.lt/Scoe/q7QjpeW5zD"
+        intent, params = self.nlu_engine.infer_intent_and_args(sentence)
+        assert intent == GlobalBag.TRACE_MUSIC_INTENT
+        assert GlobalBag.TRACE_MUSIC_PARAM_AUTHOR in params
+        assert params.get(GlobalBag.TRACE_MUSIC_PARAM_AUTHOR) == "Greta Van Fleet"
+        assert GlobalBag.TRACE_MUSIC_PARAM_TITLE in params
+        assert params.get(GlobalBag.TRACE_MUSIC_PARAM_TITLE) == "Highway Tune"
+
     def test_weather_rules(self):
         sentence = "Weather Pavia"
         intent, params = self.nlu_engine.infer_intent_and_args(sentence)
