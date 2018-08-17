@@ -1,24 +1,57 @@
 ** CREATE THE ENVIRONMENT
 
-** PYCHARM
+Install python 3.7 in Linux or in MacOS with brew
+git clone https://github.com/rainbowbreeze/yellowbutler.git master
+cd bot/src
 
-
-
-https://docs.python.org/3/library/venv.html
+From https://docs.python.org/3/library/venv.html
 python3 -m venv venv
 (last venv is the venv name)
 
 source venv/bin/activate
+pip install -r requirements.txt
 deactivate
 
-pip install  -r requirements.txt
 
-To configure inside PyCharm, I first create a venv for the new project, selecting the python interpreter in brew.
-Alternatively, create the venv in Pycharm, then from command line remove it and create a new one using python3 and rename the venv in the project preferences
+* PYCHARM 2018.2 CONFIG
+
+File -> New Project
+  Location bot/src
+  Project Interpreter
+    New environment using: Virtualenv
+    Location: bot/src/venv
+    Base interpreter: python 3.7
+PyCharm creates global virtualenv by default, so rename the venv folder with something else, create the project, then rename back venv folder.
+File -> Settings
+  Project Interpreter
+    Select the venv just created under the project folder
+Everything should work under Python in this way
 
 
-** LINUX INSTALL
-sudo snap install gcloud
+** RUN
+
+from CL
+  export FLASK_APP=wsgi/flaskapp.py
+  flask run
+  (if run with python wsgi/flaskapp.py, it doesn't work)
+from PyCharm
+  go to wsgi/flaskapp.py and run it. If there is an error with config file, read under the wrong directory, edit the run configuration and set bot/src as working path
+
+
+** TEST
+using PyTest: https://docs.pytest.org/en/latest/
+http://pytest.readthedocs.io/en/latest/goodpractices.html
+
+from the project root, run pytest
+
+
+** CONFIGURATION
+https://martin-thoma.com/configuration-files-in-python/
+https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
+
+
+
+
 
 
 ** FLASK
@@ -42,58 +75,53 @@ if __name__ == '__main__':
     app.run(debug=True)
 ---
 
-from PyCharm, click on app.py and "Run app"
-from CL
- export FLASK_APP=wsgi/flaskapp.py
- flask run
-
-
-** TEST
-using PyTest: https://docs.pytest.org/en/latest/
-http://pytest.readthedocs.io/en/latest/goodpractices.html
-
-from the project root, run pytest
-
-
-** CONFIGURATION
-https://martin-thoma.com/configuration-files-in-python/
-https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
-
 
 ** APPENGINE
-https://cloud.google.com/appengine/docs/flexible/python/quickstart
 
-https://console.cloud.google.com/projectselector/appengine/create?lang=flex_python&st=true&_ga=2.125561612.704564983.1514577758-1153595002.1514577758
-create project yellowbutler
+* LINUX INSTALL
+sudo snap install gcloud
+gcloud auth login
+gcloud config set project PROJECT_ID
+gcloud app deploy
+  gcloud topic gcloudignore
 
-Copy the project
- Open a CloudShell
-   rainbowbreeze_dev@yellowbutler-190521
+
+* GAE Standard python 3.7
+https://cloud.google.com/appengine/docs/standard/python3
+https://cloud.google.com/appengine/docs/standard/python3/building-app
+Create a new AppEngine project and enable billing, otherwise deploy won't work.
+No need to vendoring libraries, they're added using requirements.txt file in the project root
+Logging: gcloud app logs tail -s default
+
+
+* Cloud Shell
+ Open a CloudShell from the project
+   rainbowbreeze_dev@yellowbutler-213621
    /home/rainbowbreeze_dev
  git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
  cd yellowbutler/bot/src
- virtualenv --python=python3.4 venv
+ virtualenv --python=python3.7 venv
  source venv/bin/activate
  pip install -r requirements.txt
  
-Test the app
- export FLASK_APP=wsgi/flaskapp.py
- flask run
- (if run with python wsgi/flaskapp.py, it doesn't work)
-
 Deploy the app
- Changed app.yaml adding the right module name, using dotted notation
-  entrypoint: gunicorn -b :$PORT wsgi.flaskapp:app
- added gunicorn to requirements.txt and rerun 
- gcloud app deploy -v [YOUR_VERSION_ID]
- fingers crossed
- gcloud app browse
- To see logs in the Cloud Console: https://console.cloud.google.com/gcr/builds/adf5a006-f112-4dc4-9d59-86ed1d99b37b?project=yellowbutler-190521
-(gcloud app deploy -v 1 --quit)
+  https://cloud.google.com/appengine/docs/standard/python3/runtime?hl=sl#application_startup
+  Changed app.yaml adding the right module name, using dotted notation
+    entrypoint: gunicorn -b :$PORT wsgi.flaskapp:app
+    added gunicorn to requirements.txt and rerun 
+  gcloud app deploy -v [YOUR_VERSION_ID]
+  gcloud app deploy -v 1 --quiet
+  gcloud app browse
+
+To see logs in the Cloud Console: https://console.cloud.google.com/logs/viewer?project=yellowbutler-213621
+
+Run locally as in GAE
+gunicorn -b :8080 wsgi.flaskapp:app
 
 
-To deploy from local machine
 
+To check gcloud configurations
+https://www.the-swamp.info/blog/configuring-gcloud-multiple-projects/
 gcloud config configurations list
  to check the active configuration and the list of configurations
 gcloud init
@@ -103,8 +131,6 @@ gcloud app deploy -v 1 --quiet
 
 gcloud config configurations activate yellowbot
  to switch among configurations
-
-Reference: https://www.the-swamp.info/blog/configuring-gcloud-multiple-projects/
 
 
 ** SCHEDULER

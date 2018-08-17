@@ -58,7 +58,7 @@ class YellowBot:
 
         # Creates the datastore service
         db_filename = os.path.join(os.path.dirname(__file__), GlobalBag.DATABASE_FILE)
-        self._datastore = DatastoreService(db_filename)
+        #self._datastore = DatastoreService(db_filename)
 
         # Registers the interaction surface
         self._surfaces = {}
