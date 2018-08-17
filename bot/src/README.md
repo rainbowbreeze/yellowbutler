@@ -1,5 +1,9 @@
 ** CREATE THE ENVIRONMENT
 
+** PYCHARM
+
+
+
 https://docs.python.org/3/library/venv.html
 python3 -m venv venv
 (last venv is the venv name)
@@ -7,8 +11,14 @@ python3 -m venv venv
 source venv/bin/activate
 deactivate
 
+pip install  -r requirements.txt
+
 To configure inside PyCharm, I first create a venv for the new project, selecting the python interpreter in brew.
 Alternatively, create the venv in Pycharm, then from command line remove it and create a new one using python3 and rename the venv in the project preferences
+
+
+** LINUX INSTALL
+sudo snap install gcloud
 
 
 ** FLASK
@@ -50,52 +60,11 @@ https://martin-thoma.com/configuration-files-in-python/
 https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
 
 
-** PYTHONANYWHERE
-Steps here: https://help.pythonanywhere.com/pages/Flask/
-
-Copy the project
- Open a shell
- git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
- cd yellowbutler/bot/src
- mkvirtualenv --python=/usr/bin/python3.6 yellowbutler-venv
-  later or, to activate the virtual env: workon yellowbutler-venv
-
- pip install -r requirements.txt
- (virtualenv created under /home/yellowbutler/.virtualenvs/yellowbutler-venv, as per command output)
- 
-Create a new webapp
- Select Manual mode, python 3.6 and confirm everything
- virtualenv:  /home/yellowbutler/.virtualenvs/yellowbutler-venv
- change WSGI file adding under the section +++++++++++ FLASK +++++++++++
- 
-  import sys
-  path = '/home/yellowbutler/yellowbutler/bot/src'
-  if path not in sys.path:
-      sys.path.append(path)
-  from wsgi.flaskapp import app as application
-
-if I put the path to the wsgi folder, /home/yellowbutler/yellowbutler/bot/src/wsgi, I obtain a
- ModuleNotFoundError: No module named 'yellowbot'
-because the root is not anymore src, but becomes src/wsgi, and so all the python import fails
-
-
-To test:
-curl -X POST https://yellowbutler.pythonanywhere.com/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
-(remember to authorize the key in the config file, and reload the webapp)
-
-DAMN!!!
-https://help.pythonanywhere.com/pages/403ForbiddenError/
-https://www.pythonanywhere.com/whitelist/
-PythonAnywhere is a no way choice, unfortunately :(
-
-
 ** APPENGINE
 https://cloud.google.com/appengine/docs/flexible/python/quickstart
 
 https://console.cloud.google.com/projectselector/appengine/create?lang=flex_python&st=true&_ga=2.125561612.704564983.1514577758-1153595002.1514577758
 create project yellowbutler
-
-pip install --upgrade google-cloud-storage
 
 Copy the project
  Open a CloudShell
@@ -142,14 +111,49 @@ Reference: https://www.the-swamp.info/blog/configuring-gcloud-multiple-projects/
 Create a cron.yaml following https://cloud.google.com/appengine/docs/flexible/python/scheduling-jobs-with-cron-yaml
 gcloud app deploy cron.yaml --verbosity debug --quiet
 
+ 
 
+** DEPLOY UNDER PYTHONANYWHERE
+
+Steps here: https://help.pythonanywhere.com/pages/Flask/
+
+Copy the project
+ Open a shell
+ git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
+ cd yellowbutler/bot/src
+ mkvirtualenv --python=/usr/bin/python3.6 yellowbutler-venv
+  later or, to activate the virtual env: workon yellowbutler-venv
+
+ pip install -r requirements.txt
+ (virtualenv created under /home/yellowbutler/.virtualenvs/yellowbutler-venv, as per command output)
  
 Create a new webapp
+ Select Manual mode, python 3.6 and confirm everything
+ virtualenv:  /home/yellowbutler/.virtualenvs/yellowbutler-venv
+ change WSGI file adding under the section +++++++++++ FLASK +++++++++++
+ 
+  import sys
+  path = '/home/yellowbutler/yellowbutler/bot/src'
+  if path not in sys.path:
+      sys.path.append(path)
+  from wsgi.flaskapp import app as application
+
+if I put the path to the wsgi folder, /home/yellowbutler/yellowbutler/bot/src/wsgi, I obtain a
+ ModuleNotFoundError: No module named 'yellowbot'
+because the root is not anymore src, but becomes src/wsgi, and so all the python import fails
 
 
-** LOGGING
+To test:
+curl -X POST https://yellowbutler.pythonanywhere.com/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
+(remember to authorize the key in the config file, and reload the webapp)
 
-Under PAW
+LOGGING Under PAW
  https://www.pythonanywhere.com/forums/topic/3120/
   print('debug info', file=sys.stderr)
   end up in /var/log/…error.log (in some time after request)
+  
+  
+DAMN!!!
+https://help.pythonanywhere.com/pages/403ForbiddenError/
+https://www.pythonanywhere.com/whitelist/
+PythonAnywhere is a no way choice, unfortunately :(
