@@ -134,9 +134,12 @@ gcloud config configurations activate yellowbot
 
 
 ** SCHEDULER
-Create a cron.yaml following https://cloud.google.com/appengine/docs/flexible/python/scheduling-jobs-with-cron-yaml
+Create a cron.yaml following
+https://cloud.google.com/appengine/docs/flexible/python/scheduling-jobs-with-cron-yaml
+or
+https://cloud.google.com/appengine/docs/standard/python/config/cron
 gcloud app deploy cron.yaml --verbosity debug --quiet
-
+check log: https://console.cloud.google.com/appengine/taskqueues/cron?project=yellowbutler-213621
  
 
 ** DEPLOY UNDER PYTHONANYWHERE

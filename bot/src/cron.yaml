@@ -1,16 +1,6 @@
 cron:
 
-- description: "Daily summary job"
+- description: "Run Yellowbutler task scheduler"
   url: /yellowbot/api/v1.0/scheduler
-  schedule: every day 07:01
-  timezone: Europe/Rome
-
-- description: "End of day reporting"
-  url: /yellowbot/api/v1.0/scheduler
-  schedule: every day 18:05
-  timezone: Europe/Rome
-
-- description: "Test 1"
-  url: /yellowbot/api/v1.0/scheduler
-  schedule: every day 15:00
+  schedule: every 1 hours
   timezone: Europe/Rome
