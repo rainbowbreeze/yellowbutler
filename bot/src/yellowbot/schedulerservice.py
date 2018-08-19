@@ -27,10 +27,10 @@ class SchedulerTask():
                  name,
                  when,
                  intent,
-                 params = None,
-                 surface_id = None,
-                 surface_channel_id = None,
-                 surface_text = None):
+                 params=None,
+                 surface_id=None,
+                 surface_channel_id=None,
+                 surface_text=None):
         """
         Create a new task for the scheduler service
         :param name: name of the task
