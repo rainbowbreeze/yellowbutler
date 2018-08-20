@@ -17,7 +17,7 @@ class TelegramSurface(BaseInteractionSurface):
 
     Each instance of this class correspond to a bot managed in Telegram
 
-    Even if there are multiple bots, the logic to manage then is all
+    Even if there are multiple bots, the logic to manage them is all
      centralised in one YellowBot: think bots and "limited" instances of
      YellowBot, that have their own names and configurations in Telegram,
      but are all part of the same "brain" under the hood

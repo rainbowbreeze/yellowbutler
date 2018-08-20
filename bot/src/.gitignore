@@ -99,3 +99,6 @@ ENV/
 
 # Ignore task files
 *_tasks.json
+
+#PyTest
+.pytest_cache/
