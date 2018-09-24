@@ -53,7 +53,6 @@ class NluEngine:
                 separator_string = " di "
                 end_string = "https://"
             elif message.lower().startswith("ho trovato "):
-                # English language
                 begin_search_string = "Ho trovato "
                 separator_string = " di "
                 end_string = " con SoundHound, credo che ti piacer"
