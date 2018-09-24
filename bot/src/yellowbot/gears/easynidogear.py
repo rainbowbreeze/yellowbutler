@@ -82,7 +82,7 @@ class EasyNidoGear(BaseGear):
                         'data': "",
                         'mod': "tutto",
                         'page': 1,
-                        'maxRecords': 6
+                        'maxRecords': 9
                     }
                 )
                 if r.ok and r.text and r.text.startswith("<script>"):
@@ -170,8 +170,15 @@ class EasyNidoGear(BaseGear):
                     for act_title in activity.find("span", class_="titolo-att").stripped_strings:
                         if not act_title.startswith("Ed. "):
                             events.append(" {}: {}".format(time, act_title))
+                    # This is for blocks like Pranzo, Entrata, Uscita, Spuntino, Bisogno ecc
                     for act_detail in activity.find_all("span", class_="testo-black"):
                         events.append("   _{}_".format(act_detail.get_text()))
+                    # This is for image blocks, Media
+                    for act_detail in activity.find_all("a", class_="ilightbox2"):
+                        img_link = act_detail.get("href")
+                        if img_link is not None:
+                            img_full_link = img_link.replace("../../../../../../", "https://easynido.it/")
+                            events.append("   {}".format(img_full_link))
 
             # Move to the next block, the one with an activity
             root = root.next_sibling
