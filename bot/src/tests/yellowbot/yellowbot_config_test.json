@@ -27,8 +27,10 @@
   // EasyNido gear parameters
   "easynido_username": "username",
   "easynido_password": "password",
-  "easynido_idbambino": "idbambino",
-
+  "easynido_bambini": [
+    { "nome": "TestKid", "id": "test_id" }
+  ],
+  
   //Music gear parameters
   "tracemusic_destination_url": "URL_to_store_music_info"
 }
