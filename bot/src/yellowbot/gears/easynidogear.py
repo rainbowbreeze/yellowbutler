@@ -77,7 +77,7 @@ class EasyNidoGear(BaseGear):
                 # For each kid, get data
                 for kid in self._bambini:
                     kid_name = kid['nome']
-                    kindergarten_text.append("-* {} *-".format(kid_name))
+                    kindergarten_text.append("\n-* {} *-".format(kid_name))
                     kid_id = kid['id']
 
                     r = session.post(
