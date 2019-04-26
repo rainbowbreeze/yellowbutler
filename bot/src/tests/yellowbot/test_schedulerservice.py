@@ -28,7 +28,7 @@ class TestSchedulerService(TestCase):
         assert 3 == len(tasks)
         task = tasks[0]
         assert "test_task_name_1" == task.name
-        #assert time.strptime("06:00 CET", "%H:%M %Z") == task.when
+        # assert time.strptime("06:00 CET", "%H:%M %Z") == task.when
         assert "06:00+00" == task.when
         assert "name_of_the_intent_1" == task.intent
         assert "param_value_1" == task.params['param_key_1']

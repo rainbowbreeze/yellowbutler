@@ -33,6 +33,7 @@ Everything should work under Python in this way
 from CL
   export FLASK_APP=wsgi/flaskapp.py
   flask run
+  (alternatively: FLASK_APP=wsgi/flaskapp.py flask run)
   (if run with python wsgi/flaskapp.py, it doesn't work)
 from PyCharm
   go to wsgi/flaskapp.py and run it. If there is an error with config file, read under the wrong directory, edit the run configuration and set bot/src as working path
