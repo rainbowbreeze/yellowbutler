@@ -20,7 +20,7 @@ class EasyNidoGear(BaseGear):
     """
     INTENTS = [GlobalBag.EASYNIDO_INTENT_REPORT]
 
-    def __init__(self, email, password, idbambino):
+    def __init__(self, email, password, bambini):
         """
 
         :param email: user email
@@ -29,21 +29,18 @@ class EasyNidoGear(BaseGear):
         :param password: user password
         :type password: str
 
-        :param idbambino: id of the element to ask information for
-        :type idbambino: str
+        :param bambini: array with names and ids of the kids to ask information for
+        :type bambini: array
         """
         BaseGear.__init__(self, EasyNidoGear.__name__, self.INTENTS)
         self._username = email
         self._password = password
-        self._idbambino = idbambino
+        self._bambini = bambini
         self._logger = LoggingService.get_logger(__name__)
 
     def process_intent(self, intent, params):
         webservice_data = self._obtain_webservice_data()
-        if not webservice_data:
-            return "Something wrong happened query the kindergarten service ¯\_(ツ)_/¯ "
-        else:
-            return self.parse_webservice_data(webservice_data)
+        return webservice_data
 
     def _obtain_webservice_data(self):
         """
@@ -60,6 +57,8 @@ class EasyNidoGear(BaseGear):
             # This will make sure the session is closed as soon as the with block
             #  is exited, even if unhandled exceptions occurred.
             with requests.session() as session:
+                kindergarten_text = []
+
                 # Login
                 r = session.post(
                     "https://easynido.it/login",
@@ -72,26 +71,39 @@ class EasyNidoGear(BaseGear):
                 login_success = r.ok and "https://easynido.it/familiare/bacheca" == r.url
 
                 if not login_success:
-                    return None
+                    return "User not authorized to query the kindergarten service ¯\\_(ツ)_/¯"
 
-                # Get data
-                r = session.post(
-                    "https://easynido.it/genitore/diarioBordocontent",
-                    data={
-                        'idbambino': self._idbambino,
-                        'data': "",
-                        'mod': "tutto",
-                        'page': 1,
-                        'maxRecords': 9
-                    }
-                )
-                if r.ok and r.text and r.text.startswith("<script>"):
-                    # finally, we have the information we need
-                    return r.text
-        except:
-            return None
+                # For each kid, get data
+                for kid in self._bambini:
+                    kid_name = kid['nome']
+                    if len(kindergarten_text) > 0:
+                        kindergarten_text.append("\n")
+                    kindergarten_text.append("-* {} *-".format(kid_name))
+                    kid_id = kid['id']
 
-        return None
+                    r = session.post(
+                        "https://easynido.it/genitore/diarioBordocontent",
+                        data={
+                            'idbambino': kid_id,
+                            'data': "",
+                            'mod': "oggi",  # tutto
+                            'page': 1,
+                            'maxRecords': 10
+                        }
+                    )
+                    if r.ok and r.text and r.text.startswith("<script>"):
+                        try:
+                            # finally, we have the information we need
+                            kindergarten_text.append(self.parse_webservice_data(r.text))
+                        except:
+                            kindergarten_text.append(" Cannot parse kindergarten reply")
+                    else:
+                        kindergarten_text.append(" Error in querying the kindergarten service ¯\\_(ツ)_/¯")
+
+        except Exception as e:
+            self._logger.info(e)
+
+        return "\n".join(kindergarten_text)
 
     def parse_webservice_data(self, html_to_parse):
         """

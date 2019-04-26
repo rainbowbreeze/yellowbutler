@@ -148,7 +148,7 @@ class YellowBot:
         self._gears.append(EasyNidoGear(
             self.get_config("easynido_username"),
             self.get_config("easynido_password"),
-            self.get_config("easynido_idbambino")
+            self.get_config("easynido_bambini")
         ))
 
     def get_config(self, key_to_read, throw_error=True):
