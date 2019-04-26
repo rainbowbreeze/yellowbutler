@@ -58,6 +58,7 @@ class EasyNidoGear(BaseGear):
             #  is exited, even if unhandled exceptions occurred.
             with requests.session() as session:
                 kindergarten_text = []
+                kindergarten_text.append("*Report EasyNido di oggi*")
 
                 # Login
                 r = session.post(
@@ -76,8 +77,6 @@ class EasyNidoGear(BaseGear):
                 # For each kid, get data
                 for kid in self._bambini:
                     kid_name = kid['nome']
-                    if len(kindergarten_text) > 0:
-                        kindergarten_text.append("\n")
                     kindergarten_text.append("-* {} *-".format(kid_name))
                     kid_id = kid['id']
 
@@ -168,7 +167,7 @@ class EasyNidoGear(BaseGear):
             if day is not None:
                 # Day block, get the day
                 for day_text in day.stripped_strings:
-                    events.append("*{}*".format(day_text))
+                    events.append("{}".format(day_text))
 
             # Second option: there is an activity sub-block inside this block
             # Same here, searching top-level class "col-xs-12 ptn pbn prn pln"
