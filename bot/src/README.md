@@ -101,7 +101,7 @@ Logging: gcloud app logs tail -s default
    /home/rainbowbreeze_dev
  git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
  cd yellowbutler/bot/src
- virtualenv --python=python3.7 venv
+ virtualenv --python=python3.5 venv
  source venv/bin/activate
  pip install -r requirements.txt
  
