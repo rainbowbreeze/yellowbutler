@@ -11,7 +11,6 @@ class GlobalBag:
     """
 
     # EasyNido gear
-    EASYNIDO_INTENT_CHECK = "easynido_check"
     EASYNIDO_INTENT_REPORT = "easynido_report"
 
     # Echo message gear

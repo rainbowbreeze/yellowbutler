@@ -67,10 +67,10 @@ class TestSchedulerService(TestCase):
             arrow.get("00:00+01", "HH:mmZZ").to("UTC")
         # Adding a day, this time no exception is raised
         try:
-            print(arrow.get("00:00+01", "HH:mmZZ").replace(days=1).to("UTC"))
+            print(arrow.get("00:00+01", "HH:mmZZ").shift(days=1).to("UTC"))
         except OverflowError:
             self.fail("Exception not raised!")
-        print(arrow.get("00:00+00", "HH:mmZZ").replace(days=1).to("UTC"))
+        print(arrow.get("00:00+00", "HH:mmZZ").shift(days=1).to("UTC"))
 
     def test_getTasksForInterval(self):
         # print(arrow.utcnow())

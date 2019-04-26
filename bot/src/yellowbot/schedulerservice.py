@@ -163,13 +163,13 @@ class SchedulerService():
         # To avoid this problem, I always add one day to the original time,
         #  so the corresponding UTC time is always valid
 
-        refer_date = arrow.get(execution_time, "HH:mmZZ").replace(days=1).to("UTC")
+        refer_date = arrow.get(execution_time, "HH:mmZZ").shift(days=1).to("UTC")
         # Drops the date part, keeping only a time converted to UTC, finally
         # a common base for comparisons of all kind
         execution_utc_time_only = refer_date.format("HH:mm ZZ")
 
         for task in self._tasks:
-            check_time = arrow.get(task.when, "HH:mmZZ").replace(days=1).to("UTC")
+            check_time = arrow.get(task.when, "HH:mmZZ").shift(days=1).to("UTC")
             # "normalize" the task time in the same way
             if execution_utc_time_only == check_time.format("HH:mm ZZ"):
                 tasks.append(task)

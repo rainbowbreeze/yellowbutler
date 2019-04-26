@@ -5,7 +5,7 @@
 
 class SurfaceMessage:
     """
-    Represents a message that can be sent thru an interaction surface
+    Represents a message that can be sent through an interaction surface
     """
 
     def __init__(self, surface_id, channel_id, text):

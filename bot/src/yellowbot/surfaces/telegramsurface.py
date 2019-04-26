@@ -135,7 +135,7 @@ class TelegramSurface(BaseInteractionSurface):
         # }
 
         def force_independent_connection(req, **user_kw):
-           return None
+            return None
         telepot.api._which_pool = force_independent_connection
 
         # telepot.api._onetime_pool_spec = (urllib3.PoolManager, dict(num_pools=1, maxsize=1, retries=3, timeout=30))

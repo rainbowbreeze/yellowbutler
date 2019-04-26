@@ -4,7 +4,6 @@ A surface to notify an admin about a particular message
 Right now, it is a Telegram bot, but can be customized
 """
 from yellowbot.surfaces.notifyadminsurface import NotifyAdminSurface
-from yellowbot.surfaces.surfacemessage import SurfaceMessage
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 
