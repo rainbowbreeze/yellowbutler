@@ -241,12 +241,12 @@ class YellowBot:
             if GlobalBag.SURFACE_NOTIFY_ADMIN in self._surfaces\
             else None
         if admin_surface is not None:
-            self._logger.info("Notify admin about %s", text)
+            self._logger.info("Notify admin about {}".format(text))
             # Creates a new message and dispatch it
             message = admin_surface.forge_notification(text)
             return admin_surface.send_message(message)
         else:
-            self._logger.info("Cannot notify admin about %s", text)
+            self._logger.info("Cannot notify admin about {}".format(text))
             raise ValueError("Cannot find an admin surface to process message for {}".format(GlobalBag.SURFACE_NOTIFY_ADMIN))
 
     def receive_message(self, message):
@@ -306,7 +306,7 @@ class YellowBot:
         :rtype: str
         """
         # Check if any of the registered gears is able to process the intent
-        self._logger.info("Finding a gear to process intent %s", intent)
+        self._logger.info("Finding a gear to process intent {}".format(intent))
         gear = None
         for working_gear in self._gears:
             if working_gear.can_process_intent(intent):
@@ -339,7 +339,7 @@ class YellowBot:
         else:
             # Executes them
             for task in tasks:
-                self._logger.info("Executing scheduler task %s", task.name)
+                self._logger.info("Executing scheduler task {}".format( task.name))
                 result = self.process_intent(task.intent, task.params)
                 if result is not None and task.surface is not None:
                     task.surface.text = result

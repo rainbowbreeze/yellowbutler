@@ -148,7 +148,7 @@ def process_intent():
     else:
         params = {}
 
-    _logger.info("Routing call for intent %s", intent)
+    _logger.info("Routing call for intent {}".format(intent))
     try:
         message = yellowbot.process_intent(intent, params)  # Process the intent
         return make_response(jsonify(message=message), 200)
