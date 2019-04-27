@@ -16,16 +16,17 @@ class SchedulerTask():
     """
     Define a task processed by the scheduler.
 
-    All the time are in the format HH:mmZZ, ISO_8601, https://en.wikipedia.org/wiki/ISO_8601#Times
+    All the time are in the format HH:mm, ISO_8601, https://en.wikipedia.org/wiki/ISO_8601#Times
+    And the timezone is expressed afterward
      Examples:
-      19:30+00
-      01:34+02:00
-      23:32-09
+      19:30, US/Pacific
+      01:34, "GMT", or "UTC" or "Europe/Paris"
       etc
     """
     def __init__(self,
                  name,
                  when,
+                 timezone,
                  intent,
                  params=None,
                  surface_id=None,
@@ -35,8 +36,10 @@ class SchedulerTask():
         Create a new task for the scheduler service
         :param name: name of the task
         :type name: str
-        :param when: when the task is executed
+        :param when: when the task is executed, HH:mm format
         :type when: str
+        :param timezone: the timezone of the task, for example "Europe/Rome"
+        :type timezone: str
         :param intent: intent to launch
         :type intent: str
         :param params: optional parameters for the intent
@@ -50,6 +53,10 @@ class SchedulerTask():
         """
         self.name = name
         self.when = when
+        if None is timezone:
+            self.timezone = "UTC"
+        else:
+            self.timezone = timezone
         self.intent = intent
         self.params = params
         if None is surface_id and None is surface_channel_id and None is surface_text:
@@ -115,6 +122,7 @@ class SchedulerService():
                         task_dict['name'],
                         #time.strptime(task_dict['when'], "%H:%M %Z"),
                         task_dict['when'],
+                        task_dict['timezone'] if 'params' in task_dict else None,
                         task_dict['intent'],
                         task_dict['params'] if 'params' in task_dict else None,
                         task_dict['surface_id'] if 'surface_id' in task_dict else None,
@@ -126,7 +134,7 @@ class SchedulerService():
         else:
             raise ValueError("Cannot find tasks file {}".format(full_tasks_path))
 
-    def get_current_hour(self):
+    def get_current_hour___(self):
         """
         Returns current UTC time, where minutes are always 00
         :return:
@@ -136,16 +144,26 @@ class SchedulerService():
             current_time[:3],
             current_time[5:])
 
+    def get_current_datetime(self):
+        """
+        Returns current UTC time
+        :return: The current time
+        :rtype: arrow
+        """
+        return arrow.utcnow()
+
     def find_tasks_for_time(self, execution_time):
         """
         Finds tasks scheduled for the given time
         :param execution_time: time when the task should be executed
-        :type execution_time: time
+        :type execution_time: arrow
         :return: list of tasks that match the criteria
         :rtype: list
         """
         tasks = []
 
+        """
+        OLD CODE
         # In order to compare time, also date has to be added
         # For example 10:00 in Berlin in July is 08:00 UTC, but in December, it would be 09:00 UTC
         # There are several issues with struct_time and conversion to a
@@ -169,8 +187,23 @@ class SchedulerService():
         execution_utc_time_only = refer_date.format("HH:mm ZZ")
 
         for task in self._tasks:
-            check_time = arrow.get(task.when, "HH:mmZZ").shift(days=1).to("UTC")
             # "normalize" the task time in the same way
+            check_time = arrow.get(task.when, "HH:mmZZ").shift(days=1).to("UTC")
             if execution_utc_time_only == check_time.format("HH:mm ZZ"):
                 tasks.append(task)
+        return tasks
+        """
+
+        for task in self._tasks:
+            # Translate the execution time to the same timezone of the task to
+            #  check for
+            relative_time = execution_time.to(task.timezone)
+            relative_hour = relative_time.hour
+            try:
+                task_hour = int(task.when[:2])
+                if task_hour == relative_hour:
+                    tasks.append(task)
+            except:
+                pass
+
         return tasks

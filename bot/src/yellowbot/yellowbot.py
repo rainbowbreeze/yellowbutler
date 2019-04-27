@@ -7,7 +7,6 @@ import os
 
 from json_minify import json_minify
 
-from yellowbot.datastoreservice import DatastoreService
 from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
@@ -330,11 +329,9 @@ class YellowBot:
         :return:
         """
 
-        # Extracts the current time, only the hour part
-        check_time = self._scheduler.get_current_hour()
-        self._logger.info("Processing scheduler for time %s", check_time)
+        check_time = self._scheduler.get_current_datetime()
+        self._logger.info("Processing scheduler for time {}".format(check_time))
 
-        # Checks for tasks scheduled for the current hour
         tasks = self._scheduler.find_tasks_for_time(check_time)
 
         if 0 == len(tasks):
