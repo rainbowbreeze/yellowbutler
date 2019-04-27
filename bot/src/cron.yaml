@@ -2,5 +2,5 @@ cron:
 
 - description: "Run Yellowbutler task scheduler"
   url: /yellowbot/api/v1.0/scheduler
-  schedule: every 1 hours
+  schedule: every 1 hours synchronized
   timezone: Europe/Rome
