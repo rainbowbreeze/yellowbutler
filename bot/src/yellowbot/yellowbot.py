@@ -1,12 +1,10 @@
 """
 Main class
 """
-import json
 import os
 
 
-from json_minify import json_minify
-
+from yellowbot.configservice import ConfigService
 from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
@@ -56,7 +54,7 @@ class YellowBot:
         self._logger.info("YellowBot is starting")
 
         # Load the config file
-        self._load_config_file(config_file)
+        self._config_service = ConfigService(config_file)
 
         # Creates the datastore service
         db_filename = os.path.join(os.path.dirname(__file__), GlobalBag.DATABASE_FILE)
@@ -76,34 +74,6 @@ class YellowBot:
         # Assigns the scheduler service
         self._scheduler = scheduler if scheduler is not None else SchedulerService(GlobalBag.SCHEDULER_FILE)
 
-    def _load_config_file(self, config_file):
-        """
-        Load config key/value pairs from a file
-        :param config_file: name of the file. Can be full path or, otherwise,
-        same folder of this class is considered
-        :type config_file: str
-
-        :return:
-        """
-        self._config = {}
-        if not os.path.isfile(config_file):
-            # Folder where this file is, can work also without the abspath,
-            #  but better for debug so full path is traced in the error
-            base_folder = os.path.abspath(os.path.dirname(__file__))
-            full_config_path = os.path.join(base_folder, config_file)  # combine with the config file name
-        else:
-            full_config_path = config_file
-        # Now if has the file and full path with configurations
-        if os.path.isfile(full_config_path):
-            with open(full_config_path, 'r') as f:
-                json_with_comment = open(full_config_path).read()
-                self._config = json.loads(json_minify(json_with_comment))
-        else:
-            raise ValueError("Cannot find configuration file {}".format(full_config_path))
-        # Checks if the config files has real values
-        if len(self._config.keys()) == 0:
-            raise ValueError("Empty configuration file {}".format(full_config_path))
-
     def _register_interaction_surfaces(self, test_mode):
         """
         Registers all the notification surfaces
@@ -113,13 +83,13 @@ class YellowBot:
         :type test_mode: bool
 
         """
-        running_on_pythonanywhere = self.get_config("running_on_pythonanywhere_free", throw_error=False)
+        running_on_pythonanywhere = self._config_service.get_config("running_on_pythonanywhere_free", throw_error=False)
 
         # NotifyAdmin surface
         self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN] = TelegramNotifyAdminSurface(
             GlobalBag.SURFACE_NOTIFY_ADMIN,
-            self.get_config("telegram_notifyadmin_authorization_token"),
-            self.get_config("telegram_notifyadmin_chat_id"),
+            self._config_service.get_config("telegram_notifyadmin_authorization_token"),
+            self._config_service.get_config("telegram_notifyadmin_chat_id"),
             running_on_pythonanywhere=running_on_pythonanywhere,
             test_mode=test_mode
         )
@@ -127,8 +97,8 @@ class YellowBot:
         # Telegram bot Lurch
         self._surfaces[GlobalBag.SURFACE_TELEGRAM_BOT_LURCH] = TelegramSurface(
             GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
-            self.get_config("telegram_lurch_authorization_token"),
-            self.get_config("base_vps_address") + self.get_config("telegram_lurch_webhook_url_relative"),
+            self._config_service.get_config("telegram_lurch_authorization_token"),
+            self._config_service.get_config("base_vps_address") + self._config_service.get_config("telegram_lurch_webhook_url_relative"),
             running_on_pythonanywhere=running_on_pythonanywhere,
             test_mode=test_mode
         )
@@ -142,15 +112,15 @@ class YellowBot:
         :type test_mode: bool
         """
         self._gears.append(MusicGear(
-            self.get_config("tracemusic_destination_url"),
+            self._config_service.get_config("tracemusic_destination_url"),
             test_mode
         ))
         self._gears.append(EchoMessageGear())
         self._gears.append(WeatherGear())
         self._gears.append(EasyNidoGear(
-            self.get_config("easynido_username"),
-            self.get_config("easynido_password"),
-            self.get_config("easynido_bambini")
+            self._config_service.get_config("easynido_username"),
+            self._config_service.get_config("easynido_password"),
+            self._config_service.get_config("easynido_bambini")
         ))
 
     def get_config(self, key_to_read, throw_error=True):
@@ -164,14 +134,7 @@ class YellowBot:
 
         :return: the object associated wit the config key
         """
-        try:
-            return self._config[key_to_read]
-        except KeyError as e:
-            if throw_error:
-                raise ValueError(
-                    "Non existing {} value in the config, please add it".format(key_to_read))
-            else:
-                return None
+        return self._config_service.get_config(key_to_read, throw_error)
 
     def is_client_authorized(self, key):
         """
@@ -187,7 +150,7 @@ class YellowBot:
         if not key:
             return False
 
-        for auth_key in self.get_config("authorized_keys"):
+        for auth_key in self._config_service.get_config("authorized_keys"):
             if auth_key == key:
                 return True
         return False
@@ -199,7 +162,7 @@ class YellowBot:
         :param new_keys: new keys to use
         :type new_keys: str
         """
-        self._config["authorized_keys"] = new_keys
+        self._config_service.change_authorized_keys(new_keys)
 
     def add_interaction_surface(self, key, interaction_surface):
         """
@@ -342,7 +305,7 @@ class YellowBot:
         else:
             # Executes them
             for task in tasks:
-                self._logger.info("Executing scheduler task {}".format( task.name))
+                self._logger.info("Executing scheduler task {}".format(task.name))
                 result = self.process_intent(task.intent, task.params)
                 if result is not None and task.surface is not None:
                     task.surface.text = result
