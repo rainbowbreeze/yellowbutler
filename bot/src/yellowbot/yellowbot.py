@@ -37,6 +37,9 @@ class YellowBot:
         :param nlu_engine: engine to use to extract intent and arguments
         :type nlu_engine: NluEngine
 
+        :param scheduler: the scheduler service
+        :type scheduler: SchedulerService
+
         :param config_file: config file with several values. By default, the
         file yellowbot_config.json in the same folder of this file is used,
         but feel free to point to any other file. If only the file name is

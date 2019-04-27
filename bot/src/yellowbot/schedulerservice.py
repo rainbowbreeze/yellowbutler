@@ -12,7 +12,7 @@ from json_minify import json_minify
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 
-class SchedulerTask():
+class SchedulerTask:
     """
     Define a task processed by the scheduler.
 
@@ -65,7 +65,7 @@ class SchedulerTask():
             self.surface = SurfaceMessage(surface_id, surface_channel_id, surface_text)
 
 
-class SchedulerService():
+class SchedulerService:
     """
     Tasks are defined in a json file, please see examples at yellowbot_tasks_template.json
 

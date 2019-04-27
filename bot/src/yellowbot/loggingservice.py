@@ -4,7 +4,7 @@ Manage logs for the application
 import logging
 
 
-class LoggingService():
+class LoggingService:
 
     @staticmethod
     def init():

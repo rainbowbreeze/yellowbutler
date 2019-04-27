@@ -10,7 +10,7 @@ Examples
 from tinydb import TinyDB, Query
 
 
-class DatastoreService():
+class DatastoreService:
     """
 
     """
