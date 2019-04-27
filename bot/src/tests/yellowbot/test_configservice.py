@@ -25,6 +25,8 @@ class TestConfigService(TestCase):
             ConfigService(config_file="non_existing_file.json")
 
     def test_get_config(self):
-        #TODO write tests here
-        pass
-
+        assert self._config_service.get_config("telegram_lurch_webhook_url_relative") ==\
+               "/YOUR_BOT_NAME/api/v1.0/YOUR_TELEGRAM_BOT_NAME"
+        self.assertIsNone(self._config_service.get_config("non_existing", False))
+        with self.assertRaises(ValueError):
+            self._config_service.get_config("non_existing", True)
