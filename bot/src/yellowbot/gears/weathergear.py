@@ -42,13 +42,19 @@ class WeatherGear(BaseGear):
             message = "Call to {} using wrong intent {}".format(__name__, intent)
             self._logger.info(message)
             return message
-        if WeatherGear.PARAM_LOCATION not in params:
-            return "Missing {} parameter in the request".format(WeatherGear.PARAM_LOCATION)
         if WeatherGear.PARAM_CITY_NAME not in params:
             return "Missing {} parameter in the request".format(WeatherGear.PARAM_CITY_NAME)
-
-        latlng = params[WeatherGear.PARAM_LOCATION]
         city_name = params[WeatherGear.PARAM_CITY_NAME]
+        latlng = None
+        if WeatherGear.PARAM_LOCATION not in params:
+            # Adds some defaults latitude and longitude data
+            if "pavia".lower(city_name):
+                latlng = "45.19205,9.15917"
+            elif "milano".lower(city_name):
+                latlng = "45.4642,9.1900"
+            else:
+                return "Missing {} parameter in the request".format(WeatherGear.PARAM_LOCATION)
+
         self._logger.info("Searching weather condition for city {} at location {}".format(city_name, latlng))
 
         url = "https://api.darksky.net/forecast/{}/{}?{}".format(
@@ -79,17 +85,17 @@ class WeatherGear(BaseGear):
             daily_sunset_epoch = daily_data["sunsetTime"]
             daily_sunset_time = self._from_epoch_to_time(daily_sunset_epoch, timezone)
             return "A {} attualmente {} e {}°C.\n" \
-                   "Per i prossimi giorni si prevede {}.\n" \
-                   "Oggi {}, con min {}°, max {}°, alba {} tramonto {}".format(
+                   "Oggi {}, con temperatura min {}°C e max {}°C. Alba alle {} e tramonto alle {}.\n" \
+                   "Nei prossimi giorni {}".format(
                 city_name,
                 current_summary,
                 current_temperature,
-                week_summary,
                 daily_summary,
                 daily_temperature_min,
                 daily_temperature_max,
                 daily_sunrise_time,
-                daily_sunset_time
+                daily_sunset_time,
+                week_summary
             )
         except BaseException as e:
             self._logger.exception(e)
