@@ -26,7 +26,7 @@ class TestSchedulerService(TestCase):
 
     def test_readTasks(self):
         tasks = self._scheduler.get_tasks()
-        assert 3 == len(tasks)
+        assert 4 == len(tasks)
         task = tasks[0]
         assert "test_task_name_1" == task.name
         # assert time.strptime("06:00 CET", "%H:%M %Z") == task.when
@@ -54,6 +54,16 @@ class TestSchedulerService(TestCase):
         assert "name_of_the_intent_3" == task.intent
         assert None is task.params
         assert None is task.surface
+        task = tasks[3]
+        assert "test_task_name_4" == task.name
+        assert "17:00" == task.when
+        assert "Europe/Rome" == task.timezone
+        assert "name_of_the_intent_4" == task.intent
+        assert None is task.params
+        assert "test_surface_4" == task.surface.surface_id
+        assert "123456" == task.surface.channel_id
+        assert None is task.surface.text
+
 
     def test_TimeComparison(self):
         """

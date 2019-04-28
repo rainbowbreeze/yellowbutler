@@ -54,10 +54,7 @@ class SchedulerTask:
 
         self.name = name
         self.when = when
-        if None is timezone:
-            self.timezone = "UTC"
-        else:
-            self.timezone = timezone
+        self.timezone = timezone if timezone else "UTC"
         self.intent = intent
         self.params = params
         if not (surface_id and surface_id.strip()):
@@ -127,7 +124,7 @@ class SchedulerService:
                         task_dict['name'],
                         #time.strptime(task_dict['when'], "%H:%M %Z"),
                         task_dict['when'],
-                        task_dict['timezone'] if 'params' in task_dict else None,
+                        task_dict['timezone'] if 'timezone' in task_dict else None,
                         task_dict['intent'],
                         task_dict['params'] if 'params' in task_dict else None,
                         task_dict['surface_id'] if 'surface_id' in task_dict else None,
@@ -194,9 +191,6 @@ class SchedulerService:
             # Translate the execution time to the same timezone of the task to
             #  check for
             relative_time = execution_time.to(task.timezone)
-            self._logger.info("Task time: {}".format(task.when))
-            self._logger.info("Task timezone: {}".format(task.timezone))
-            self._logger.info("relative_time: {}".format(relative_time))
             relative_hour = relative_time.hour
             try:
                 task_hour = int(task.when[:2])

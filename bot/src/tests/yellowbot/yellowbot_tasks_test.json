@@ -35,7 +35,18 @@
     "name": "test_task_name_3",
     "when": "15:00",
     "intent": "name_of_the_intent_3"
+  },
+
+  {
+    "name": "test_task_name_4",
+    "when": "17:00",
+    "timezone": "Europe/Rome",
+    "intent": "name_of_the_intent_4",
+    "surface_id": "test_surface_4",
+    "surface_channel_id": "123456",
+    "surface_text": ""
   }
+
 ]
 
 
