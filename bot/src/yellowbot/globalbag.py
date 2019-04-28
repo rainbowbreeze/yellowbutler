@@ -24,7 +24,8 @@ class GlobalBag:
 
     # Weather forecast
     WEATHER_FORECAST_INTENT = "weather_forecast"
-    WEATHER_FORECAST_PARAM_LOCATION = "location"
+    WEATHER_FORECAST_PARAM_LOCATION = "latlon"
+    WEATHER_FORECAST_PARAM_CITY_NAME = "city_name"
 
     # Send a message
     SEND_MESSAGE_INTENT = "send_message"

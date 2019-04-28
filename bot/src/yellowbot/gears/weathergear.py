@@ -19,7 +19,8 @@ class WeatherGear(BaseGear):
     Get the weather condition from Yahoo! Weather service
     """
     INTENTS = [GlobalBag.WEATHER_FORECAST_INTENT]
-    PARAM_LOCATION = GlobalBag.WEATHER_FORECAST_PARAM_LOCATION  # The message to echo
+    PARAM_LOCATION = GlobalBag.WEATHER_FORECAST_PARAM_LOCATION  # The latitude and longitude of the city
+    PARAM_CITY_NAME = GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME  # The city name
 
     def __init__(self, api_key):
         BaseGear.__init__(self, WeatherGear.__name__, self.INTENTS)
@@ -36,11 +37,23 @@ class WeatherGear(BaseGear):
         :param params:
         :return:
         """
-        self._logger.info("Searching weather condition for {}".format("45.19205,9.15917"))
+
+        if WeatherGear.INTENTS[0] != intent:
+            message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(message)
+            return message
+        if WeatherGear.PARAM_LOCATION not in params:
+            return "Missing {} parameter in the request".format(WeatherGear.PARAM_LOCATION)
+        if WeatherGear.PARAM_CITY_NAME not in params:
+            return "Missing {} parameter in the request".format(WeatherGear.PARAM_CITY_NAME)
+
+        latlong = params[WeatherGear.PARAM_LOCATION]
+        city_name = params[WeatherGear.PARAM_CITY_NAME]
+        self._logger.info("Searching weather condition for city {} at location {}".format(city_name, latlong))
 
         url = "https://api.darksky.net/forecast/{}/{}?{}".format(
             self._api_key,
-            "45.19205,9.15917",
+            latlong,
             "exclude=minutely,hourly,alerts,flags&units=si&lang=it"
         )
         try:
@@ -65,9 +78,10 @@ class WeatherGear(BaseGear):
             daily_sunrise_time = self._from_epoch_to_time(daily_sunrise_epoch, timezone)
             daily_sunset_epoch = daily_data["sunsetTime"]
             daily_sunset_time = self._from_epoch_to_time(daily_sunset_epoch, timezone)
-            return "A Pavia attualmente {} e {}°C.\n" \
+            return "A {} attualmente {} e {}°C.\n" \
                    "Per i prossimi giorni si prevede {}.\n" \
                    "Oggi {}, con min {}°, max {}°, alba {} tramonto {}".format(
+                city_name,
                 current_summary,
                 current_temperature,
                 week_summary,
@@ -98,67 +112,4 @@ class WeatherGear(BaseGear):
         time = arrow.get(epoch)  # UTC
         time = time.to(timezone)  # Local time
         return time.format("HH:mm")
-
-    def _read_weather_from_yahoo(self, intent, params):
-        """
-        How Yahoo weather works
-
-        Basic Python code to query the API
-        https://developer.yahoo.com/weather/#python
-
-        select item.condition from weather.forecast where woeid = 2487889
-        https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20%3D%202487889&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys
-
-        select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="Rome, Italy") and 'u=c'
-
-        :param intent:
-        :param params:
-        :return:
-        """
-        if WeatherGear.PARAM_LOCATION not in params:
-            return "Missing {} parameter in the request".format(WeatherGear.PARAM_LOCATION)
-
-        location_name = params[WeatherGear.PARAM_LOCATION]
-        self._logger.info("Searching weather condition for %s", location_name)
-
-        # Test different options using
-        #  https://developer.yahoo.com/weather/
-        # Using Celsius instead of Fahrenheit
-        #  https://stackoverflow.com/questions/21092164/return-yahoo-weather-api-data-in-celsius-using-yql
-        url = "{}?q=select item, astronomy from weather.forecast " \
-              "where woeid in (select woeid from geo.places(1) where text='{}') and u='c'" \
-              "&format=json"\
-            .format("http://query.yahooapis.com/v1/public/yql", location_name)
-
-        try:
-            req = requests.get(url)
-            if not req.ok:
-                req.raise_for_status()
-            results = req.json()
-        except BaseException as e:
-            self._logger.exception(e)
-            return "Error while getting weather information {}".format(repr(e))
-
-        try:
-            if int(results['query']['count']) > 0:
-                wo = results['query']['results']['channel']
-                astronomy = wo['astronomy']
-                today_forecast = wo['item']['forecast'][0]
-                return "Today's weather for {}: {}, min {}, max {}. Sunrise {}, sunset {}".format(
-                    location_name,
-                    today_forecast['text'],
-                    today_forecast['low'],
-                    today_forecast['high'],
-                    astronomy['sunrise'],
-                    astronomy['sunset']
-                )
-            else:
-                self._logger.info("No weather data for location %s\n Result is %s",
-                                     location_name,
-                                     results)
-                return "Sorry, I don't know how to provide weather forecast for {}".format(
-                    location_name)
-        except BaseException as e:
-            self._logger.exception(e)
-            return "Exception happened while parsing weather data {}".format(repr(e))
-
+    
