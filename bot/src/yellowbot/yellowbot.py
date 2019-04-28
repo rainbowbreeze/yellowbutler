@@ -95,12 +95,10 @@ class YellowBot:
         ))
 
         # Send message gear
-        self._send_message_gear = SendMessageGear(
+        self._gears.append(SendMessageGear(
             self._config_service,
             test_mode
-        )
-        self._gears.append(self._send_message_gear)
-        # TODO fix this workaround for tests
+        ))
 
     def get_config(self, key_to_read, throw_error=True):
         """
@@ -143,19 +141,6 @@ class YellowBot:
         :type new_keys: str
         """
         self._config_service.change_authorized_keys(new_keys)
-        # TODO fix workaround for tests
-
-    def add_interaction_surface(self, key, interaction_surface):
-        """
-        Add a new interaction surface
-
-        :param key: the key to assign to the interaction surface
-        :type key: str
-
-        :param interaction_surface: the surface to add
-        :type interaction_surface: BaseInteractionSurface
-        """
-        self._send_message_gear.add_interaction_surface(key, interaction_surface)
         # TODO fix workaround for tests
 
     def notify_admin(self, text):

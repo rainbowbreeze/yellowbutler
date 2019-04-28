@@ -58,3 +58,12 @@ class NotifyAdminGear(BaseGear):
         # Creates a new message and dispatch it
         message = self._admin_surface.forge_notification(text)
         return self._admin_surface.send_message(message)
+
+    def swap_surface_for_test(self, new_surface):
+        """
+        Changes the surface for test purposes
+        :param new_surface:
+        :return:
+        """
+        self._admin_surface = new_surface
+

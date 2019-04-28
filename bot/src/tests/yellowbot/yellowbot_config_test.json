@@ -20,9 +20,9 @@
   "telegram_lurch_authorization_token": "YOUR_AUTHORIZATION_TOKEN",
 
   // NotifyAdmin surface, now a Telegram bot
-  "telegram_notifyadmin_authorization_token": "YOUR_AUTHORIZATION_TOKEN",
+  "telegram_notifyadmin_authorization_token": "YOUR_ADMIN_AUTHORIZATION_TOKEN",
   // Chat id to use to send notification message
-  "telegram_notifyadmin_chat_id": "your_chat_id",
+  "telegram_notifyadmin_chat_id": "your_admin_chat_id",
 
   // EasyNido gear parameters
   "easynido_username": "username",
