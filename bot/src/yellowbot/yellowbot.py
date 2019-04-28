@@ -227,7 +227,7 @@ class YellowBot:
         if gear is not None:
             return gear.process_intent(intent, params)
         else:
-            self._logger.info("No gear found to process intent %s", intent)
+            self._logger.info("No gear found to process intent {}".format(intent))
             return "No gear to process your intent"
 
     def tick_scheduler(self):
