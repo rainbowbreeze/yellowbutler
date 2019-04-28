@@ -52,7 +52,7 @@ class WeatherGear(BaseGear):
             elif "milano".lower(city_name):
                 latlng = "45.4642,9.1900"
             else:
-                return "Missing {} parameter in the request".format(WeatherGear.PARAM_LOCATION)
+                return "Missing {} parameter in the request_".format(WeatherGear.PARAM_LOCATION)
         else:
             latlng = params[WeatherGear.PARAM_LOCATION]
 
