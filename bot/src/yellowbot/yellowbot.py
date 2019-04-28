@@ -261,9 +261,10 @@ class YellowBot:
                     # TODO: better check for none or empty or only spaces or... https://stackoverflow.com/a/24534152
                     text = result if task.surface.text is None else task.surface.text
                     # Sends a message with the result of the task, if specified in the task
-                    self.process_intent(GlobalBag.SEND_MESSAGE_INTENT,
-                                        {
-                                            GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: task.surface.surface_id,
-                                            GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: task.surface.channel_id,
-                                            GlobalBag.SEND_MESSAGE_PARAM_TEXT: text
-                                          })
+                    self.process_intent(
+                        GlobalBag.SEND_MESSAGE_INTENT,
+                        {
+                            GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: task.surface.surface_id,
+                            GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: task.surface.channel_id,
+                            GlobalBag.SEND_MESSAGE_PARAM_TEXT: text
+                        })

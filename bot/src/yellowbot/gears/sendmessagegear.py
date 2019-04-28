@@ -48,6 +48,11 @@ class SendMessageGear(BaseGear):
         :param params:
         :return:
         """
+
+        if SendMessageGear.INTENTS[0] != intent:
+            message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(message)
+            return message
         if SendMessageGear.PARAM_SURFACE_ID not in params:
             return "Missing {} parameter in the request".format(SendMessageGear.PARAM_SURFACE_ID)
         if SendMessageGear.PARAM_CHANNEL_ID not in params:
