@@ -24,7 +24,7 @@ class SurfaceMessage:
         # str() because can arrive something different from a string
         self.surface_id = self._none_if_emtpy_otherwise_value(surface_id)
         self.channel_id = self._none_if_emtpy_otherwise_value(channel_id)
-        self.text = self._none_if_emtpy_otherwise_value(str(text))
+        self.text = self._none_if_emtpy_otherwise_value(text)
 
     def _none_if_emtpy_otherwise_value(self, string):
         """
@@ -36,6 +36,14 @@ class SurfaceMessage:
         :param string: the string to check
         :return string: str
         """
-        return None if not (string and string.strip()) else string
 
-
+        # Check for strip() to a non str object raises and error, so the check
+        #  on the type before everything else
+        if string is None:
+            return None
+        elif isinstance(string, str):
+            # Check for empty string of None of full of spaces
+            return None if not (string and string.strip()) else string
+        else:
+            # Convert to a string and return
+            return str(string)
