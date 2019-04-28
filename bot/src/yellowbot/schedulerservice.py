@@ -4,11 +4,10 @@ Scheduler service, to run specific tasks at specific times
 import json
 import os
 
-import time
-
 import arrow
 from json_minify import json_minify
 
+from yellowbot.loggingservice import LoggingService
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 
@@ -59,7 +58,8 @@ class SchedulerTask:
             self.timezone = timezone
         self.intent = intent
         self.params = params
-        if None is surface_id and None is surface_channel_id and None is surface_text:
+        if not (surface_id and surface_id.strip()):
+            # If surface_id is None, empty of full of spaces
             self.surface = None
         else:
             self.surface = SurfaceMessage(surface_id, surface_channel_id, surface_text)
@@ -82,6 +82,9 @@ class SchedulerService:
         :param tasks_file:
         :type tasks_file: str
         """
+        # Create the logger and initialise it
+        self._logger = LoggingService.get_logger(__name__)
+
         self._load_tasks(tasks_file)
 
     def get_tasks(self):
@@ -133,16 +136,6 @@ class SchedulerService:
 
         else:
             raise ValueError("Cannot find tasks file {}".format(full_tasks_path))
-
-    def get_current_hour___(self):
-        """
-        Returns current UTC time, where minutes are always 00
-        :return:
-        """
-        current_time = arrow.utcnow().format("HH:mmZZ")
-        return "{}00{}".format(
-            current_time[:3],
-            current_time[5:])
 
     def get_current_datetime(self):
         """

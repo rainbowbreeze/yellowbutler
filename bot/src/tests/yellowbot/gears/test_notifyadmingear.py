@@ -33,7 +33,7 @@ class TestNotifyAdminGear(TestCase):
         result = self._gear.process_intent(
             GlobalBag.NOTIFY_ADMIN_INTENT,
             {
-                GlobalBag.NOTIFY_ADMIN_PARAM_TEXT: text
+                GlobalBag.NOTIFY_ADMIN_PARAM_MESSAGE: text
             }
         )
 

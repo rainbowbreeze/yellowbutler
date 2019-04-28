@@ -21,6 +21,21 @@ class SurfaceMessage:
         :param text: the text to send
         :type text: str
         """
-        self.surface_id = surface_id
-        self.channel_id = channel_id
-        self.text = text
+        # str() because can arrive something different from a string
+        self.surface_id = self._none_if_emtpy_otherwise_value(surface_id)
+        self.channel_id = self._none_if_emtpy_otherwise_value(channel_id)
+        self.text = self._none_if_emtpy_otherwise_value(str(text))
+
+    def _none_if_emtpy_otherwise_value(self, string):
+        """
+        Return None if the string is None or empty or full of spaces, otherwise
+         the string value
+
+        Based on https://stackoverflow.com/a/24534152
+
+        :param string: the string to check
+        :return string: str
+        """
+        return None if not (string and string.strip()) else string
+
+

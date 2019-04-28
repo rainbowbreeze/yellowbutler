@@ -25,6 +25,12 @@ class BaseGear:
         self._gear_name = gear_name
         self._gear_intents = gear_intents
 
+    def name(self):
+        """
+        :return: the name of the gear
+        """
+        return self._gear_name
+
     def can_process_intent(self, intent):
         """
         Return True is the gear can process the intent, otherwise False

@@ -34,7 +34,7 @@ class GlobalBag:
 
     # Notify Admins
     NOTIFY_ADMIN_INTENT = "notify_admin"
-    NOTIFY_ADMIN_PARAM_TEXT = "text"
+    NOTIFY_ADMIN_PARAM_MESSAGE = "message"
 
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot

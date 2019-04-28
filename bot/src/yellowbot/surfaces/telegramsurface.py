@@ -67,11 +67,15 @@ class TelegramSurface(BaseInteractionSurface):
 
     def send_message(self, message):
         # Do not send empty message or message while testing
-        if not message or self._test_mode:
+        if self._test_mode:
+            return "Message not really sent in test mode"
+        if not message:
             return
 
         # To check Markdown, please refer to https://core.telegram.org/bots/api#sendmessage
-        return self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
+        message = self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
+        # It returns a string with the message id, not the whole message object
+        return str(message["message_id"]) if "message_id" in message else None
 
     def _init_pythonanywhere(self, running_on_pythonanywhere_free):
         """

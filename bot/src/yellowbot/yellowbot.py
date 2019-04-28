@@ -143,21 +143,21 @@ class YellowBot:
         self._config_service.change_authorized_keys(new_keys)
         # TODO fix workaround for tests
 
-    def notify_admin(self, text):
+    def notify_admin(self, message):
         """
         Sends a notification to the admin. Use in very few cases and, under
          the hood, uses a dedicated interaction surface targeting a special
          channel used by admin
 
-        :param text: the message to send
-        :type text: str
+        :param message: the message to send
+        :type message: str
         :return:
         """
 
         self.process_intent(
             GlobalBag.NOTIFY_ADMIN_INTENT,
             {
-                GlobalBag.NOTIFY_ADMIN_PARAM_TEXT: text
+                GlobalBag.NOTIFY_ADMIN_PARAM_MESSAGE: message
             }
         )
 
@@ -179,7 +179,7 @@ class YellowBot:
         intent, params = self._nlu_engine.infer_intent_and_args(message.text)
         # If an intent is matched, process the intent and return the result
         #  of the operation
-        self._logger.info("The message received triggered the intent %s", intent)
+        self._logger.info("The message received triggered the intent {} ".format(intent))
 
         if intent:
             response_text = self.process_intent(intent, params)
@@ -225,6 +225,7 @@ class YellowBot:
 
         # And process it, if a gear has been found
         if gear is not None:
+            # self._logger.info("Found gear {}".format(gear.name()))
             return gear.process_intent(intent, params)
         else:
             self._logger.info("No gear found to process intent {}".format(intent))
@@ -251,12 +252,16 @@ class YellowBot:
             for task in tasks:
                 self._logger.info("Executing scheduler task {}".format(task.name))
                 result = self.process_intent(task.intent, task.params)
-                if result is not None and task.surface is not None:
-
+                if task.surface is not None:
+                    self._logger.info("Sending a message after task execution to surface {}".format(
+                        task.surface.surface_id))
+                    # Priority to a potential text written in the config file
+                    # TODO: better check for none or empty or only spaces or... https://stackoverflow.com/a/24534152
+                    text = result if task.surface.text is None else task.surface.text
                     # Sends a message with the result of the task, if specified in the task
                     self.process_intent(GlobalBag.SEND_MESSAGE_INTENT,
                                         {
                                             GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: task.surface.surface_id,
                                             GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: task.surface.channel_id,
-                                            GlobalBag.SEND_MESSAGE_PARAM_TEXT: result
+                                            GlobalBag.SEND_MESSAGE_PARAM_TEXT: text
                                           })

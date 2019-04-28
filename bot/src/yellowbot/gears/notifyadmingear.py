@@ -12,7 +12,7 @@ class NotifyAdminGear(BaseGear):
     """
     """
     INTENTS = [GlobalBag.NOTIFY_ADMIN_INTENT]
-    PARAM_TEXT = GlobalBag.NOTIFY_ADMIN_PARAM_TEXT
+    PARAM_MESSAGE = GlobalBag.NOTIFY_ADMIN_PARAM_MESSAGE
 
     def __init__(self,
                  config_service,
@@ -50,9 +50,11 @@ class NotifyAdminGear(BaseGear):
         :param params:
         :return:
         """
-        if NotifyAdminGear.PARAM_TEXT not in params:
-            return "Missing {} parameter in the request".format(NotifyAdminGear.PARAM_TEXT)
-        text = params[NotifyAdminGear.PARAM_TEXT]
+        if NotifyAdminGear.PARAM_MESSAGE not in params:
+            error_text = "Missing {} parameter in the request".format(NotifyAdminGear.PARAM_MESSAGE)
+            self._logger.info(error_text)
+            return error_text
+        text = params[NotifyAdminGear.PARAM_MESSAGE]
         self._logger.info("Notify admin about {}".format(text))
 
         # Creates a new message and dispatch it

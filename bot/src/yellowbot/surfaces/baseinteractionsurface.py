@@ -28,6 +28,7 @@ class BaseInteractionSurface:
         :param message: a message to send
         :type message: SurfaceMessage
 
-        :return: TDB
+        :return: a string with something, if needed. In th future, it could be a status code or something else
+        :rtype: str
         """
         raise ValueError("The surface {} cannot send a message".format(self._surface_name))

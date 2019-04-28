@@ -117,6 +117,6 @@ class SendMessageGear(BaseGear):
             # Creates a new message and dispatch it
             return surface.send_message(message)
         else:
-            raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))
+            raise ValueError("Cannot find surface {} to process message".format(message.surface_id))
 
 
