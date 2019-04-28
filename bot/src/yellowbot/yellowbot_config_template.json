@@ -30,6 +30,8 @@
   "easynido_idbambino": "idbambino",
 
   //Music gear parameters, where to send the post request as a http form submit
-  "tracemusic_destination_url": "URL_to_store_music_info"
+  "tracemusic_destination_url": "URL_to_store_music_info",
 
+  // Weather forecase
+  "darksky_api": "API_KEY_FOR_DARKSKY"
 }

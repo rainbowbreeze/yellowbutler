@@ -9,7 +9,7 @@ from yellowbot.globalbag import GlobalBag
 
 class TestWeatherGear(TestCase):
     def setUp(self):
-        self._gear = WeatherGear()
+        self._gear = WeatherGear("test_darksky_api")
         pass
 
     def tearDown(self):

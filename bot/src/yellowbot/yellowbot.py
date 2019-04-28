@@ -81,7 +81,9 @@ class YellowBot:
             test_mode
         ))
         self._gears.append(EchoMessageGear())
-        self._gears.append(WeatherGear())
+        self._gears.append(WeatherGear(
+            self._config_service.get_config("darksky_api")
+        ))
         self._gears.append(EasyNidoGear(
             self._config_service.get_config("easynido_username"),
             self._config_service.get_config("easynido_password"),
