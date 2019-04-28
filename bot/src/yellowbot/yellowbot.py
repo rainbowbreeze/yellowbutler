@@ -146,15 +146,15 @@ class YellowBot:
     def notify_admin(self, message):
         """
         Sends a notification to the admin. Use in very few cases and, under
-         the hood, uses a dedicated interaction surface targeting a special
-         channel used by admin
+         the hood, it's the usual intent process, using a dedicated interaction
+         surface targeting a special channel used by admin
 
         :param message: the message to send
         :type message: str
         :return:
         """
 
-        self.process_intent(
+        return self.process_intent(
             GlobalBag.NOTIFY_ADMIN_INTENT,
             {
                 GlobalBag.NOTIFY_ADMIN_PARAM_MESSAGE: message
