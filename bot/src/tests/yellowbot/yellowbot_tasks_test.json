@@ -43,8 +43,7 @@
     "timezone": "Europe/Rome",
     "intent": "name_of_the_intent_4",
     "surface_id": "test_surface_4",
-    "surface_channel_id": "123456",
-    "surface_text": ""
+    "surface_channel_id": "123456"
   }
 
 ]

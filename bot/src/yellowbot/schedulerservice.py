@@ -186,7 +186,6 @@ class SchedulerService:
         return tasks
         """
 
-        self._logger.info("execution_time: {}".format(execution_time))
         for task in self._tasks:
             # Translate the execution time to the same timezone of the task to
             #  check for
