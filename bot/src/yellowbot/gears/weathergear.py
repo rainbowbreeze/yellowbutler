@@ -43,7 +43,7 @@ class WeatherGear(BaseGear):
             self._logger.info(message)
             return message
         if WeatherGear.PARAM_CITY_NAME not in params:
-            return "Missing {} parameter in the request".format(WeatherGear.PARAM_CITY_NAME)
+            return "Missing {} parameter in the request_".format(WeatherGear.PARAM_CITY_NAME)
         city_name = params[WeatherGear.PARAM_CITY_NAME]
         if WeatherGear.PARAM_LOCATION not in params:
             # Adds some defaults latitude and longitude data
@@ -52,7 +52,7 @@ class WeatherGear(BaseGear):
             elif "milano".lower(city_name):
                 latlng = "45.4642,9.1900"
             else:
-                return "Missing {} parameter in the request_".format(WeatherGear.PARAM_LOCATION)
+                return "Missing {} parameter in the request".format(WeatherGear.PARAM_LOCATION)
         else:
             latlng = params[WeatherGear.PARAM_LOCATION]
 
