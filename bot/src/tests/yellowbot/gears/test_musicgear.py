@@ -10,7 +10,6 @@ from yellowbot.globalbag import GlobalBag
 class TestMusicGear(TestCase):
     def setUp(self):
         self._gear = MusicGear("test_url", True)
-        pass
 
     def tearDown(self):
         pass

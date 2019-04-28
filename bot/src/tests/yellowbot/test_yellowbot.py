@@ -5,8 +5,8 @@ from unittest import TestCase
 
 import os
 
+from tests.yellowbot.surfaces.fakeinteractionsurface import FakeInteractionSurface
 from yellowbot.globalbag import GlobalBag
-from yellowbot.surfaces.baseinteractionsurface import BaseInteractionSurface
 from yellowbot.surfaces.notifyadminsurface import NotifyAdminSurface
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 from yellowbot.yellowbot import YellowBot
@@ -21,11 +21,6 @@ class TestYellowBot(TestCase):
         # The file is under the same directory of this test class
         config_path = os.path.join(os.path.dirname(__file__), "yellowbot_config_test.json")
         self._yellowbot = YellowBot(config_file=config_path, test_mode=True)
-        self._test_surface = FakeInteractionSurface(FakeInteractionSurface.SURFACE_ID)
-        # Add a test interaction surface
-        self._yellowbot.add_interaction_surface(
-            FakeInteractionSurface.SURFACE_ID,
-            self._test_surface)
 
     def tearDown(self):
         pass
@@ -66,31 +61,9 @@ class TestYellowBot(TestCase):
         self._yellowbot.notify_admin("Test notification message")
         # Nothing in the other interaction surfaces
         assert None == self._test_surface.last_message
-        # And the right message in mocked the nofify admin surface
+        # And the right message in mocked the notify admin surface
         assert "Notify_Test" == notify_surface.last_message.channel_id
         assert "Test notification message" == notify_surface.last_message.text
-
-
-class FakeInteractionSurface(BaseInteractionSurface):
-    """
-    Surface to check if messages have really been sent
-    Cannot call it TestInteractionSurface, otherwise tests will be execute
-     on this class too
-    """
-    SURFACE_ID = "Test_Surface"
-
-    def __init__(self, surface_id):
-        """
-        Test surface
-
-        :param surface_id: id of the surface to use
-        :type surface_id: str
-        """
-        BaseInteractionSurface.__init__(self, surface_id)
-        self.last_message = None
-
-    def send_message(self, message):
-        self.last_message = message
 
 
 class FakeNotifyAdminInteractionSurface(NotifyAdminSurface):

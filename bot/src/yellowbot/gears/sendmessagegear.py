@@ -42,7 +42,7 @@ class SendMessageGear(BaseGear):
 
     def process_intent(self, intent, params):
         """
-        Right now, call YellowBot to send a message, using its configuration
+        Sends a message using one of the registered surfaces
 
         :param intent:
         :param params:
