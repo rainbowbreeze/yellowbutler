@@ -193,6 +193,10 @@ class YellowBot:
         if not response_text:
             return
 
+        self._logger.info("response_text type is {} and value is ##{}##".format(
+            type(response_text),
+            response_text
+        ))
         # create a reply, and send it back
         self.process_intent(
             GlobalBag.SEND_MESSAGE_INTENT,
