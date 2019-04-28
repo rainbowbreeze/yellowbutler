@@ -50,6 +50,8 @@ class SchedulerTask:
         :param surface_text: text to use for communication
         :type surface_text: str
         """
+        self._logger = LoggingService.get_logger(__name__)
+
         self.name = name
         self.when = when
         if None is timezone:
@@ -187,10 +189,14 @@ class SchedulerService:
         return tasks
         """
 
+        self._logger.info("execution_time: {}".format(execution_time))
         for task in self._tasks:
             # Translate the execution time to the same timezone of the task to
             #  check for
             relative_time = execution_time.to(task.timezone)
+            self._logger.info("Task time: {}".format(task.when))
+            self._logger.info("Task timezone: {}".format(task.timezone))
+            self._logger.info("relative_time: {}".format(relative_time))
             relative_hour = relative_time.hour
             try:
                 task_hour = int(task.when[:2])
