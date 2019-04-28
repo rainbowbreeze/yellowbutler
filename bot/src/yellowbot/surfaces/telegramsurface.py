@@ -72,6 +72,7 @@ class TelegramSurface(BaseInteractionSurface):
         if not message:
             return
 
+        self._logger.info("message {}".format(message.text))
         # To check Markdown, please refer to https://core.telegram.org/bots/api#sendmessage
         message = self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
         # It returns a string with the message id, not the whole message object
