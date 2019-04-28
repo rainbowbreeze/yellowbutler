@@ -40,7 +40,7 @@ class NluEngine:
             if message.lower().startswith(header):
                 intent = GlobalBag.WEATHER_FORECAST_INTENT
                 location_name = message[len(header):].strip()
-                params[GlobalBag.WEATHER_FORECAST_PARAM_LOCATION] = location_name
+                params[GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME] = location_name
                 return intent, params
 
         # Checks for Music Trace intent

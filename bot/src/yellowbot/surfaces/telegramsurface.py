@@ -72,7 +72,10 @@ class TelegramSurface(BaseInteractionSurface):
         if not message:
             return
 
-        self._logger.info("message {}".format(message.text))
+        # Sometimes an error happens sending a message with only a _
+        #  like "Missing city_name parameter in the request"
+        #  and the entire sendMessage call crashes
+        # TODO sanitize the message before sending it
         # To check Markdown, please refer to https://core.telegram.org/bots/api#sendmessage
         message = self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
         # It returns a string with the message id, not the whole message object
