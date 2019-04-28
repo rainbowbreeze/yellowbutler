@@ -29,7 +29,6 @@ class TestSchedulerService(TestCase):
         assert 4 == len(tasks)
         task = tasks[0]
         assert "test_task_name_1" == task.name
-        # assert time.strptime("06:00 CET", "%H:%M %Z") == task.when
         assert "06:00" == task.when
         assert "UTC" == task.timezone
         assert "name_of_the_intent_1" == task.intent
@@ -37,7 +36,8 @@ class TestSchedulerService(TestCase):
         assert "param_value_2" == task.params['param_key_2']
         assert "surface_id_1" == task.surface.surface_id
         assert "surface_channel_id_1" == task.surface.channel_id
-        assert "text_for_the_message_1" == task.surface.text
+        assert None is task.surface.text
+        assert "text_for_the_message_1" == task.default_message
         task = tasks[1]
         assert "test_task_name_2" == task.name
         assert "20:00" == task.when
@@ -47,6 +47,7 @@ class TestSchedulerService(TestCase):
         assert "surface_id_2" == task.surface.surface_id
         assert "channel_id_2" == task.surface.channel_id
         assert None is task.surface.text
+        assert None is task.default_message
         task = tasks[2]
         assert "test_task_name_3" == task.name
         assert "15:00" == task.when
@@ -54,6 +55,7 @@ class TestSchedulerService(TestCase):
         assert "name_of_the_intent_3" == task.intent
         assert None is task.params
         assert None is task.surface
+        assert None is task.default_message
         task = tasks[3]
         assert "test_task_name_4" == task.name
         assert "17:00" == task.when
@@ -63,7 +65,7 @@ class TestSchedulerService(TestCase):
         assert "test_surface_4" == task.surface.surface_id
         assert "123456" == task.surface.channel_id
         assert None is task.surface.text
-
+        assert None is task.default_message
 
     def test_TimeComparison(self):
         """

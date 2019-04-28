@@ -14,7 +14,7 @@
     },
     "surface_id": "surface_id_1",
     "surface_channel_id": "surface_channel_id_1",
-    "surface_text": "text_for_the_message_1"
+    "default_message": "text_for_the_message_1"
   },
 
   // A good mix between optional fields

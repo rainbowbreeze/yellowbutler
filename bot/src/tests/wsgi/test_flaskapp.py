@@ -109,8 +109,8 @@ class TestFlaskApp(TestCase):
         # Not valid key passed in auth header
         response = self.app.post(
             flaskapp.FLASK_TELEGRAM_BOT_LURCH_WEBHOOK,
-            data=json.dumps(telegram_data), # Has to be dumped
-            content_type="application/json", # Has to be specified
+            data=json.dumps(telegram_data),  # Has to be dumped
+            content_type="application/json",  # Has to be specified
             follow_redirects=True
         )
         assert 200 == response.status_code

@@ -257,9 +257,14 @@ class YellowBot:
                 if task.surface is not None:
                     self._logger.info("Sending a message after task execution to surface {}".format(
                         task.surface.surface_id))
-                    # Priority to a potential text written in the config file
+
                     # TODO: better check for none or empty or only spaces or... https://stackoverflow.com/a/24534152
-                    text = result if task.surface.text is None else task.surface.text
+                    # If the intent has returned something, use that text, otherwise the default
+                    #  test in the configuration file
+                    if result and result.strip():
+                        text = result
+                    else:
+                        text = task.default_message
                     # Sends a message with the result of the task, if specified in the task
                     self.process_intent(
                         GlobalBag.SEND_MESSAGE_INTENT,

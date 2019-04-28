@@ -30,7 +30,7 @@ class SchedulerTask:
                  params=None,
                  surface_id=None,
                  surface_channel_id=None,
-                 surface_text=None):
+                 default_message=None):
         """
         Create a new task for the scheduler service
         :param name: name of the task
@@ -47,8 +47,8 @@ class SchedulerTask:
         :type surface_id: str
         :param surface_channel_id: surface channel id to use for communication
         :type surface_channel_id: str
-        :param surface_text: text to use for communication
-        :type surface_text: str
+        :param default_message: default message to use for communication, if the task result is empty
+        :type default_message: str
         """
         self._logger = LoggingService.get_logger(__name__)
 
@@ -56,12 +56,13 @@ class SchedulerTask:
         self.when = when
         self.timezone = timezone if timezone else "UTC"
         self.intent = intent
+        self.default_message = default_message
         self.params = params
         if not (surface_id and surface_id.strip()):
             # If surface_id is None, empty of full of spaces
             self.surface = None
         else:
-            self.surface = SurfaceMessage(surface_id, surface_channel_id, surface_text)
+            self.surface = SurfaceMessage(surface_id, surface_channel_id, None)
 
 
 class SchedulerService:
@@ -129,7 +130,7 @@ class SchedulerService:
                         task_dict['params'] if 'params' in task_dict else None,
                         task_dict['surface_id'] if 'surface_id' in task_dict else None,
                         task_dict['surface_channel_id'] if 'surface_channel_id' in task_dict else None,
-                        task_dict['surface_text'] if 'surface_text' in task_dict else None,
+                        task_dict['default_message'] if 'default_message' in task_dict else None,
                     )
                     self._tasks.append(task)
 
