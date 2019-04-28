@@ -50,10 +50,13 @@ class NotifyAdminGear(BaseGear):
         :param params:
         :return:
         """
+        if NotifyAdminGear.INTENTS[0] != intent:
+            message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(message)
+            return message
         if NotifyAdminGear.PARAM_MESSAGE not in params:
-            error_text = "Missing {} parameter in the request".format(NotifyAdminGear.PARAM_MESSAGE)
-            self._logger.info(error_text)
-            return error_text
+            return "Missing {} parameter in the request".format(NotifyAdminGear.PARAM_MESSAGE)
+
         text = params[NotifyAdminGear.PARAM_MESSAGE]
         self._logger.info("Notify admin about {}".format(text))
 

@@ -22,6 +22,10 @@ class EchoMessageGear(BaseGear):
         self._logger = LoggingService.get_logger(__name__)
 
     def process_intent(self, intent, params):
+        if EchoMessageGear.INTENTS[0] != intent:
+            message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(message)
+            return message
         if EchoMessageGear.PARAM_MESSAGE not in params:
             return "Missing {} parameter in the request".format(EchoMessageGear.PARAM_MESSAGE)
 

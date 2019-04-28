@@ -47,13 +47,13 @@ class WeatherGear(BaseGear):
         if WeatherGear.PARAM_CITY_NAME not in params:
             return "Missing {} parameter in the request".format(WeatherGear.PARAM_CITY_NAME)
 
-        latlong = params[WeatherGear.PARAM_LOCATION]
+        latlng = params[WeatherGear.PARAM_LOCATION]
         city_name = params[WeatherGear.PARAM_CITY_NAME]
-        self._logger.info("Searching weather condition for city {} at location {}".format(city_name, latlong))
+        self._logger.info("Searching weather condition for city {} at location {}".format(city_name, latlng))
 
         url = "https://api.darksky.net/forecast/{}/{}?{}".format(
             self._api_key,
-            latlong,
+            latlng,
             "exclude=minutely,hourly,alerts,flags&units=si&lang=it"
         )
         try:
@@ -112,4 +112,3 @@ class WeatherGear(BaseGear):
         time = arrow.get(epoch)  # UTC
         time = time.to(timezone)  # Local time
         return time.format("HH:mm")
-    

@@ -1,5 +1,5 @@
 """
-A YellowBot gear to check for music
+A YellowBot gear to add title and artist of a song to a Google Spreadsheet
 
 Requirements
 - requests
@@ -37,6 +37,10 @@ class MusicGear(BaseGear):
         self._test_mode = test_mode
 
     def process_intent(self, intent, params):
+        if MusicGear.INTENTS[0] != intent:
+            message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(message)
+            return message
         if MusicGear.PARAM_TITLE not in params:
             return "Missing {} parameter in the request".format(MusicGear.PARAM_TITLE)
         if MusicGear.PARAM_AUTHOR not in params:
