@@ -26,6 +26,16 @@ class GlobalBag:
     WEATHER_FORECAST_INTENT = "weather_forecast"
     WEATHER_FORECAST_PARAM_LOCATION = "location"
 
+    # Send a message
+    SEND_MESSAGE_INTENT = "send_message"
+    SEND_MESSAGE_PARAM_SURFACE_ID = "surface_id"
+    SEND_MESSAGE_PARAM_CHANNEL_ID = "chat_id"
+    SEND_MESSAGE_PARAM_TEXT = "text"
+
+    # Notify Admins
+    NOTIFY_ADMIN_INTENT = "notify_admin"
+    NOTIFY_ADMIN_PARAM_TEXT = "text"
+
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
     SURFACE_NOTIFY_ADMIN = "NotifyAdmin"  # Notification channel for admin

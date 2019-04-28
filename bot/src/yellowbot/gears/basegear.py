@@ -1,5 +1,10 @@
 """
 Base gear, all the others have to inherit from this one
+
+A gear defines a way to solve one or more intents, and can be seen as a
+ "feature" of the main app
+
+Adding new gears adds more features to the main app.
 """
 
 
@@ -7,7 +12,16 @@ class BaseGear:
     """
     Defines basic attributes and methods of all gears
     """
+
     def __init__(self, gear_name, gear_intents):
+        """
+        Constructor
+        :param gear_name: name of the gear, useful for logging
+        :type gear_name: str
+
+        :param gear_intents: the intent processes
+        :type gear_intents: str[]
+        """
         self._gear_name = gear_name
         self._gear_intents = gear_intents
 

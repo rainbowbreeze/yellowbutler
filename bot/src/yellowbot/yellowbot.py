@@ -1,21 +1,19 @@
 """
 Main class
 """
-import os
-
 
 from yellowbot.configservice import ConfigService
 from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
+from yellowbot.gears.notifyadmingear import NotifyAdminGear
+from yellowbot.gears.sendmessagegear import SendMessageGear
 from yellowbot.gears.weathergear import WeatherGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.nluengine import NluEngine
 from yellowbot.schedulerservice import SchedulerService
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
-from yellowbot.surfaces.telegramnotifyadminsurface import TelegramNotifyAdminSurface
-from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 
 class YellowBot:
@@ -57,12 +55,8 @@ class YellowBot:
         self._config_service = ConfigService(config_file)
 
         # Creates the datastore service
-        db_filename = os.path.join(os.path.dirname(__file__), GlobalBag.DATABASE_FILE)
-        #self._datastore = DatastoreService(db_filename)
-
-        # Registers the interaction surface
-        self._surfaces = {}
-        self._register_interaction_surfaces(test_mode)
+        # db_filename = os.path.join(os.path.dirname(__file__), GlobalBag.DATABASE_FILE)
+        # self._datastore = DatastoreService(db_filename)
 
         # Registers gears
         self._gears = []
@@ -73,35 +67,6 @@ class YellowBot:
 
         # Assigns the scheduler service
         self._scheduler = scheduler if scheduler is not None else SchedulerService(GlobalBag.SCHEDULER_FILE)
-
-    def _register_interaction_surfaces(self, test_mode):
-        """
-        Registers all the notification surfaces
-
-        :param test_mode: class instance created for test purposes, some
-        features are disabled
-        :type test_mode: bool
-
-        """
-        running_on_pythonanywhere = self._config_service.get_config("running_on_pythonanywhere_free", throw_error=False)
-
-        # NotifyAdmin surface
-        self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN] = TelegramNotifyAdminSurface(
-            GlobalBag.SURFACE_NOTIFY_ADMIN,
-            self._config_service.get_config("telegram_notifyadmin_authorization_token"),
-            self._config_service.get_config("telegram_notifyadmin_chat_id"),
-            running_on_pythonanywhere=running_on_pythonanywhere,
-            test_mode=test_mode
-        )
-
-        # Telegram bot Lurch
-        self._surfaces[GlobalBag.SURFACE_TELEGRAM_BOT_LURCH] = TelegramSurface(
-            GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
-            self._config_service.get_config("telegram_lurch_authorization_token"),
-            self._config_service.get_config("base_vps_address") + self._config_service.get_config("telegram_lurch_webhook_url_relative"),
-            running_on_pythonanywhere=running_on_pythonanywhere,
-            test_mode=test_mode
-        )
 
     def _register_gears(self, test_mode):
         """
@@ -123,6 +88,20 @@ class YellowBot:
             self._config_service.get_config("easynido_bambini")
         ))
 
+        # Admin notification gear
+        self._gears.append(NotifyAdminGear(
+            self._config_service,
+            test_mode
+        ))
+
+        # Send message gear
+        self._send_message_gear = SendMessageGear(
+            self._config_service,
+            test_mode
+        )
+        self._gears.append(self._send_message_gear)
+        # TODO fix this workaround for tests
+
     def get_config(self, key_to_read, throw_error=True):
         """
         Read a value from the configuration, throwing an error if it doesn't exist
@@ -135,6 +114,7 @@ class YellowBot:
         :return: the object associated wit the config key
         """
         return self._config_service.get_config(key_to_read, throw_error)
+        # TODO fix this workaround for Flask
 
     def is_client_authorized(self, key):
         """
@@ -163,6 +143,7 @@ class YellowBot:
         :type new_keys: str
         """
         self._config_service.change_authorized_keys(new_keys)
+        # TODO fix workaround for tests
 
     def add_interaction_surface(self, key, interaction_surface):
         """
@@ -174,23 +155,8 @@ class YellowBot:
         :param interaction_surface: the surface to add
         :type interaction_surface: BaseInteractionSurface
         """
-        self._surfaces[key] = interaction_surface
-
-    def send_message(self, message):
-        """
-        Sends a message to one of the interaction surfaces.
-        Use this method when YellowBot acts as a chatbot
-
-        :param message: the message received that needs to be handled
-        :type message: SurfaceMessage
-        """
-        # Finds the surface for sending the result message
-        surface = self._surfaces[message.surface_id] if message.surface_id in self._surfaces else None
-        if surface is not None:
-            # Creates a new message and dispatch it
-            return surface.send_message(message)
-        else:
-            raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))
+        self._send_message_gear.add_interaction_surface(key, interaction_surface)
+        # TODO fix workaround for tests
 
     def notify_admin(self, text):
         """
@@ -202,18 +168,13 @@ class YellowBot:
         :type text: str
         :return:
         """
-        # Finds the surface for sending the result message
-        admin_surface = self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN]\
-            if GlobalBag.SURFACE_NOTIFY_ADMIN in self._surfaces\
-            else None
-        if admin_surface is not None:
-            self._logger.info("Notify admin about {}".format(text))
-            # Creates a new message and dispatch it
-            message = admin_surface.forge_notification(text)
-            return admin_surface.send_message(message)
-        else:
-            self._logger.info("Cannot notify admin about {}".format(text))
-            raise ValueError("Cannot find an admin surface to process message for {}".format(GlobalBag.SURFACE_NOTIFY_ADMIN))
+
+        self.process_intent(
+            GlobalBag.NOTIFY_ADMIN_INTENT,
+            {
+                GlobalBag.NOTIFY_ADMIN_PARAM_TEXT: text
+            }
+        )
 
     def receive_message(self, message):
         """
@@ -245,17 +206,15 @@ class YellowBot:
         if not response_text:
             return
 
-        # Finds the surface for sending the result message
-        surface = self._surfaces[message.surface_id] if message.surface_id in self._surfaces else None
-        if surface is not None:
-            # Creates a new message and dispatch it
-            return surface.send_message(SurfaceMessage(
-                message.surface_id,
-                message.channel_id,
-                response_text
-            ))
-        else:
-            raise ValueError("Cannot find a surface to process message for {}".format(message.surface_id))
+        # create a reply, and send it back
+        self.process_intent(
+            GlobalBag.SEND_MESSAGE_INTENT,
+            {
+                GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: message.surface_id,
+                GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: message.channel_id,
+                GlobalBag.SEND_MESSAGE_PARAM_TEXT: response_text
+            }
+        )
 
     def process_intent(self, intent, params):
         """
@@ -308,5 +267,11 @@ class YellowBot:
                 self._logger.info("Executing scheduler task {}".format(task.name))
                 result = self.process_intent(task.intent, task.params)
                 if result is not None and task.surface is not None:
-                    task.surface.text = result
-                    self.send_message(task.surface)
+
+                    # Sends a message with the result of the task, if specified in the task
+                    self.process_intent(GlobalBag.SEND_MESSAGE_INTENT,
+                                        {
+                                            GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: task.surface.surface_id,
+                                            GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: task.surface.channel_id,
+                                            GlobalBag.SEND_MESSAGE_PARAM_TEXT: result
+                                          })

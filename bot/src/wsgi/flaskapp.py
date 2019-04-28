@@ -29,7 +29,6 @@ Useful links:
 
  Basic code to deal with Telegram: https://blog.pythonanywhere.com/148/
 """
-import logging
 import threading
 
 from flask import Flask, request, make_response, jsonify
