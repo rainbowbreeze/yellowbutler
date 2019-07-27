@@ -56,9 +56,14 @@ class NluEngine:
                 begin_search_string = "Ho trovato "
                 separator_string = " di "
                 end_string = " con SoundHound, credo che ti piacer"
-            elif message.lower().startswith("just used"):
+            elif message.lower().startswith("just used "):
                 # English language
                 begin_search_string = "Just used SoundHound to find "
+                separator_string = " by "
+                end_string = "https://"
+            elif message.lower().startswith("i found "):
+                # English language
+                begin_search_string = "I found "
                 separator_string = " by "
                 end_string = "https://"
             else:
