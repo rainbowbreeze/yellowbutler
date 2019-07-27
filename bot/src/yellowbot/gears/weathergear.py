@@ -79,12 +79,12 @@ class WeatherGear(BaseGear):
         try:
             timezone = results["timezone"]
             current_summary = results["currently"]["summary"]
-            current_temperature = results["currently"]["temperature"]
+            current_temperature = round(results["currently"]["temperature"])
             week_summary = results["daily"]["summary"]
             daily_data = results["daily"]["data"][0]
             daily_summary = daily_data["summary"]
-            daily_temperature_max = daily_data["temperatureMax"]
-            daily_temperature_min = daily_data["temperatureMin"]
+            daily_temperature_max = round(daily_data["temperatureMax"])
+            daily_temperature_min = round(daily_data["temperatureMin"])
             daily_sunrise_epoch = daily_data["sunriseTime"]
             daily_sunrise_time = self._from_epoch_to_time(daily_sunrise_epoch, timezone)
             daily_sunset_epoch = daily_data["sunsetTime"]
