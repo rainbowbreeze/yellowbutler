@@ -116,8 +116,8 @@ Deploy the app
 
 To see logs in the Cloud Console:
 https://console.cloud.google.com/logs/viewer?project=yellowbutler-213621
-or
-gcloud app logs tail -s default from Cloud Shell
+from Cloud Shell
+gcloud app logs tail -s default 
 
 Run locally as in GAE
 gunicorn -b :8080 wsgi.flaskapp:app
