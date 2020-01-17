@@ -21,3 +21,8 @@ venv/
 
 #PyTest
 .pytest_cache/
+
+#IDE files
+.vscode
+.idea
+

@@ -63,11 +63,11 @@ class TestNluEngine(TestCase):
         sentence = "Weather Pavia"
         intent, params = self.nlu_engine.infer_intent_and_args(sentence)
         assert intent == GlobalBag.WEATHER_FORECAST_INTENT
-        assert GlobalBag.WEATHER_FORECAST_PARAM_LOCATION in params
-        assert params.get(GlobalBag.WEATHER_FORECAST_PARAM_LOCATION) == "Pavia"
+        assert GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME in params
+        assert params.get(GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME) == "Pavia"
 
         sentence = "Meteo Milano, Italy"
         intent, params = self.nlu_engine.infer_intent_and_args(sentence)
         assert intent == GlobalBag.WEATHER_FORECAST_INTENT
-        assert GlobalBag.WEATHER_FORECAST_PARAM_LOCATION in params
-        assert params.get(GlobalBag.WEATHER_FORECAST_PARAM_LOCATION) == "Milano, Italy"
+        assert GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME in params
+        assert params.get(GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME) == "Milano, Italy"
