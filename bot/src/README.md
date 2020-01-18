@@ -13,7 +13,15 @@ pip install -r requirements.txt
 deactivate
 
 
-* PYCHARM 2018.2 CONFIG
+** VSCODE SETUP
+Create the basic environment
+https://code.visualstudio.com/docs/python/tutorial-flask
+
+Enable tests
+https://code.visualstudio.com/docs/python/testing
+
+
+** PYCHARM 2018.2 CONFIG
 
 File -> New Project
   Location bot/src
@@ -35,6 +43,8 @@ from CL
   flask run
   (alternatively: FLASK_APP=wsgi/flaskapp.py flask run)
   (if run with python wsgi/flaskapp.py, it doesn't work)
+from VSCode
+  
 from PyCharm
   go to wsgi/flaskapp.py and run it. If there is an error with config file, read under the wrong directory, edit the run configuration and set bot/src as working path
 
@@ -179,14 +189,3 @@ because the root is not anymore src, but becomes src/wsgi, and so all the python
 To test:
 curl -X POST https://yellowbutler.pythonanywhere.com/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
 (remember to authorize the key in the config file, and reload the webapp)
-
-LOGGING Under PAW
- https://www.pythonanywhere.com/forums/topic/3120/
-  print('debug info', file=sys.stderr)
-  end up in /var/log/…error.log (in some time after request)
-  
-  
-DAMN!!!
-https://help.pythonanywhere.com/pages/403ForbiddenError/
-https://www.pythonanywhere.com/whitelist/
-PythonAnywhere is a no way choice, unfortunately :(
