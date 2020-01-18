@@ -25,7 +25,7 @@ class EchoMessageGear(BaseGear):
         if EchoMessageGear.INTENTS[0] != intent:
             message = "Call to {} using wrong intent {}".format(__name__, intent)
             self._logger.info(message)
-            return message
+            return message 
         if EchoMessageGear.PARAM_MESSAGE not in params:
             return "Missing {} parameter in the request".format(EchoMessageGear.PARAM_MESSAGE)
 

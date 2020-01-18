@@ -37,6 +37,9 @@ class GlobalBag:
     NOTIFY_ADMIN_INTENT = "notify_admin"
     NOTIFY_ADMIN_PARAM_MESSAGE = "message"
 
+    # CommitStrip 
+    COMMITSTRIP_INTENT = "commitstrip"
+
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
     SURFACE_NOTIFY_ADMIN = "NotifyAdmin"  # Notification channel for admin
