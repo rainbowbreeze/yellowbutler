@@ -6,9 +6,6 @@
     "test_key_2"
   ],
 
-  // Define if the app is running hosted on PythonAnywhere
-  "running_on_pythonanywhere": false,
-
   // API address, base domain (without the /)
   "base_vps_address": "https://YOUR_PYTHONANYWHERE_USERNAME.pythonanywhere.com",
   // API address, everything after the base domain
