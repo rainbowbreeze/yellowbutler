@@ -61,7 +61,6 @@ class TelegramSurface(BaseInteractionSurface):
         self._test_mode = test_mode
         if not self._test_mode:
             self._fix_connection_reset_error()
-            self._init_pythonanywhere(running_on_pythonanywhere)
             self.telegram_bot = telepot.Bot(auth_token)
             self._set_webhook(webhook_url)
 
@@ -80,40 +79,6 @@ class TelegramSurface(BaseInteractionSurface):
         message = self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
         # It returns a string with the message id, not the whole message object
         return str(message["message_id"]) if "message_id" in message else None
-
-    def _init_pythonanywhere(self, running_on_pythonanywhere_free):
-        """
-        Call it once to initialize Telegram library to interact with
-         PythonAnywhere
-
-        :param running_on_pythonanywhere_free: if the whole app is hosted and
-        running on PythonAnywhere with free account
-        :return:
-        """
-        # If run in production (so, not run locally), sets the PythonAnywhere
-        #  special config and the webhook for the bot.
-        #  Otherwise, as soon as there is call to set the webhook when Flask
-        #  is running locally, the command fails because of the proxy settings
-        #  with urllib3.exceptions.ProxyError
-        if not running_on_pythonanywhere_free:
-            return
-
-        if TelegramSurface._FIX_PythonAnywhereFree_APPLIED:
-            return
-
-        self._logger.info("Applying PythonAnywhere Free fix")
-
-        # You can leave this bit out if you're using a paid PythonAnywhere account
-        # https://help.pythonanywhere.com/pages/403ForbiddenError/
-        proxy_url = "http://proxy.server:3128"
-        telepot.api._pools = {
-            'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
-        }
-        telepot.api._onetime_pool_spec = (
-            urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
-        # end of the stuff that's only needed for free accounts
-
-        TelegramSurface._FIX_PythonAnywhereFree_APPLIED = True
 
     def _fix_connection_reset_error(self):
         """

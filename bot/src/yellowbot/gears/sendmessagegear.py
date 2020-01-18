@@ -89,14 +89,12 @@ class SendMessageGear(BaseGear):
         :type test_mode: bool
 
         """
-        running_on_pythonanywhere = self._config_service.get_config("running_on_pythonanywhere_free", throw_error=False)
 
         # NotifyAdmin surface
         self._surfaces[GlobalBag.SURFACE_NOTIFY_ADMIN] = TelegramNotifyAdminSurface(
             GlobalBag.SURFACE_NOTIFY_ADMIN,
             self._config_service.get_config("telegram_notifyadmin_authorization_token"),
             self._config_service.get_config("telegram_notifyadmin_chat_id"),
-            running_on_pythonanywhere=running_on_pythonanywhere,
             test_mode=test_mode
         )
 
@@ -105,7 +103,6 @@ class SendMessageGear(BaseGear):
             GlobalBag.SURFACE_TELEGRAM_BOT_LURCH,
             self._config_service.get_config("telegram_lurch_authorization_token"),
             self._config_service.get_config("base_vps_address") + self._config_service.get_config("telegram_lurch_webhook_url_relative"),
-            running_on_pythonanywhere=running_on_pythonanywhere,
             test_mode=test_mode
         )
 

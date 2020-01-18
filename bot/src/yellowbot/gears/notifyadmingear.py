@@ -31,14 +31,11 @@ class NotifyAdminGear(BaseGear):
         self._config_service = config_service
         self._logger = LoggingService.get_logger(__name__)
 
-        running_on_pythonanywhere = self._config_service.get_config("running_on_pythonanywhere_free", throw_error=False)
-
         # Registers the interaction surface
         self._admin_surface = TelegramNotifyAdminSurface(
             GlobalBag.SURFACE_NOTIFY_ADMIN,
             self._config_service.get_config("telegram_notifyadmin_authorization_token"),
             self._config_service.get_config("telegram_notifyadmin_chat_id"),
-            running_on_pythonanywhere=running_on_pythonanywhere,
             test_mode=test_mode
         )
 
