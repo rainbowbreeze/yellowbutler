@@ -21,8 +21,7 @@ Enable tests
 https://code.visualstudio.com/docs/python/testing
 
 
-** PYCHARM 2018.2 CONFIG
-
+** PYCHARM 2018.2 SETUP
 File -> New Project
   Location bot/src
   Project Interpreter
@@ -44,7 +43,7 @@ from CL
   (alternatively: FLASK_APP=wsgi/flaskapp.py flask run)
   (if run with python wsgi/flaskapp.py, it doesn't work)
 from VSCode
-  
+  Once configured the IDE, simply CTRL+F5 or Debug -> Run without debugger. or select the arrow in the "Debug" left panel section
 from PyCharm
   go to wsgi/flaskapp.py and run it. If there is an error with config file, read under the wrong directory, edit the run configuration and set bot/src as working path
 
@@ -61,8 +60,9 @@ https://martin-thoma.com/configuration-files-in-python/
 https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
 
 
-
-
+** REQUIREMENTS
+pip freeze > requirements.txt
+pip install -r requirements.txt
 
 
 ** FLASK

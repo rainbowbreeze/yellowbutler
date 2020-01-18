@@ -84,7 +84,7 @@ def tick_scheduler_thread(yellowbot):
 
 
 @app.route("/")
-def hello_world():
+def home():
     return "YellowBot here, happy to serve at {} :)".format(
         FLASK_BASE_API_ADDRESS
     )
