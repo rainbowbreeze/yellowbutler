@@ -85,11 +85,11 @@ class YellowBot:
         self._gears.append(WeatherGear(
             self._config_service.get_config("darksky_api")
         ))
-        self._gears.append(EasyNidoGear(
-            self._config_service.get_config("easynido_username"),
-            self._config_service.get_config("easynido_password"),
-            self._config_service.get_config("easynido_bambini")
-        ))
+        #self._gears.append(EasyNidoGear(
+        #    self._config_service.get_config("easynido_username"),
+        #    self._config_service.get_config("easynido_password"),
+        #    self._config_service.get_config("easynido_bambini")
+        #))
 
         # Admin notification gear
         self._gears.append(NotifyAdminGear(
