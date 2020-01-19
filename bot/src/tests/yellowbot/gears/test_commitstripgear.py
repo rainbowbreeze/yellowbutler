@@ -5,6 +5,8 @@ from unittest import TestCase
 
 import os
 
+import arrow
+
 from yellowbot.gears.commitstripgear import CommitStripGear
 from yellowbot.globalbag import GlobalBag
 
@@ -20,8 +22,17 @@ class TestCommitStripGear(TestCase):
 
     def test_return_latest_strip(self):
         testdata1 = open(TESTDATA_FILENAME.format("1")).read()
-        result = self._gear._return_latest_strip("")
+        
+        # Test cornercases
+        result = self._gear._get_strip_for_date("", arrow.get("2020-01-14"))
+        self.assertIsNone(result)
+        result = self._gear._get_strip_for_date(testdata1, arrow.get("2020-01-20"))
         self.assertIsNone(result)
 
-        result = self._gear._return_latest_strip(testdata1)
-        self.assertEqual("Tue, 14 Jan 2020 20:03:56 +0000", result)
+        # Real test
+        result = self._gear._get_strip_for_date(testdata1, arrow.get("2020-01-14"))
+        self.assertEqual("New CommitStrip content: {}\n{}".format(
+                "Other people’s code",
+                "https://www.commitstrip.com/wp-content/uploads/2020/01/Strip-Paywall-650-finalenglish.jpg"
+            ), result)
+

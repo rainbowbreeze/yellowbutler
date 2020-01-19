@@ -16,7 +16,6 @@ gunicorn
 
 # EasyNido gear
 beautifulsoup4
-requests
 # ---
 
 # Telegram support
@@ -26,10 +25,14 @@ urllib3==1.24.2
 telepot
 # ---
 
+# CommitStip
+feedparser
+
 # Misc
 # To parse json files for configuration, tasks etc
 json_minify
 # For date and time management
 arrow
+# For EasyNido, CommitStrip, Telegram, etc
+requests
 # ---
-
