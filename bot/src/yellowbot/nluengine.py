@@ -90,6 +90,12 @@ class NluEngine:
                 params[GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE] = message[len(header):].strip()
                 return intent, params
 
+        # Checks for CommitStrip intent
+        headers = ["commitstrip", "/commitstrip"]
+        if any(message.lower().startswith(header) for header in headers):
+            intent = GlobalBag.COMMITSTRIP_INTENT
+            return intent, params
+
         # Checks for other intents
 
         return intent, params

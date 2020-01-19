@@ -39,6 +39,7 @@ class GlobalBag:
 
     # CommitStrip 
     COMMITSTRIP_INTENT = "commitstrip"
+    COMMITSTRIP_PARAM_SILENT = "silent"
 
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot

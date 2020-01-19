@@ -22,10 +22,16 @@ class CommitStripGear(BaseGear):
     Read the CommitStrip RSS and check if there is a new artwork with the same date of today
     """
     INTENTS = [GlobalBag.COMMITSTRIP_INTENT]
+    PARAM_SILENT = GlobalBag.COMMITSTRIP_PARAM_SILENT  # No notification if there is nothing new 
 
-    def __init__(self):
+    def __init__(self,
+                 test_mode=False):
+        """
+        """
+
         BaseGear.__init__(self, CommitStripGear.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
+        self._test_mode = test_mode
 
     def process_intent(self, intent, params):
         if CommitStripGear.INTENTS[0] != intent:
@@ -33,9 +39,14 @@ class CommitStripGear(BaseGear):
             self._logger.info(message)
             return message 
 
-        return self._find_daily_strip
+        # Defaul value for silent param
+        silent = False
+        if CommitStripGear.PARAM_SILENT in params:
+            silent = params[CommitStripGear.PARAM_SILENT]
 
-    def _find_daily_strip(self):
+        return self._find_daily_strip(silent)
+
+    def _find_daily_strip(self, silent):
         """
         Read CommitStrip RSS, extract latest Strips and check if there is something for today
 
@@ -54,9 +65,9 @@ class CommitStripGear(BaseGear):
             return "Error while reading RSS feed from CommitStrip: {}".format(repr(e))
         
         today = arrow.utcnow()
-        return self._get_strip_for_date(rssdata, today)
+        return self._get_strip_for_date(rssdata, today, silent)
 
-    def _get_strip_for_date(self, rss_content, date_to_compare):
+    def _get_strip_for_date(self, rss_content, date_to_compare, silent):
         """
         Parse the RSS stream and check if the most recent item was published on
          the same date of the specific data param
@@ -66,6 +77,9 @@ class CommitStripGear(BaseGear):
 
         param date_to_compare: the day CommitStrip should have published something
         type date_to_compare: arrow
+
+        param silent: do not send any message if there is a new strip for the given date
+        type silent: boolean
 
         return: None, or the url of the image published in the specified day
         """
@@ -90,7 +104,10 @@ class CommitStripGear(BaseGear):
                 # <img src="https://www.commitstrip.com/wp-content/uploads/2020/01/Strip-Paywall-650-finalenglish.jpg" alt="" width="650" height="607" class="alignnone size-full wp-image-20822" />
                 img_matches = re.search('src="([^"]+)"', img_tag)
                 return "New CommitStrip content: {}\n{}".format(first_entry.title,img_matches[1])
-            return None
+            elif not silent:
+                return "No new CommitStrip for today"
+            else:
+                return None
         except Exception as err:
             # It could be
             # - IndexError if there are no items inside the main feed definition

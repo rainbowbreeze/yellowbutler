@@ -9,6 +9,7 @@ from yellowbot.gears.musicgear import MusicGear
 from yellowbot.gears.notifyadmingear import NotifyAdminGear
 from yellowbot.gears.sendmessagegear import SendMessageGear
 from yellowbot.gears.weathergear import WeatherGear
+from yellowbot.gears.commitstripgear import CommitStripGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.nluengine import NluEngine
@@ -99,6 +100,11 @@ class YellowBot:
         # Send message gear
         self._gears.append(SendMessageGear(
             self._config_service,
+            test_mode
+        ))
+
+        # CommitStrip gear
+        self._gears.append(CommitStripGear(
             test_mode
         ))
 
@@ -255,9 +261,6 @@ class YellowBot:
                 self._logger.info("Executing scheduler task {}".format(task.name))
                 result = self.process_intent(task.intent, task.params)
                 if task.surface is not None:
-                    self._logger.info("Sending a message after task execution to surface {}".format(
-                        task.surface.surface_id))
-
                     # TODO: better check for none or empty or only spaces or... https://stackoverflow.com/a/24534152
                     # If the intent has returned something, use that text, otherwise the default
                     #  test in the configuration file
@@ -265,11 +268,19 @@ class YellowBot:
                         text = result
                     else:
                         text = task.default_message
-                    # Sends a message with the result of the task, if specified in the task
-                    self.process_intent(
-                        GlobalBag.SEND_MESSAGE_INTENT,
-                        {
-                            GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: task.surface.surface_id,
-                            GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: task.surface.channel_id,
-                            GlobalBag.SEND_MESSAGE_PARAM_TEXT: text
-                        })
+                    # If there is no defaul message, and the result of the task
+                    #  is an empty string, skip sending the message
+                    if text and text.strip():
+                        self._logger.info("Sending a message after task execution to surface {}".format(
+                            task.surface.surface_id))
+
+                        # Sends a message with the result of the task, if specified in the task
+                        self.process_intent(
+                            GlobalBag.SEND_MESSAGE_INTENT,
+                            {
+                                GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: task.surface.surface_id,
+                                GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: task.surface.channel_id,
+                                GlobalBag.SEND_MESSAGE_PARAM_TEXT: text
+                            })
+                    else:
+                        self._logger.info("Skipping sending task execution message as there is nothing to send")
