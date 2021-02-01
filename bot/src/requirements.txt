@@ -1,5 +1,5 @@
 # Flask
-Flask==1.0.2
+Flask==1.1.2
 # ---
 
 # Test
