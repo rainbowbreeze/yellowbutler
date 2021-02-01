@@ -91,6 +91,13 @@ ENV/
 # PyCharm
 .idea
 
+
+# VSCode
+.vscode
+
+
+# YellowBot specific files
+
 # Ignore configuration files
 *_config.json
 
