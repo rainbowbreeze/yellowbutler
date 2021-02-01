@@ -1,6 +1,4 @@
-# YELLOW BOT
-My own version of digital, personal, butler
-
+# YELLOWBOT GAE AND PYTHON SPECIFIC CONFIGURATIONS
 
 ## Run YellowBot
 
@@ -75,21 +73,3 @@ entrypoint: gunicorn -b :$PORT wsgi.flaskapp:app
 ```
 
 Added gunicorn to requirements.txt and rerun 
-
-
-
-## Deploy using Google Cloud Shell
-Open a CloudShell from the project
-```
-git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
-cd yellowbutler/bot/src
-virtualenv --python=python3.7 venv
-source venv/bin/activate
-pip install -r requirements.txt
-``` 
-
-Deploy the app [guide](https://cloud.google.com/appengine/docs/standard/python3/runtime?hl=sl#application_startup)
-```
-gcloud app deploy -v [YOUR_VERSION_ID]
-gcloud app deploy -v 1 --quiet
-```
