@@ -69,21 +69,42 @@ https://code.visualstudio.com/docs/python/testing
 
 
 ## Run YellowBot locally
+Assuming working directory is bot/src - this is important for module's relative paths, configuration path, etc
 
-### From CL
+### Edit configuration
+```
+cp yellowbot_config_template.json yellowbot_config.json
+cp yellowbot_tasks_template.json yellowbot_tasks.json
+```
+Then, edit files accordingly to the comments.
+
+
+### From CL, as a GAE app
+```
+gunicorn -b :5000 wsgi.flaskapp:app
+```
+Test with: 
+```
+curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
+```
+
+
+### From CL, as normal python app
 _(dir is bot/scr, with venv activated)_
+```
+FLASK_APP=wsgi/flaskapp.py flask run
+```
+alternatively:
 ```
 export FLASK_APP=wsgi/flaskapp.py
 flask run
 ```
-(alternatively: FLASK_APP=wsgi/flaskapp.py flask run)
-(if run with python wsgi/flaskapp.py, it doesn't work)
+_(if run with python wsgi/flaskapp.py, it doesn't work)_
 
 Test with: 
 ```
-curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
+curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
 ```
-
 
 ### From VSCode
 - Once configured the IDE, simply CTRL+F5 or Debug -> Run without debugger. or select the arrow in the "Debug" left panel section
@@ -100,6 +121,12 @@ gcloud app deploy -v 1 --quiet
 To open the browser at the current app's page:
 ```
 gcloud app browse
+```
+
+To see logs in the Cloud Console use the link https://console.cloud.google.com/logs/viewer?project=%YOUR_PROJECT_ID%
+from Cloud Shell or local
+```
+gcloud app logs tail -s default 
 ```
 
 
@@ -145,18 +172,6 @@ gcloud config configurations activate yellowbot
 To change gcloud user:
 ```
 gcloud config set account ACCOUNT
-```
-
-To see logs in the Cloud Console:
-https://console.cloud.google.com/logs/viewer?project=%YOUR_PROJECT_ID%
-from Cloud Shell or local
-```
-gcloud app logs tail -s default 
-```
-
-Run locally as in GAE
-```
-gunicorn -b :8080 wsgi.flaskapp:app
 ```
 
 Check installed components with:

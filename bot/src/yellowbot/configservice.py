@@ -14,11 +14,9 @@ class ConfigService:
     def __init__(self,
                  config_file=GlobalBag.CONFIG_FILE):
         """
+        Initialize this class.
 
-        :param config_file: config file with several values. By default, the
-        file yellowbot_config.json in the same folder of this file is used,
-        but feel free to point to any other file. If only the file name is
-        used, the assumption it is in the same folder of this file
+        :param config_file: JSON file with app configuration.
         :type config_file: str
         """
         # Create the logger and initialise it
@@ -31,8 +29,17 @@ class ConfigService:
     def _load_config_file(self, config_file):
         """
         Load config key/value pairs from a file
-        :param config_file: name of the file. Can be full path or, otherwise,
-        same folder of this class is considered
+        :param config_file: name of the config file.
+          When only the filename is passed, this method searches the file
+           inside the root folder where the app was started.
+          In case of GAE environment launch, it is the same folder of app.yaml.
+          In case of a python launch, it is the same folder where python
+           executable was launched (generally, the src folder).
+          If the file is not found, this method looks inside the same folder
+           where this class file is stored.
+          Alternatively, It could also be a full path. In this case, it depends
+           on the hosting filesystem structure, and I don't know what's the
+           expected behavior under GAE.
         :type config_file: str
 
         :return:
@@ -41,11 +48,13 @@ class ConfigService:
         if not os.path.isfile(config_file):
             # Folder where this file is, can work also without the abspath,
             #  but better for debug so full path is traced in the error
+            self._logger.info("Exact config file was not found, falling back to this class folder")
             base_folder = os.path.abspath(os.path.dirname(__file__))
             full_config_path = os.path.join(base_folder, config_file)  # combine with the config file name
         else:
             full_config_path = config_file
-        # Now if has the file and full path with configurations
+        # Now it has the file and full path with configurations
+        self._logger.info("Loading configurating from {}".format(full_config_path))
         if os.path.isfile(full_config_path):
             with open(full_config_path, 'r') as f:
                 json_with_comment = open(full_config_path).read()
