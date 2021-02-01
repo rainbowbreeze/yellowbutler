@@ -68,10 +68,10 @@ https://code.visualstudio.com/docs/python/testing
 
 
 
-## Run YellowBot
+## Run YellowBot locally
 
-From CL
-dir is bot/scr
+### From CL
+_(dir is bot/scr, with venv activated)_
 ```
 export FLASK_APP=wsgi/flaskapp.py
 flask run
@@ -79,13 +79,32 @@ flask run
 (alternatively: FLASK_APP=wsgi/flaskapp.py flask run)
 (if run with python wsgi/flaskapp.py, it doesn't work)
 
-From VSCode
+Test with: 
+```
+curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
+```
+
+
+### From VSCode
 - Once configured the IDE, simply CTRL+F5 or Debug -> Run without debugger. or select the arrow in the "Debug" left panel section
 
 
 
+## Deploy YellowBot
 
-## Deploy using Google Cloud Shell
+### From CL
+```
+gcloud app deploy -v 1 --quiet
+```
+
+To open the browser at the current app's page:
+```
+gcloud app browse
+```
+
+
+
+### Using Google Cloud Shell
 Open a CloudShell from the project
 ```
 git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
@@ -133,16 +152,6 @@ https://console.cloud.google.com/logs/viewer?project=%YOUR_PROJECT_ID%
 from Cloud Shell or local
 ```
 gcloud app logs tail -s default 
-```
-
-Deploy the app
-```
-gcloud app deploy -v 1 --quiet
-```
-
-To open the browser at the current app's page:
-```
-gcloud app browse
 ```
 
 Run locally as in GAE
