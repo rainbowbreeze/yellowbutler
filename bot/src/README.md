@@ -2,19 +2,51 @@
 My own version of digital, personal, butler
 
 
-## BASIC ENVIRONMENT SETUP
+## Environment setup with Google App Engine and Linux
+
+YellowBot runs on [App Engine Standard environment](https://cloud.google.com/appengine/docs/the-appengine-environments). As for [Jan 2021](https://cloud.google.com/appengine/quotas), _The App Engine standard environment gives you 1 GB of data storage and traffic for free, which can be increased by enabling paid applications. However, some features impose limits unrelated to quotas to protect the stability of the system_
+
+Some tutorials:
+- Official [App Engine Python tutorials](https://cloud.google.com/appengine/docs/standard/python3), with quickstart.
+
+
+### Google Cloud SDK Linux install
+[Install Cloud SDK on Ubuntu](https://cloud.google.com/sdk/docs/quickstart#deb). It cannot be installed via [snap package](https://cloud.google.com/sdk/docs/downloads-snap), because the package miss the appengine-python module.
+```
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get install apt-transport-https ca-certificates gnupg
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+sudo apt-get update && sudo apt-get install google-cloud-sdk
+sudo apt-get install google-cloud-sdk-app-engine-python google-cloud-sdk-app-engine-python-extras
+```
+Note: _Updating and removing components using gcloud components is disabled if you installed Cloud SDK using apt-get or yum. To manage the Cloud SDK in this case, continue using the package management tool used during installation._
+
+[Initialize](https://cloud.google.com/sdk/docs/initializing) the gcloud environment and get started:
+```
+gcloud init
+```
+or, if a user has already been configured:
+```
+gcloud auth login
+gcloud config set project PROJECT_ID
+```
+
+
+### Python installation and setup
 
 Install python 3.x in Linux or in MacOS with brew
+
+Download the application
 ```
 git clone https://github.com/rainbowbreeze/yellowbutler.git master
 cd bot/src
 ```
 
-From https://docs.python.org/3/library/venv.html
+Create the [Python virtual environment](https://docs.python.org/3/library/venv.html) and activate it
 ```
 python3 -m venv venv
 ```
-(last venv is the venv name)
+_(last venv is the venv name)_
 
 ```
 source venv/bin/activate
@@ -35,22 +67,7 @@ Enable tests
 https://code.visualstudio.com/docs/python/testing
 
 
-### PyCharm 2018.2 setup
-File -> New Project
-  Location bot/src
-  Project Interpreter
-    New environment using: Virtualenv
-    Location: bot/src/venv
-    Base interpreter: python 3.7
-PyCharm creates global virtualenv by default, so rename the venv folder with something else, create the project, then rename back venv folder.
-File -> Settings
-  Project Interpreter
-    Select the venv just created under the project folder
-Everything should work under Python in this way
-
-
-
-## RUN
+## Run YellowBot
 
 from CL
   export FLASK_APP=wsgi/flaskapp.py
@@ -64,12 +81,14 @@ from PyCharm
 
 
 
-## TEST
+## Run tests
 using PyTest: https://docs.pytest.org/en/latest/
 http://pytest.readthedocs.io/en/latest/goodpractices.html
 
-from the project root, run pytest
-
+from the project root
+```
+pytest
+```
 
 
 ## CONFIGURATION
@@ -105,39 +124,70 @@ if __name__ == '__main__':
 
 
 
-## Google App Engine
+### GAE Standard python 3.7
+https://cloud.google.com/appengine/docs/standard/python3
+https://cloud.google.com/appengine/docs/standard/python3/building-app
 
-YellowBot runs on [App Engine Standard environment](https://cloud.google.com/appengine/docs/the-appengine-environments). As for [Jan 2021](https://cloud.google.com/appengine/quotas), _The App Engine standard environment gives you 1 GB of data storage and traffic for free, which can be increased by enabling paid applications. However, some features impose limits unrelated to quotas to protect the stability of the system_
+As per [quickstart](https://cloud.google.com/appengine/docs/standard/python3/quickstart
+), create a new AppEngine project and enable billing, otherwise deploy won't work.
+No need to vendoring libraries, they're added using requirements.txt file in the project root
 
-Some tutorials:
-- [App Engine Python tutorials](https://cloud.google.com/appengine/docs/standard/python3).
 
 
-### Linux SDK install
-[Install Cloud SDK on Ubuntu](https://cloud.google.com/sdk/docs/quickstart#deb). It cannot be installed via [snap package](https://cloud.google.com/sdk/docs/downloads-snap), because the package miss the appengine-python module.
+## SCHEDULER
+Create a cron.yaml following
+https://cloud.google.com/appengine/docs/flexible/python/scheduling-jobs-with-cron-yaml
+or
+https://cloud.google.com/appengine/docs/standard/python/config/cron
+gcloud app deploy cron.yaml --verbosity debug --quiet
+Check for log on Cloud console: https://console.cloud.google.com/appengine/taskqueues/cron
+ 
+
+Changed app.yaml adding the right module name, using dotted notation
 ```
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-sudo apt-get install apt-transport-https ca-certificates gnupg
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-sudo apt-get update && sudo apt-get install google-cloud-sdk
-sudo apt-get install google-cloud-sdk-app-engine-python google-cloud-sdk-app-engine-python-extras
+entrypoint: gunicorn -b :$PORT wsgi.flaskapp:app
 ```
 
-Check installed components with:
+Added gunicorn to requirements.txt and rerun 
+
+
+
+## Deploy using Google Cloud Shell
+Open a CloudShell from the project
 ```
-gcloud components list
+git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
+cd yellowbutler/bot/src
+virtualenv --python=python3.7 venv
+source venv/bin/activate
+pip install -r requirements.txt
+``` 
+
+Deploy the app [guide](https://cloud.google.com/appengine/docs/standard/python3/runtime?hl=sl#application_startup)
+```
+gcloud app deploy -v [YOUR_VERSION_ID]
+gcloud app deploy -v 1 --quiet
 ```
 
-Note: _Updating and removing components using gcloud components is disabled if you installed Cloud SDK using apt-get or yum. To manage the Cloud SDK in this case, continue using the package management tool used during installation._
 
-[Initialize](https://cloud.google.com/sdk/docs/initializing) the gcloud environment and get started:
+
+## Appendix
+
+### Misc GAE commands
+
+How to check for [gcloud configurations](https://www.the-swamp.info/blog/configuring-gcloud-multiple-projects/):
+
+Create a new configuration to connect a new account to the project id
 ```
 gcloud init
+``` 
+Check the active configuration and the list of configurations
 ```
-or, if a user has already been configured:
+gcloud config configurations list
 ```
-gcloud auth login
-gcloud config set project PROJECT_ID
+
+To switch among configurations
+```
+gcloud config configurations activate yellowbot
 ```
 
 To change gcloud user:
@@ -145,105 +195,86 @@ To change gcloud user:
 gcloud config set account ACCOUNT
 ```
 
-### Deploy the app
-```
-gcloud app deploy
-  gcloud topic gcloudignore
-```
-
-### GAE Standard python 3.7
-https://cloud.google.com/appengine/docs/standard/python3
-https://cloud.google.com/appengine/docs/standard/python3/building-app
-Create a new AppEngine project and enable billing, otherwise deploy won't work.
-No need to vendoring libraries, they're added using requirements.txt file in the project root
-Logging: gcloud app logs tail -s default
-
-
-### Cloud Shell
- Open a CloudShell from the project
-   rainbowbreeze_dev@yellowbutler-213621
-   /home/rainbowbreeze_dev
- git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
- cd yellowbutler/bot/src
- virtualenv --python=python3.5 venv
- source venv/bin/activate
- pip install -r requirements.txt
- 
-Deploy the app
-  https://cloud.google.com/appengine/docs/standard/python3/runtime?hl=sl#application_startup
-  Changed app.yaml adding the right module name, using dotted notation
-    entrypoint: gunicorn -b :$PORT wsgi.flaskapp:app
-    added gunicorn to requirements.txt and rerun 
-  gcloud app deploy -v [YOUR_VERSION_ID]
-  gcloud app deploy -v 1 --quiet
-  gcloud app browse
-
 To see logs in the Cloud Console:
-https://console.cloud.google.com/logs/viewer?project=yellowbutler-213621
-from Cloud Shell
+https://console.cloud.google.com/logs/viewer?project=%YOUR_PROJECT_ID%
+from Cloud Shell or local
+```
 gcloud app logs tail -s default 
+```
+
+Deploy the app
+```
+gcloud app deploy -v 1 --quiet
+```
+
+To open the browser at the current app's page:
+```
+gcloud app browse
+```
 
 Run locally as in GAE
+```
 gunicorn -b :8080 wsgi.flaskapp:app
+```
+
+Check installed components with:
+```
+gcloud components list
+```
 
 
 
-To check gcloud configurations
-https://www.the-swamp.info/blog/configuring-gcloud-multiple-projects/
-gcloud config configurations list
- to check the active configuration and the list of configurations
-gcloud init
- and select to create a new configuration to connect a new account to the project id
-once finished the usual command to deploy the app
-gcloud app deploy -v 1 --quiet
-
-gcloud config configurations activate yellowbot
- to switch among configurations
-
-
-** SCHEDULER
-Create a cron.yaml following
-https://cloud.google.com/appengine/docs/flexible/python/scheduling-jobs-with-cron-yaml
-or
-https://cloud.google.com/appengine/docs/standard/python/config/cron
-gcloud app deploy cron.yaml --verbosity debug --quiet
-check log: https://console.cloud.google.com/appengine/taskqueues/cron?project=yellowbutler-213621
- 
-
-
-### DEPLOY UNDER PYTHONANYWHERE
+## Deprecated - Deploy Under PythonAnaywhere
 
 Steps here: https://help.pythonanywhere.com/pages/Flask/
 
 Copy the project
- Open a shell
- git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
- cd yellowbutler/bot/src
- mkvirtualenv --python=/usr/bin/python3.6 yellowbutler-venv
-  later or, to activate the virtual env: workon yellowbutler-venv
+Open a shell
+```
+git clone https://github.com/rainbowbreeze/yellowbutler.git/ yellowbutler
+cd yellowbutler/bot/src
+mkvirtualenv --python=/usr/bin/python3.6 yellowbutler-venv
+```
+later or, to activate the virtual env: workon yellowbutler-venv
 
- pip install -r requirements.txt
- (virtualenv created under /home/yellowbutler/.virtualenvs/yellowbutler-venv, as per command output)
+```
+pip install -r requirements.txt
+```
+(virtualenv created under /home/yellowbutler/.virtualenvs/yellowbutler-venv, as per command output)
  
 Create a new webapp
 - Select Manual mode, python 3.6 and confirm everything
 - virtualenv:  /home/yellowbutler/.virtualenvs/yellowbutler-venv
 - change WSGI file adding under the section +++++++++++ FLASK +++++++++++
 ```
-  import sys
-  path = '/home/yellowbutler/yellowbutler/bot/src'
-  if path not in sys.path:
-      sys.path.append(path)
-  from wsgi.flaskapp import app as application
+import sys
+path = '/home/yellowbutler/yellowbutler/bot/src'
+if path not in sys.path:
+    sys.path.append(path)
+from wsgi.flaskapp import app as application
 ```
 
-if I put the path to the wsgi folder, /home/yellowbutler/yellowbutler/bot/src/wsgi, I obtain a
+If I put the path to the wsgi folder, /home/yellowbutler/yellowbutler/bot/src/wsgi, I obtain a
  ModuleNotFoundError: No module named 'yellowbot'
 because the root is not anymore src, but becomes src/wsgi, and so all the python import fails
-
 
 To test:
 ```
 curl -X POST https://yellowbutler.pythonanywhere.com/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Ciao da meeeeee\"}}"
 ```
 (remember to authorize the key in the config file, and reload the webapp)
+
+### Deprecated - PyCharm 2018.2 setup
+File -> New Project
+  Location bot/src
+  Project Interpreter
+    New environment using: Virtualenv
+    Location: bot/src/venv
+    Base interpreter: python 3.7
+PyCharm creates global virtualenv by default, so rename the venv folder with something else, create the project, then rename back venv folder.
+File -> Settings
+  Project Interpreter
+    Select the venv just created under the project folder
+Everything should work under Python in this way
+
+
