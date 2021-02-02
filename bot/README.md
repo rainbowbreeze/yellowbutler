@@ -26,11 +26,19 @@ Note: _Updating and removing components using gcloud components is disabled if y
 ```
 gcloud init
 ```
+gcloud init --console-only to avoid browser login
+
 or, if a user has already been configured:
 ```
 gcloud auth login
 gcloud config set project PROJECT_ID
 ```
+
+To enable Google Cloud SDK authentication
+```
+gcloud auth application-default login
+```
+TODO: enable service account via https://cloud.google.com/docs/authentication
 
 
 ### Python installation and environment setup
