@@ -3,7 +3,12 @@
 
 ## Python notes
 
-## Run tests
+
+### GAE and data storing
+https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-python
+
+
+### Run tests
 using PyTest: https://docs.pytest.org/en/latest/
 http://pytest.readthedocs.io/en/latest/goodpractices.html
 
@@ -11,6 +16,18 @@ from bot/src folder
 ```
 pytest
 ```
+
+#### GAE and Unit Testing
+Reference links
+- [Local Unit Testing for Python 2](https://cloud.google.com/appengine/docs/standard/python/tools/localunittesting)- For python 2.x, and testbed is not supported on python 3.x runtime [post](https://groups.google.com/g/google-appengine/c/yuAofPuxYtE/m/z4rRIggECgAJ)
+- [Concepts, use and testing Cloud Datastore in local](https://groups.google.com/g/google-appengine/c/cBXfhk3HfRI)
+- [Datastore emulator for unit testing](https://groups.google.com/g/google-appengine/c/yuAofPuxYtE/m/KQYeFUcBCgAJ), with a link to a repo with unit test examples
+
+To emulate the Datastore, it's necessary to launch the GAE project using the local app server, dev_appserver.py, configured to provide [Datastore emulation](https://cloud.google.com/appengine/docs/standard/python/tools/migrate-cloud-datastore-emulator)
+```
+dev_appserver.py --application=%YOUR_APPLICATION_ID --support_datastore_emulator=true --dev_appserver_log_level=debug app.yaml
+```
+
 
 ### Manage configurations
 https://martin-thoma.com/configuration-files-in-python/

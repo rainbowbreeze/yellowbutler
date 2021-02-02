@@ -28,6 +28,9 @@ telepot
 # CommitStip
 feedparser
 
+# Google cloud Datastore
+google-cloud-datastore==2.1.0
+
 # Misc
 # To parse json files for configuration, tasks etc
 json_minify

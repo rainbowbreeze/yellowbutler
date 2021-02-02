@@ -18,6 +18,7 @@ sudo apt-get install apt-transport-https ca-certificates gnupg
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 sudo apt-get update && sudo apt-get install google-cloud-sdk
 sudo apt-get install google-cloud-sdk-app-engine-python google-cloud-sdk-app-engine-python-extras
+sudo apt-get install google-cloud-sdk-datastore-emulator
 ```
 Note: _Updating and removing components using gcloud components is disabled if you installed Cloud SDK using apt-get or yum. To manage the Cloud SDK in this case, continue using the package management tool used during installation._
 
@@ -106,6 +107,9 @@ Test with:
 ```
 curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
 ```
+
+There is also the option to use the [local development server](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app#local-dev-server), dev_appserver.py - this is useful to emulate services like Cloud Datastore, Cloud Bigtable and Cloud Pub/Sub. Unfortunately, [offical docs](https://cloud.google.com/appengine/docs/standard/python/migrate-to-python3/testing#testing-on-app-engine) says: _The [local development server](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app#local-dev-server) that is included in the Cloud SDK is available in alpha for Python 3 apps. We recommend you use standard Python 3 tools instead of this local development server._
+
 
 
 ### From VSCode
