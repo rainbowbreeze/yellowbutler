@@ -62,7 +62,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-To quick from the environment
+To quit from the environment
 ```
 deactivate
 ```
@@ -77,8 +77,9 @@ https://code.visualstudio.com/docs/python/testing
 
 
 
-## Run YellowBot locally
-Assuming working directory is bot/src - this is important for module's relative paths, configuration path, etc
+## Configuring gears
+YellowBot works using the concept of gears. Each gear offers a functionality. So there is a weather gear for weather forecasting, and echo gear for sending a message to a specific surface (Telegram), a youtube video gears for getting the latest videos published on a channel, etc.
+The majority of gears requires parameters to work, like API keys, telegram chat id, etc. There paramenters are configured via a specific config file
 
 ### Edit configuration
 ```
@@ -87,6 +88,21 @@ cp yellowbot_tasks_template.json yellowbot_tasks.json
 ```
 Then, edit files accordingly to the comments.
 
+### Weather gear
+TBD
+
+## Telegram gear
+TBD
+
+### YouTube gear
+Enable YoutTube API for the current project and obtain a YouTube API key following [these instructions](https://developers.google.com/youtube/v3/getting-started)
+Check for [API quota](https://console.developers.google.com/iam-admin/quotas) used.
+
+
+
+
+## Run YellowBot locally
+Assuming working directory is bot/src - this is important for module's relative paths, configuration path, etc
 
 ### From CL, as normal python app
 As per [official reference](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app), it's possible to run locally the app launching the python script that starts flask environment

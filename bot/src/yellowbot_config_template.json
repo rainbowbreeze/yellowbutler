@@ -25,5 +25,9 @@
   "tracemusic_destination_url": "URL_to_store_music_info",
 
   // Weather forecase
-  "darksky_api": "API_KEY_FOR_DARKSKY"
+  "darksky_api": "API_KEY_FOR_DARKSKY",
+
+  //Youtube API key
+  "youtube_api": "YOUTUBE_API_KEY"
+
 }
