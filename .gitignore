@@ -93,3 +93,7 @@ ENV/
 
 # MAC
 .DS_Store
+
+
+# VSCode
+.vscode
