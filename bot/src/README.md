@@ -94,3 +94,149 @@ entrypoint: gunicorn -b :$PORT wsgi.flaskapp:app
 ```
 
 Added gunicorn to requirements.txt, so App Engine can be launched locally
+
+
+## YouTube notes
+
+Resouces:
+- [YouTube Developers Live: Getting a Channel's Uploads in v3](https://www.youtube.com/watch?v=RjUlmco7v2M)
+- [YouTube API to fetch all videos on a channel](https://stackoverflow.com/questions/18953499/youtube-api-to-fetch-all-videos-on-a-channel) - one of the last [replies](https://stackoverflow.com/a/36387404) is the best one, as the solution consumes only 2 quota token, and not 100 as a normal search
+
+[Official reference doc](https://developers.google.com/youtube/v3/docs/channels/list) to get the "upload" playlist from the channel:
+```
+curl 'https://youtube.googleapis.com/youtube/v3/channels?part=contentDetails&id=UCSbdMXOI_3HGiFviLZO6kNA&key=[YOUR_API_KEY]' --header 'Accept: application/json' --compressed
+```
+Result:
+```
+{
+  "kind": "youtube#channelListResponse",
+  "etag": "nhLskkHElB2KEuMHsB1MCvcS39M",
+  "pageInfo": {
+    "totalResults": 1,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#channel",
+      "etag": "_4gfGDJgf5GGfG3wN_Vo-ANkiyE",
+      "id": "UCSbdMXOI_3HGiFviLZO6kNA",
+      "contentDetails": {
+        "relatedPlaylists": {
+          "likes": "",
+          "favorites": "",
+          "uploads": "UUSbdMXOI_3HGiFviLZO6kNA"
+        }
+      }
+    }
+  ]
+}
+```
+
+[Official reference doc](https://developers.google.com/youtube/v3/docs/playlistItems/list) to get the items of a playlist:
+```
+curl 'https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=20&playlistId=UUSbdMXOI_3HGiFviLZO6kNA&key=[YOUR_API_KEY]' --header 'Accept: application/json' --compressed
+```
+Result:
+```
+{
+  "kind": "youtube#playlistItemListResponse",
+  "etag": "7NNslmCQmNZ4HyiQCWOoH2uPwlk",
+  "nextPageToken": "CAIQAA",
+  "items": [
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "AbWaqKJEbkfBpDbUqSkbvM2whno",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLnZlVngwQXVoSEZ3",
+      "snippet": {
+        "publishedAt": "2021-01-27T20:00:10Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "Valve's next VR projects are SCARILY similar to Sword Art Online",
+        "description": "Hello and welcome to Tuesday Newsday! Your number one resource for the entire weeks worth of VR news. Today is actually a CRAZY week for VR news. Between Valve announcing a partnership with a BCI company, new haptic gloves, Quest 2 news, and Doom Eternal maybe coming to VR... I hope you enjoy! \n\n\nMy links-\nTwitch Stream TODAY!\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill\n\n\nSources-\nhttps://www.roadtovr.com/bethesda-vr-pc-2021-project/\nhttps://www.classification.gov.au/titles/project-2021a\nhttps://www.roadtovr.com/valve-openbci-immersive-vr-games/\nhttps://www.roadtovr.com/gabe-newell-brain-computer-interfaces-way-closer-matrix-people-realize/\nhttps://www.tvnz.co.nz/one-news/new-zealand/gabe-newell-says-brain-computer-interface-tech-allow-video-games-far-beyond-human-meat-peripherals-can-comprehend\nhttps://www.roadtovr.com/bethesda-vr-pc-2021-project/\nhttps://vrscout.com/news/haptx-true-contact-haptic-gloves-vr/\nhttps://vrscout.com/news/haptx-true-contact-haptic-gloves-vr/\nhttps://haptx.com/virtual-reality/",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 0,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "veVx0AuhHFw"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "3DUxmtnDvgj2vJdH_stgWRzY4hQ",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLmxJTGxXTUxUbjBj",
+      "snippet": {
+        "publishedAt": "2021-01-23T19:15:01Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "What Happened to my Valve Index After 2000 Hours?",
+        "description": "Hello! Here is an updated video as promised of my Valve index after 2000 hours and about a year and a half of usage. I have been through a lot and I have learned a lot about the index and how to make it last a long time, so buckle up and enjoy!\n\nBTW, im super sorry, this this video took me way longer to do than normal, Im using multiple different camera setups with different lighting etc, definitely is not my best video ever, but It will get better. Thank you!\n\nMy links-\nTwitch Stream TODAY!\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill\n\nMusic- Protostar Overdrive",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 1,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "lILlWMLTn0c"
+        }
+      }
+    }
+  ],
+  "pageInfo": {
+    "totalResults": 157,
+    "resultsPerPage": 2
+  }
+}
+```
