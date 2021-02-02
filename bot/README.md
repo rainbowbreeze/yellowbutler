@@ -79,17 +79,8 @@ cp yellowbot_tasks_template.json yellowbot_tasks.json
 Then, edit files accordingly to the comments.
 
 
-### From CL, as a GAE app
-```
-gunicorn -b :5000 wsgi.flaskapp:app
-```
-Test with: 
-```
-curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
-```
-
-
 ### From CL, as normal python app
+As per [official reference](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app), it's possible to run locally the app launching the python script that starts flask environment
 _(dir is bot/scr, with venv activated)_
 ```
 FLASK_APP=wsgi/flaskapp.py flask run
@@ -105,6 +96,17 @@ Test with:
 ```
 curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
 ```
+
+### From CL, as a GAE app
+To simulate a production App Engine environment, you can run the full Web Server Gateway Interface (WSGI) server locally. To do this, use the same command specified as entrypoint in your app.yaml, for example:
+```
+gunicorn -b :5000 wsgi.flaskapp:app
+```
+Test with: 
+```
+curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
+```
+
 
 ### From VSCode
 - Once configured the IDE, simply CTRL+F5 or Debug -> Run without debugger. or select the arrow in the "Debug" left panel section
