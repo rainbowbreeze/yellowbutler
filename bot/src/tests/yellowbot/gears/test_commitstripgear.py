@@ -1,7 +1,16 @@
 """
 Test CommitStrip gear
+
+Responses library is used to mock Request calls
+https://github.com/getsentry/responses
+
+Unfortunately, I wasn't able to configure responses as Pytest fixture inside Unittest
+- Pytext fixtures: https://docs.pytest.org/en/stable/fixture.html#fixture-function
+- Responses as pytest fixture: https://github.com/getsentry/responses#responses-as-a-pytest-fixture
+- UnitTest and fixtures: https://docs.pytest.org/en/stable/unittest.html#mixing-pytest-fixtures-into-unittest-testcase-subclasses-using-marks
 """
 from unittest import TestCase
+import responses
 
 import os
 
@@ -37,4 +46,37 @@ class TestCommitStripGear(TestCase):
                 "Other people’s code",
                 "https://www.commitstrip.com/wp-content/uploads/2020/01/Strip-Paywall-650-finalenglish.jpg"
             ), result)
+    
+    @responses.activate
+    def test_mock_request(self):
+        testdata1 = open(TESTDATA_FILENAME.format("1")).read()
 
+        # Use responses to provide a predefined value when the testes class calls requests
+        responses.add(
+            responses.GET,
+            'http://www.commitstrip.com/en/feed/',
+            body = testdata1,
+            status = 200,
+            content_type='application/xml'
+        )
+
+        result = self._gear._find_daily_strip(False)
+        self.assertEqual("No new CommitStrip for today", result)
+        # Unfortunately, I don't have parameters to pass a specific day at this level.
+        #  But, at least, I verified the responses mechanism works
+
+    @responses.activate
+    def test_simulate_error_in_request(self):
+        # This test also checks that responses are not carried over from one
+        #  test to another, and each test starts the responses routes empty 
+
+        responses.add(
+            responses.GET,
+            'http://www.commitstrip.com/en/feed/',
+            body = '',
+            status = 404,
+            content_type='application/xml'
+        )
+
+        result = self._gear._find_daily_strip(False)
+        self.assertEqual('Error while reading RSS feed from CommitStrip: HTTPError(\'404 Client Error: Not Found for url: http://www.commitstrip.com/en/feed/\')', result)

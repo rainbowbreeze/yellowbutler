@@ -18,6 +18,10 @@ pip install -r requirements-tests.txt
 pytest
 ```
 
+#### Mock requests call
+[Responses](https://github.com/getsentry/responses) seems a good library to mock Request calls.
+
+
 #### GAE and Unit Testing
 Reference links
 - [Local Unit Testing for Python 2](https://cloud.google.com/appengine/docs/standard/python/tools/localunittesting)- For python 2.x, and testbed is not supported on python 3.x runtime [post](https://groups.google.com/g/google-appengine/c/yuAofPuxYtE/m/z4rRIggECgAJ)
