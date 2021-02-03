@@ -80,7 +80,7 @@ class NewsReportGear(BaseGear):
         # Search in the database if it has already the "upload" playlist id 
         #  for the given channel.
         # This pla
-        upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, channel_id)
+        upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, youtube_channel_id)
         self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
 
         # Find the upload playlist id for the given channel
