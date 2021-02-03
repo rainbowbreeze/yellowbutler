@@ -3,6 +3,27 @@
 
 ## Python notes
 
+### Documentation format
+For documentation, the python reStructured Text format is used, following the suggestions on [this article]https://realpython.com/documenting-python-code/#documenting-your-python-code-base-using-docstrings
+
+Example:
+```
+def print_header(file_loc, print_cols = False):
+  """Gets and prints the spreadsheet's header columns
+
+  This is a more detailed description of the class, and other important things to know.
+
+  :param file_loc: The file location of the spreadsheet
+  :type file_loc: str
+  :param print_cols: A flag used to print the columns to the console
+      (default is False)
+  :type print_cols: bool
+  :returns: a list of strings representing the header columns
+  :rtype: list
+  """
+
+  # Code starts after an empty line
+```
 
 ### GAE and data storing
 https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-python
