@@ -1,0 +1,461 @@
+{
+  "kind": "youtube#playlistItemListResponse",
+  "etag": "TSYLBTd4vAPwyQVHegzGFN2obE4",
+  "nextPageToken": "CAoQAA",
+  "items": [
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "rbxm8bbLIRSiZvI9pUywA-hEXhY",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLldGZW55N2wxRXY0",
+      "snippet": {
+        "publishedAt": "2021-02-02T19:15:04Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "The 7 Types of VR Users 2",
+        "description": "I LOVED THE FIRST ONE OF THESE. So here's part 2! Here are 7 more types of VR users, whether Quest, Quest 2, Index, Vive or other, you may just fall into one of if not many of these categories.  I HOPE YOU ENJOY! If you want more videos like this hit that like button fam. Much Love. Also Tuesday Newsday will just be tomorrow. \n\nMy links-\nHere are my links\nTwitch Stream TODAY!\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\n\n\nSources-",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/WFeny7l1Ev4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/WFeny7l1Ev4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/WFeny7l1Ev4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/WFeny7l1Ev4/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/WFeny7l1Ev4/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 0,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "WFeny7l1Ev4"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "fw-Ij0q4PwQOzjgU4j9zcgyAiO8",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLnZlVngwQXVoSEZ3",
+      "snippet": {
+        "publishedAt": "2021-01-27T20:00:10Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "Valve's next VR projects are SCARILY similar to Sword Art Online",
+        "description": "Hello and welcome to Tuesday Newsday! Your number one resource for the entire weeks worth of VR news. Today is actually a CRAZY week for VR news. Between Valve announcing a partnership with a BCI company, new haptic gloves, Quest 2 news, and Doom Eternal maybe coming to VR... I hope you enjoy! \n\n\nMy links-\nTwitch Stream TODAY!\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill\n\n\nSources-\nhttps://www.roadtovr.com/bethesda-vr-pc-2021-project/\nhttps://www.classification.gov.au/titles/project-2021a\nhttps://www.roadtovr.com/valve-openbci-immersive-vr-games/\nhttps://www.roadtovr.com/gabe-newell-brain-computer-interfaces-way-closer-matrix-people-realize/\nhttps://www.tvnz.co.nz/one-news/new-zealand/gabe-newell-says-brain-computer-interface-tech-allow-video-games-far-beyond-human-meat-peripherals-can-comprehend\nhttps://www.roadtovr.com/bethesda-vr-pc-2021-project/\nhttps://vrscout.com/news/haptx-true-contact-haptic-gloves-vr/\nhttps://vrscout.com/news/haptx-true-contact-haptic-gloves-vr/\nhttps://haptx.com/virtual-reality/",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/veVx0AuhHFw/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 1,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "veVx0AuhHFw"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "aj7dCnur4MhgETWF8foUU4Yazoo",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLmxJTGxXTUxUbjBj",
+      "snippet": {
+        "publishedAt": "2021-01-23T19:15:01Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "What Happened to my Valve Index After 2000 Hours?",
+        "description": "Hello! Here is an updated video as promised of my Valve index after 2000 hours and about a year and a half of usage. I have been through a lot and I have learned a lot about the index and how to make it last a long time, so buckle up and enjoy!\n\nBTW, im super sorry, this this video took me way longer to do than normal, Im using multiple different camera setups with different lighting etc, definitely is not my best video ever, but It will get better. Thank you!\n\nMy links-\nTwitch Stream TODAY!\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill\n\nMusic- Protostar Overdrive",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/lILlWMLTn0c/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 2,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "lILlWMLTn0c"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "pwC7pnwtEXBQ6m-akgvyaHJ-5PI",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLkV6SGp1Y0RyTnNZ",
+      "snippet": {
+        "publishedAt": "2021-01-19T19:35:57Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "The Oculus Quest 2 gets a HUGE Update for QoL",
+        "description": "Hello and welcome to TUESDAY NEWSDAY! Your number one resource for the entire weeks worth of VR news. Lots to cover this week from some awesome experimental VR displays from Facebook,  a little more from CES, Viveport, and of course, a huge Oculus Quest and Quest 2 update that will make your life using those devices WAY better. \n\nThat and so much more I hope you enjoy this weeks video!\nSorry for any mistakes, this video was actually really hard to edit, I have been quite sick lately with a bad ear infection, so If there are weird audio issues or problems, I likely literally couldn't hear them lol.\n\nMy links-\n2nd Channel:\nhttps://youtu.be/-ub19xtY3AI\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill\n\n\nsources-\nhttps://www.theringer.com/2021/1/12/22226387/virtual-reality-playstation-xbox-oculus\nhttps://www.geekwire.com/2021/valve-recaps-record-2020-steam-looks-ahead-china-launch-year/\nhttps://uploadvr.com/ces-2021-vr-announcements/\nhttps://www.roadtovr.com/viveport-developers-revenue-share-increase-2021/\nhttps://www.roadtovr.com/multi-user-app-sharing-oculus-quest-2/\nhttps://www.roadtovr.com/valve-steam-vr-2020-new-users-revenue/\nhttps://www.roadtovr.com/mechanical-display-shifting-sde-reduction-facebook-reality-labs-research/\nhttps://vrscout.com/news/panasonic-automotive-ar-hud-windshield/\nhttps://na.panasonic.com/explore/product-service/in-car-experience",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/EzHjucDrNsY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/EzHjucDrNsY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/EzHjucDrNsY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/EzHjucDrNsY/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/EzHjucDrNsY/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 3,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "EzHjucDrNsY"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "0WCeC7rX2BT5NVmuzB02v_v71Ws",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLlBJSVh5ZnV4T2NV",
+      "snippet": {
+        "publishedAt": "2021-01-12T19:13:35Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "CES 2021 brings INSANE new VR Technology",
+        "description": "Hello and welcome to TUESDAY NEWSDAY! Your number one resource for the entire weeks worth of VR news. This is a special week as its the start of CES or the consumer electronic show that is being held digitally. I have attended most of the events and so far I have been extremely excited about many of the new technologies for VR that have been announced. New headsets, new headset technologies, haptip force feedback gloves and more. That and so much more this week, so I hope you enjoy!\n\nMy links-\n2nd Channel:\nhttps://youtu.be/Xp-p5RGoGpM\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill\n\nMusic-\nProtostar -https://open.spotify.com/track/6kjl9utzXBGxYGP6FuBDPn?si=iK-OGnqMTkaJHw8XnwIPog\n\nSources-\nhttps://www.roadtovr.com/pavlov-vr-tanks-ww2-update/\nhttps://www.roadtovr.com/lenovo-thinkreality-a3-ar-smart-glasses/\nhttps://www.roadtovr.com/difference-between-smartglasses-and-augmented-reality-glasses-why-everyone-is-confused/\nhttps://www.roadtovr.com/creal-light-field-ar-vr-headset-prototype/#1610356990004-59843e40-72b1\nhttps://www.roadtovr.com/mechanical-display-shifting-sde-reduction-facebook-reality-labs-research/\nhttps://www.roadtovr.com/medal-of-honor-update-patch-1-19/\nhttps://www.roadtovr.com/oculus-quest-2-monthly-active-users/\nhttps://vrscout.com/news/defunctland-vr-disney-ride-back-to-life/\nhttps://vrscout.com/news/defunctland-vr-disney-ride-back-to-life/\nhttps://uploadvr.com/carmack-facebook-login/",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/PIIXyfuxOcU/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/PIIXyfuxOcU/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/PIIXyfuxOcU/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/PIIXyfuxOcU/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/PIIXyfuxOcU/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 4,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "PIIXyfuxOcU"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "1U_v52Y64wBLe40kF4UTLW2O4xc",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLkNOQlUzTjlNdmlj",
+      "snippet": {
+        "publishedAt": "2021-01-06T18:51:07Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "New VR Full Body Trackers are coming",
+        "description": "Hello and Welcome to Tuesday newsday! Your number one resource for the entire weeks worth of VR news. Lots of fun news this week from VRChat completely breaking to Tundra Labs announcing new smaller, cheaper full body trackers to be coming soon AND a new Apple VR glove patent!\n\nAll that and so much more I hope you enjoy!\nMy Links-\nDiscord for Giveaway- Discord.gg/Thrill\nTwitch- Twitch.tv/Thrilluwu\nTwitter- Twitter.com/thrilluwu\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\n\n\n\n\n\nSources-\nhttps://uploadvr.com/apple-vr-glove-patent/\nhttps://www.roadtovr.com/tundra-tracker-vive-tracker-alternative-steamvr-tracking/\nhttps://www.patentlyapple.com/patently-apple/2020/10/a-new-apple-patent-relates-to-user-interactions-with-synthesized-reality-sr-content-on-advanced-ar-glasses.html\nhttps://www.roadtovr.com/buy-oculus-quest-2-stock-black-friday-cyber-monday/\nhttps://medium.com/vrchat/vrchats-new-years-2021-or-what-the-was-that-d84334789f77\nhttps://www.reddit.com/r/VR_memes/\nhttps://tundra-labs.com/shop\nhttps://www.nytimes.com/2021/01/05/technology/virtual-reality.html",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/CNBU3N9Mvic/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/CNBU3N9Mvic/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/CNBU3N9Mvic/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/CNBU3N9Mvic/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/CNBU3N9Mvic/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 5,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "CNBU3N9Mvic"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "lXHn2SXM3Apial4Pem33RQCLBt4",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLk9tX0tRa3dhS3Iw",
+      "snippet": {
+        "publishedAt": "2020-12-29T19:11:59Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "Reddit Discovers SERIOUS Oculus Quest 2 Manufacturing Flaws",
+        "description": "Hello and welcome to TUESDAY NEWSDAY! Your number one resource for the entire weeks worth of VR news. Today I will be covering a number of topics but the most pressing one is a serious manufacturing flaws with certain oculus Quest 2s. this serves as a PSA for all new VR owners that may not know what VR is \"supposed\" to look like. just sayin, it ain't supposed to be blurry. \n\nThanks to ridge wallet for sponsoring this weeks video!\n get yours here or use code Thrill at checkout: ridge.com/THRILL + 10% off.\n\nMy links:\nTwitch Stream TODAY!\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill\n\nSources: \n\nhttps://www.reddit.com/r/OculusQuest/comments/jqi2ia/what_bad_lenses_look_like/\nhttps://www.reddit.com/r/OculusQuest/comments/jtbysd/visual_differences_between_lenses_made_in_august/?utm_medium=android_app&utm_source=share\nhttps://www.reddit.com/r/OculusQuest/comments/keap9w/on_my_fourth_quest_finally_got_great_lenses_world/?utm_medium=android_app&utm_source=share\nhttps://www.reddit.com/r/OculusQuest/comments/jrxm52/downgrade/\nhttps://www.reddit.com/r/OculusQuest/comments/jn3ped/seeing_more_godrays_on_quest_2s_bought_from/\n\nVirtuallyReal:\nhttps://www.youtube.com/watch?v=5_oRPSdB5OQ\nhttps://www.roadtovr.com/oculus-quest-2-facebook-account-required-age-13-years-old/\nhttps://www.roadtovr.com/half-life-alyx-steam-best-most-rated-game/\nhttps://uploadvr.com/microsoft-flight-sim-vr-players-performance-issues/\nhttps://vrscout.com/news/quantaar-fast-paced-melee-vr-2021-2/\nhttps://uploadvr.com/microsoft-flight-sim-vr-players-performance-issues/\nhttps://twitter.com/TheeBeardedBard/status/1342297616919367680",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Om_KQkwaKr0/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Om_KQkwaKr0/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Om_KQkwaKr0/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/Om_KQkwaKr0/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/Om_KQkwaKr0/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 6,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "Om_KQkwaKr0"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "LJ32U6PK92wlq1EkfJU--61BBXE",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLnBGLXY5Ml9pSFlF",
+      "snippet": {
+        "publishedAt": "2020-12-26T17:28:36Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "VR Tips and Tricks I've Learned after 5000 Hours in VR",
+        "description": "Hello! Here's an updated video that I think will be useful for all of the new VR users after this holiday season. I've picked up a bunch of tips and tricks of what you should do (and not do) with your new VR headset. Whether you have been in VR for 1 minute or 3 years I think you can find something useful here. Also whether you're a Quest 2 user or an Index user, same story. \n\nAffiliate Links to the things I used in this video:\nPolyWatch:\nhttps://amzn.to/3puLWyN\n\nVRCover:\nhttps://vrcover.com/#322\n\nVR Pulleys:\nhttps://amzn.to/3ppBIiX\n\nVR Matt:\nhttps://amzn.to/38AQVad\n\nTP Link Wifi6 Router:\nhttps://amzn.to/3n1JldU\n\nMY links:\nTwitch Stream TODAY!\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/pF-v92_iHYE/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/pF-v92_iHYE/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/pF-v92_iHYE/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/pF-v92_iHYE/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/pF-v92_iHYE/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 7,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "pF-v92_iHYE"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "k0vXyXjhbYP0qmGAsgmjNf4rVQU",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLnl4SWtLd012RzJN",
+      "snippet": {
+        "publishedAt": "2020-12-22T17:28:14Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "The FIRST REAL Ready Player One VR Immersion Rig",
+        "description": "Hello and welcome to TUESDAY NEWSDAY! Your number one resource for the entire weeks worth of VR news. Today I have some really wacky news about a VR exoskeleton suit created that reminds me a whole lot of the giant immersion rigs from the book Ready Player One. Some more Oculus, beat saber and AR news as well! Also MAKE SURE YOU CHECK OUT VIRTUAL MARKET 5 while it's around. You won't be disappointed. \n\nMy links:\nTwitch Stream TODAY!\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill\n\nOutro Music: Protostar Where I Belong\n\nSources:\nhttps://www.roadtovr.com/jurassic-world-aftermath-quest-release-date-price-dlc/\nhttps://www.roadtovr.com/leaked-lenovo-ar-glasses-ces-2021/\nhttps://newatlas.com/vr/holotron-virtual-rreality-haptic-exoskeleton/\nhttps://uploadvr.com/beat-saber-ost-4-2021/\nhttps://www.vrfocus.com/2020/11/review-star-wars-tales-from-the-galaxys-edge/",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/yxIkKwMvG2M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/yxIkKwMvG2M/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/yxIkKwMvG2M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/yxIkKwMvG2M/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/yxIkKwMvG2M/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 8,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "yxIkKwMvG2M"
+        }
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "JBu4DGs-iKirqjdyiNHQr2jqMPI",
+      "id": "VVVTYmRNWE9JXzNIR2lGdmlMWk82a05BLkd4Z1duUHM3Rkpz",
+      "snippet": {
+        "publishedAt": "2020-12-18T17:02:21Z",
+        "channelId": "UCSbdMXOI_3HGiFviLZO6kNA",
+        "title": "VR Headset Buyers Guide: Which is right for you?",
+        "description": "Here is the comprehensive buyers guide for the typical consumer looking to buy a PCVR headset in 2020-2021. After this guide you should be able to pick a headset that will suit you will for your needs, whether that be hardcore VR gaming, casual, simulators, or full body tracking in VRChat. \n\nIn this video I cover:\n HP Reverb G2 \n Valve Index\n Oculus Quest 2\n Oculus Rift S\n HTC Vive Cosmos Elite\n\nHere are affiliate links to purchase some of these headsets:\nOculus Quest 2: https://amzn.to/2KfxHyE\nRift S: https://amzn.to/3p7Drto\nCosmos Elite: https://amzn.to/37wtK1n\n\nMy links:\n2nd Channel:\nhttps://youtu.be/Xp-p5RGoGpM\nhttps://www.twitch.tv/thrilluwu\nJoin my discord for good times\nhttps://discord.gg/thrill\nPatreon link:Join\nhttps://www.patreon.com/Thrillseeker\nGAMERSUPPS Discount Code: THRILL\nhttp://gamersupps.gg/?afmc=thrill",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/GxgWnPs7FJs/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/GxgWnPs7FJs/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/GxgWnPs7FJs/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/GxgWnPs7FJs/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/GxgWnPs7FJs/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "ThrillSeeker",
+        "playlistId": "UUSbdMXOI_3HGiFviLZO6kNA",
+        "position": 9,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "GxgWnPs7FJs"
+        }
+      }
+    }
+  ],
+  "pageInfo": {
+    "totalResults": 158,
+    "resultsPerPage": 10
+  }
+}

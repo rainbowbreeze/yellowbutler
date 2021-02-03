@@ -32,5 +32,8 @@
   "tracemusic_destination_url": "URL_to_store_music_info",
 
   // Weather forecase
-  "darksky_api": "test_darksky_api_key"
+  "darksky_api": "test_darksky_api_key",
+
+  //Youtube API key
+  "youtube_api": "mock_youtube_api_key"
 }
