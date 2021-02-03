@@ -2,10 +2,6 @@
 Flask==1.1.2
 # ---
 
-# Test
-pytest
-# ---
-
 # Database (3.7.0)
 tinydb
 # ---
