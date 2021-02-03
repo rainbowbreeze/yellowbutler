@@ -14,6 +14,7 @@ http://pytest.readthedocs.io/en/latest/goodpractices.html
 
 from bot/src folder
 ```
+pip install -r requirements-tests.txt
 pytest
 ```
 

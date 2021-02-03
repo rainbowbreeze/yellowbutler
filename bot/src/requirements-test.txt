@@ -1,0 +1,10 @@
+# Files for all the dependencies for running tests
+
+# Main test class
+pytest
+
+# Mock Request calls
+responses
+
+# ---
+
