@@ -109,3 +109,6 @@ ENV/
 
 #PyTest
 .pytest_cache/
+
+# One specific file with temporary draft code
+draft_code.py
