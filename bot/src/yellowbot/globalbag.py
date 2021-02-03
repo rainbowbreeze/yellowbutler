@@ -41,6 +41,9 @@ class GlobalBag:
     COMMITSTRIP_INTENT = "commitstrip"
     COMMITSTRIP_PARAM_SILENT = "silent"
 
+    # NewsReporter
+    CHECKFORNEWS_INTENT = "checkfornews"
+    
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
     SURFACE_NOTIFY_ADMIN = "NotifyAdmin"  # Notification channel for admin
