@@ -1,25 +1,20 @@
-"""
-Test CommitStrip gear
+"""Test CommitStrip gear
 
 Responses library is used to mock Request calls
 https://github.com/getsentry/responses
 
-Unfortunately, I wasn't able to configure responses as Pytest fixture inside Unittest
-- Pytext fixtures: https://docs.pytest.org/en/stable/fixture.html#fixture-function
-- Responses as pytest fixture: https://github.com/getsentry/responses#responses-as-a-pytest-fixture
-- UnitTest and fixtures: https://docs.pytest.org/en/stable/unittest.html#mixing-pytest-fixtures-into-unittest-testcase-subclasses-using-marks
+Unfortunately, PyTest fixtures feature do not work when pytest is used in unittest.TestCase subclasses, apart from Auto-use fixtures.
+Source: https://docs.pytest.org/en/stable/unittest.html#pytest-features-in-unittest-testcase-subclasses
 """
 from unittest import TestCase
 import responses
-
 import os
-
 import arrow
 
 from yellowbot.gears.commitstripgear import CommitStripGear
 from yellowbot.globalbag import GlobalBag
 
-TESTDATA_FILENAME = os.path.join(os.path.dirname(__file__), "commitstrip_example_{}.txt")
+TESTDATA_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_commitstrip_{}.txt")
 
 
 class TestCommitStripGear(TestCase):
