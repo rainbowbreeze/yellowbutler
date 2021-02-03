@@ -25,13 +25,18 @@ def print_header(file_loc, print_cols = False):
   # Code starts after an empty line
 ```
 
+
 ### GAE and data storing
 https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-python
 
 
-### Run tests
-using PyTest: https://docs.pytest.org/en/latest/
-http://pytest.readthedocs.io/en/latest/goodpractices.html
+
+### Testing
+
+#### Run Unit tests
+Resources:
+- Using PyTest: https://docs.pytest.org/en/latest/
+- http://pytest.readthedocs.io/en/latest/goodpractices.html
 
 from bot/src folder
 ```
@@ -39,8 +44,18 @@ pip install -r requirements-tests.txt
 pytest
 ```
 
+Unfortunately, PyTest fixtures feature do not work when pytest is used in unittest.TestCase subclasses, apart from Auto-use fixtures. [Source](https://docs.pytest.org/en/stable/unittest.html#pytest-features-in-unittest-testcase-subclasses)
+
+Fixtures:
+- [Pytext fixtures](https://docs.pytest.org/en/stable/fixture.html#fixture-function)
+- [Responses as pytest fixture](https://github.com/getsentry/responses#responses-as-a-pytest-fixture)
+- [UnitTest and fixtures](https://docs.pytest.org/en/stable/unittest.html#mixing-pytest-fixtures-into-unittest-testcase-subclasses-using-marks)
+
+
 #### Mock requests call
 [Responses](https://github.com/getsentry/responses) seems a good library to mock Request calls.
+
+
 
 
 #### GAE and Unit Testing
@@ -55,6 +70,7 @@ dev_appserver.py --application=%YOUR_APPLICATION_ID --support_datastore_emulator
 ```
 
 
+
 ### Manage configurations
 https://martin-thoma.com/configuration-files-in-python/
 https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
@@ -62,11 +78,13 @@ https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
 I put in the configuration class logic to obtain the file both via a relative path (relative to the root folder when the python is lauched), and also looking inside of the folder where the specific class is, as fallback. This is particuarly useful with tests, so I can pass different configuration files while running tests.
 
 
+
 ### PIP management
 ```
 pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
+
 
 
 ### Flask
@@ -98,6 +116,7 @@ FLASK_APP=wsgi/flaskapp.py flask run
 ```
 
 
+
 ## App Engine notes
 
 ### Scheduler
@@ -120,6 +139,7 @@ entrypoint: gunicorn -b :$PORT wsgi.flaskapp:app
 ```
 
 Added gunicorn to requirements.txt, so App Engine can be launched locally
+
 
 
 ## YouTube notes
