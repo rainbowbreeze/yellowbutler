@@ -10,6 +10,7 @@ from yellowbot.gears.notifyadmingear import NotifyAdminGear
 from yellowbot.gears.sendmessagegear import SendMessageGear
 from yellowbot.gears.weathergear import WeatherGear
 from yellowbot.gears.commitstripgear import CommitStripGear
+from yellowbot.gears.newsreportergear import NewsReportGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.nluengine import NluEngine
@@ -106,6 +107,11 @@ class YellowBot:
         # CommitStrip gear
         self._gears.append(CommitStripGear(
             test_mode
+        ))
+
+        # CheckForNews gear
+        self._gears.append(NewsReportGear(
+            self._config_service.get_config("youtube_api")
         ))
 
     def get_config(self, key_to_read, throw_error=True):
