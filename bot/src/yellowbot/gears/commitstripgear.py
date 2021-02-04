@@ -9,7 +9,6 @@ Requirements
 import feedparser
 import re
 import requests
-
 import arrow
 
 from yellowbot.gears.basegear import BaseGear
@@ -44,6 +43,9 @@ class CommitStripGear(BaseGear):
 
     def _find_daily_strip(self, silent):
         """Read CommitStrip RSS, extract latest Strips and check if there is something for today
+
+        :param silent: if True, doesn't produce any value when new content is not found
+        :type silent: bool
 
         :returns: a message with the result of the processing
         :rtype: str
