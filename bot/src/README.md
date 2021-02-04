@@ -4,7 +4,7 @@
 ## Python notes
 
 ### Documentation format
-For documentation, the python reStructured Text format is used, following the suggestions on [this article]https://realpython.com/documenting-python-code/#documenting-your-python-code-base-using-docstrings
+For documentation, the python reStructured Text format is used, following the suggestions on [this article](https://realpython.com/documenting-python-code/#documenting-your-python-code-base-using-docstrings)
 
 Example:
 ```
