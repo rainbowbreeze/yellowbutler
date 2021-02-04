@@ -1,5 +1,4 @@
-"""
-Main class
+"""YellowBot main class, everything starts from here
 """
 
 from yellowbot.configservice import ConfigService
@@ -19,8 +18,7 @@ from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 
 class YellowBot:
-    """
-    The Yellow bot core class. Orchestrate the connections between the external world and the gears
+    """The Yellow bot core class. Orchestrate the connections between the external world and the gears
     """
 
     def __init__(self,
@@ -29,8 +27,7 @@ class YellowBot:
                  config_file=GlobalBag.CONFIG_FILE,
                  test_mode=False
                  ):
-        """
-        Init the bot
+        """Init the bot
 
         :param nlu_engine: engine to use to extract intent and arguments
         :type nlu_engine: NluEngine
@@ -71,8 +68,7 @@ class YellowBot:
         self._scheduler = scheduler if scheduler is not None else SchedulerService(GlobalBag.SCHEDULER_FILE)
 
     def _register_gears(self, test_mode):
-        """
-        Registers all the gears in the bot
+        """ Registers all the gears in the bot
 
         :param test_mode: class instance created for test purposes, some
         features are disabled
@@ -115,30 +111,31 @@ class YellowBot:
         ))
 
     def get_config(self, key_to_read, throw_error=True):
-        """
-        Read a value from the configuration, throwing an error if it doesn't exist
+        """Read a value from the configuration, throwing an error if it doesn't exist
         :param key_to_read: the key to read
         :type key_to_read: str
 
         :param throw_error: if False, doesn't throw an error, but return None instead
         :type throw_error: bool
 
-        :return: the object associated wit the config key
+        :returns: the object associated wit the config key
+        :rtype: obj
         """
+
         return self._config_service.get_config(key_to_read, throw_error)
         # TODO fix this workaround for Flask
 
     def is_client_authorized(self, key):
-        """
-        Checks if the key is among the ones authorized to use the bot
+        """Checks if the key is among the ones authorized to use the bot
 
         :param key: the key to check for authorization. Authorized keys are
         generally listed in the config file
         :type key: str
 
-        :return: True if the key is authorized, otherwise False
+        :returns: True if the key is authorized, otherwise False
         :rtype: bool
         """
+
         if not key:
             return False
 
@@ -148,24 +145,27 @@ class YellowBot:
         return False
 
     def change_authorized_keys(self, new_keys):
-        """
-        Substitutes old authorization keys with new ones. Useful for testing
-        purposes
+        """Substitutes old authorization keys with new ones. Useful for testing purposes
+
         :param new_keys: new keys to use
         :type new_keys: str
         """
+
         self._config_service.change_authorized_keys(new_keys)
         # TODO fix workaround for tests
 
     def notify_admin(self, message):
-        """
-        Sends a notification to the admin. Use in very few cases and, under
-         the hood, it's the usual intent process, using a dedicated interaction
-         surface targeting a special channel used by admin
+        """Sends a notification to the admin.
+        
+        Use in very few cases and, under the hood, it's the usual intent
+         process, using a dedicated interaction surface targeting a special
+         channel used by admin
 
         :param message: the message to send
         :type message: str
-        :return:
+        
+        :returns: None
+        :rtype: None
         """
 
         return self.process_intent(
@@ -176,15 +176,16 @@ class YellowBot:
         )
 
     def receive_message(self, message):
-        """
-        Process a message that hits one of the interaction surface.
+        """Process a message that hits one of the interaction surface.
         Use this method when YellowBot acts as a chatbot
 
         :param message: the message received that needs to be handled
         :type message: SurfaceMessage
 
-        :return: the interaction surface sending message operation result, TBD
+        :returns: the interaction surface sending message operation result, TBD
+        :rtype: 
         """
+        
         if not message:
             self._logger.info("A message was received, but has no data inside")
             return
@@ -216,9 +217,7 @@ class YellowBot:
         )
 
     def process_intent(self, intent, params):
-        """
-        Process an intent. Use this method when YellowBot acts behind a REST API or
-        something similar
+        """Process an intent. Use this method when YellowBot acts behind a REST API or something similar
 
         :param intent: the intent to execute
         :type intent: str
@@ -226,9 +225,10 @@ class YellowBot:
         :param params: a json object with all the intent's required params
         :type params: dict
 
-        :return: a message with the result of the processing
+        :returns: a message with the result of the processing
         :rtype: str
         """
+
         # Check if any of the registered gears is able to process the intent
         self._logger.info("Finding a gear to process intent {}".format(intent))
         gear = None
@@ -246,12 +246,9 @@ class YellowBot:
             return "No gear to process your intent"
 
     def tick_scheduler(self):
-        """
-        Check for tasks to run for the scheduler service and, in case,
-         executes them.
+        """Check for tasks to run for the scheduler service and, in case, executes them.
 
         Right now, only the hour is taken into account
-        :return:
         """
 
         check_time = self._scheduler.get_current_datetime()
