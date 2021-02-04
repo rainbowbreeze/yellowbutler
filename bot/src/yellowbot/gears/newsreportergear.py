@@ -7,11 +7,11 @@ Once updates are found, they're send over a surface to notify the user.
 
 Requirements
 - requests
-- feedparser
 - arrow
 """
 
 import requests
+import arrow
 
 from types import SimpleNamespace
 
@@ -24,7 +24,7 @@ class NewsReportGear(BaseGear):
     """
 
     INTENTS = [GlobalBag.CHECKFORNEWS_INTENT]
-    # PARAM_SILENT = GlobalBag.COMMITSTRIP_PARAM_SILENT  # No notification if there is nothing new 
+    PARAM_SILENT = GlobalBag.CHECKFORNEWS_PARAM_SILENT  # No notification if there is nothing new 
 
     def __init__(self,
                  youtube_api_key,
@@ -47,25 +47,56 @@ class NewsReportGear(BaseGear):
             return message 
 
         # Defaul value for silent param
-        #silent = False
-        #if CommitStripGear.PARAM_SILENT in params:
-        #    silent = params[CommitStripGear.PARAM_SILENT]
+        silent = False
+        if NewsReportGear.PARAM_SILENT in params:
+            silent = params[NewsReportGear.PARAM_SILENT]
 
-        return self._analize_youtube_channel('')
+        return self._find_daily_news(silent)
 
-    def _analyze_and_notify_news_sources(self):
-        """Analyze all the different news sources, notifying in case new
-         contents are found
+    def _find_daily_news(self, silent):
+        """Analyze all the different news sources, notifying in case new contents are found
+
+        :param silent: if True, doesn't produce any value when new content is not found
+        :type silent: bool
+
+        :returns: a message with the result of the processing
+        :rtype: str
         """
 
-        # Based on the source address, it calls a different logic
-        return
-    
-    def _analize_youtube_channel(self, youtube_channel_id):
+        channel_urls = [
+            'https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA'
+        ]
+        today = arrow.utcnow()
+
+        message = None
+        for channel_url in channel_urls:
+            self._logger.info("Checking for news on {}".format(channel_url))
+            #TODO check for errors
+            videos = self._analize_youtube_channel(channel_url)
+            #TODO check for errors
+            for video in videos:
+                video_publish_date = arrow.get(video.published)
+                if today.format("YYYY-MM-DD") == video_publish_date.format("YYYY-MM-DD"):
+                    self._logger.debug("Found new video {}".format(video.url))
+                    # Good, the video was published today
+                    message = 'New video published: {}\n{}'.format(
+                        video.title,
+                        video.url
+                    )
+        
+        if not message and not silent:
+            message = "No new videos for today"
+        
+        return message
+
+    def _analize_youtube_channel(self, channel_url):
         """Analyze a YouTube channel searching for new videos
 
-        :param youtube_channel_id: the id of the channel to analyze
-        :type youtube_channel_id: str
+        :param channel_url: the full url of the Youtube channel to analyze. E.g.: https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA
+        :type channel_url: str
+
+        :returns: TDB, the list of the latest channel videos
+        :rtype: list
         """
 
         # Every channel as a special playlist called upload, with all the 
@@ -80,12 +111,40 @@ class NewsReportGear(BaseGear):
         # Search in the database if it has already the "upload" playlist id 
         #  for the given channel.
         # This pla
-        upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, youtube_channel_id)
-        self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
+
+        channel_id = self._youtube_extract_channel_id_from_url(channel_url)
 
         # Find the upload playlist id for the given channel
+        upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, channel_id)
 
         # Search latest videos in the upload playlist
+        videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
+        return videos
+
+        # Find in the db the last check date
+
+        # Discard all the videos older that a certain date
+
+        # Check if updates for the remaining videos have been already provided
+
+        # Send alerts for the next videos
+
+        # Register them in the DB
+
+    def _youtube_extract_channel_id_from_url(self, channel_url):
+        """Extract the channel id from the channel URL
+
+        For https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA, it returns UCSbdMXOI_3HGiFviLZO6kNA
+
+        :param channel_url: YouTube channel url
+        :type channel_url: str
+
+        :returns: channel id only
+        :rtype: str
+        """
+
+        # More elegant regex solution: https://stackoverflow.com/questions/51166723/extract-youtube-channel-id-from-channel-url-android
+        return channel_url[len('https://www.youtube.com/channel/'):]
 
     def _youtube_find_upload_playlist_from_channel(self, api_key, channel_id):
         """Find upload playlist id for a given channel
@@ -166,6 +225,7 @@ class NewsReportGear(BaseGear):
                 video_title = snippet['title']
                 video_published = snippet['publishedAt']
 
+                # Power of SimpleNamespace class
                 video = SimpleNamespace(
                     url = video_url,
                     title = video_title,
@@ -176,8 +236,3 @@ class NewsReportGear(BaseGear):
             return "Exception happened while parsing YouTube data {}".format(repr(e))        
 
         return latest_videos
-
-
-
-
-

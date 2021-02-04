@@ -23,6 +23,11 @@ class TestNewsReportGear(TestCase):
     def tearDown(self):
         pass
 
+    def test_youtube_extract_channel_id_from_url(self):
+        self.assertEqual('UCSbdMXOI_3HGiFviLZO6kNA', self._gear._youtube_extract_channel_id_from_url('https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA'))
+        self.assertEqual('UCkRfArvrzheW2E7b6SVT7vQ', self._gear._youtube_extract_channel_id_from_url('https://www.youtube.com/channel/UCkRfArvrzheW2E7b6SVT7vQ'))
+
+
     @responses.activate
     def test_youtube_upload_playlist_from_channel(self):
         testdata = open(self.TESTDATA_YOUTUBE_CHANNEL_FILENAME).read()
@@ -44,7 +49,6 @@ class TestNewsReportGear(TestCase):
     @responses.activate
     def test_youtube_find_new_videos_in_a_playlist(self):
         testdata = open(self.TESTDATA_YOUTUBE_PLAYLIST_FILENAME).read()
-
         responses.add(
             responses.GET,
             'https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId=UUSbdMXOI_3HGiFviLZO6kNA&key=mock_youtube_key',
@@ -80,3 +84,28 @@ class TestNewsReportGear(TestCase):
         self.assertEqual('https://www.youtube.com/watch?v=PIIXyfuxOcU', item.url)
         self.assertEqual('CES 2021 brings INSANE new VR Technology', item.title)
         self.assertEqual('2021-01-12T19:13:35Z', item.published)
+
+    @responses.activate
+    def test_find_daily_news(self):
+        testdata1 = open(self.TESTDATA_YOUTUBE_CHANNEL_FILENAME).read()
+        testdata2 = open(self.TESTDATA_YOUTUBE_PLAYLIST_FILENAME).read()
+        responses.add(
+            responses.GET,
+            'https://youtube.googleapis.com/youtube/v3/channels?part=contentDetails&id=UCSbdMXOI_3HGiFviLZO6kNA&key=mock_youtube_key',
+            body = testdata1,
+            status = 200,
+            content_type='application/json'
+        )
+        responses.add(
+            responses.GET,
+            'https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId=UUSbdMXOI_3HGiFviLZO6kNA&key=mock_youtube_key',
+            body = testdata2,
+            status = 200,
+            content_type='application/json'
+        )
+
+
+
+        result = self._gear._find_daily_news(False)
+
+        self.assertEqual('No new videos for today', result)

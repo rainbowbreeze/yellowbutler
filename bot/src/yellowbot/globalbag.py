@@ -43,6 +43,7 @@ class GlobalBag:
 
     # NewsReporter
     CHECKFORNEWS_INTENT = "checkfornews"
+    CHECKFORNEWS_PARAM_SILENT = "silent"
     
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH = "Telegram-Lurch"  # Lurch telegram bot
