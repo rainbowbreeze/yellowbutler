@@ -1,5 +1,4 @@
-"""
-A YellowBot gear to read latest CommitStrip artwork and output the one for the current day
+"""A YellowBot gear to read latest CommitStrip artwork and output the one for the current day
 
 Requirements
 -requests
@@ -18,17 +17,14 @@ from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 
 class CommitStripGear(BaseGear):
+    """Read the CommitStrip RSS and check if there is a new artwork with the same date of today
     """
-    Read the CommitStrip RSS and check if there is a new artwork with the same date of today
-    """
+
     INTENTS = [GlobalBag.COMMITSTRIP_INTENT]
     PARAM_SILENT = GlobalBag.COMMITSTRIP_PARAM_SILENT  # No notification if there is nothing new 
 
     def __init__(self,
                  test_mode=False):
-        """
-        """
-
         BaseGear.__init__(self, CommitStripGear.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
         self._test_mode = test_mode
@@ -47,10 +43,9 @@ class CommitStripGear(BaseGear):
         return self._find_daily_strip(silent)
 
     def _find_daily_strip(self, silent):
-        """
-        Read CommitStrip RSS, extract latest Strips and check if there is something for today
+        """Read CommitStrip RSS, extract latest Strips and check if there is something for today
 
-        :return: a message with the result of the processing
+        :returns: a message with the result of the processing
         :rtype: str
         """
 
@@ -68,21 +63,21 @@ class CommitStripGear(BaseGear):
         return self._get_strip_for_date(rssdata, today, silent)
 
     def _get_strip_for_date(self, rss_content, date_to_compare, silent):
+        """Parse the RSS stream and check if the most recent item was published on the same date of the specific data param
+
+        :param rss_content: the RSS content output of CommitStrip
+        :type rss_content: srt
+
+        :param date_to_compare: the day CommitStrip should have published something
+        :type date_to_compare: arrow
+
+        :param silent: do not send any message if there is a new strip for the given date
+        :type silent: boolean
+
+        :returns: None, or the url of the image published in the specified day
+        :rtype: str
         """
-        Parse the RSS stream and check if the most recent item was published on
-         the same date of the specific data param
 
-        param rss_content: the RSS content output of CommitStrip
-        type rss_content: srt
-
-        param date_to_compare: the day CommitStrip should have published something
-        type date_to_compare: arrow
-
-        param silent: do not send any message if there is a new strip for the given date
-        type silent: boolean
-
-        return: None, or the url of the image published in the specified day
-        """
         if not rss_content:
           return None
 
