@@ -1,5 +1,4 @@
-"""
-Implement a datastore service
+"""Implement a datastore service
 
 Currently it uses TinyDB, but it's transparent (more or less) to the outside world
  https://pypi.python.org/pypi/tinydb/
