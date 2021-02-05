@@ -68,12 +68,13 @@ class YellowBot:
         self._scheduler = scheduler if scheduler is not None else SchedulerService(GlobalBag.SCHEDULER_FILE)
 
     def _register_gears(self, test_mode):
-        """ Registers all the gears in the bot
+        """Registers all the gears in the bot
 
         :param test_mode: class instance created for test purposes, some
         features are disabled
         :type test_mode: bool
         """
+
         self._gears.append(MusicGear(
             self._config_service.get_config("tracemusic_destination_url"),
             test_mode
@@ -101,9 +102,7 @@ class YellowBot:
         ))
 
         # CommitStrip gear
-        self._gears.append(CommitStripGear(
-            test_mode
-        ))
+        self._gears.append(CommitStripGear())
 
         # CheckForNews gear
         self._gears.append(NewsReportGear(
@@ -266,7 +265,7 @@ class YellowBot:
                 if task.surface is not None:
                     # TODO: better check for none or empty or only spaces or... https://stackoverflow.com/a/24534152
                     # If the intent has returned something, use that text, otherwise the default
-                    #  test in the configuration file
+                    #  text in the configuration file
                     if result and result.strip():
                         text = result
                     else:
