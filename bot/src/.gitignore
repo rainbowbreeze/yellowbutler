@@ -112,3 +112,6 @@ ENV/
 
 # One specific file with temporary draft code
 draft_code.py
+
+# Authentiation key for using GCP
+service_account.json

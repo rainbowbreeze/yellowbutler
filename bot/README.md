@@ -22,6 +22,8 @@ sudo apt-get install google-cloud-sdk-datastore-emulator
 ```
 Note: _Updating and removing components using gcloud components is disabled if you installed Cloud SDK using apt-get or yum. To manage the Cloud SDK in this case, continue using the package management tool used during installation._
 
+
+## Google Cloud SDK project initialization
 [Initialize](https://cloud.google.com/sdk/docs/initializing) the gcloud environment and get started:
 ```
 gcloud init
@@ -33,12 +35,26 @@ or, if a user has already been configured:
 gcloud auth login
 gcloud config set project PROJECT_ID
 ```
+It's important to remember the PROJECT_ID, it's used in the YellowBot config files.
 
-To enable Google Cloud SDK authentication
+
+### Google Cloud SDK authentication
+Google App Engine supports several [ways to store data](https://cloud.google.com/appengine/docs/standard/python3/storage-options). YellowBot uses Cloud Datastore, via the Google Cloud SDK. In order to run YellowBot both on App Engine and locally, (access private data on behalf of a service account outside Google Cloud environments) it's necessary to create a [service accout with User-managed keys](https://cloud.google.com/iam/docs/service-accounts#user-managed_keys), and use it with the Google Cloud SDK authentication. If the idea is to run it only on GCP, it's more secure to use the Google-managed keys, or switch to a Environment-provided service account.
+Details on the [different types of authentication available](https://cloud.google.com/docs/authentication). 
+
+[Create and authenticate as a service account](https://cloud.google.com/docs/authentication/production#auth-cloud-explicit-python)
+- In the Cloud Console, go to the Create service account key page.
+- Go to the Create Service Account Key page
+- From the Service account list, select New service account.
+- In the Service account name field, enter a name.
+- From the Role list, select "App Engine default service account" (it should be enough to access datastore)
+- Click Create. A JSON file that contains your key downloads to your computer.
+- Put this file under bot/src folder with the name service_account.json (defaul convention of the Google Cloud SDK)
+
+Deprecated - use a User accounts to access the resources while running YellowBot locally (not suggested, and it won't work once deployed to GAE)
 ```
 gcloud auth application-default login
 ```
-TODO: enable service account via https://cloud.google.com/docs/authentication
 
 
 ### Python installation and environment setup
@@ -95,7 +111,7 @@ TBD
 TBD
 
 ### YouTube gear
-Enable YoutTube API for the current project and obtain a YouTube API key following [these instructions](https://developers.google.com/youtube/v3/getting-started)
+Enable YoutTube API for the current GCP project and obtain a YouTube API key following [these instructions](https://developers.google.com/youtube/v3/getting-started)
 Check for [API quota](https://console.developers.google.com/iam-admin/quotas) used.
 
 
