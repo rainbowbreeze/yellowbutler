@@ -23,12 +23,15 @@ sudo apt-get install google-cloud-sdk-datastore-emulator
 Note: _Updating and removing components using gcloud components is disabled if you installed Cloud SDK using apt-get or yum. To manage the Cloud SDK in this case, continue using the package management tool used during installation._
 
 
+
 ## Google Cloud SDK project initialization
 [Initialize](https://cloud.google.com/sdk/docs/initializing) the gcloud environment and get started:
 ```
 gcloud init
 ```
 gcloud init --console-only to avoid browser login
+It's important to pick-up the right [location](https://cloud.google.com/appengine/docs/locations) for the project
+
 
 or, if a user has already been configured:
 ```
@@ -43,7 +46,7 @@ Google App Engine supports several [ways to store data](https://cloud.google.com
 Details on the [different types of authentication available](https://cloud.google.com/docs/authentication). 
 
 [Create and authenticate as a service account](https://cloud.google.com/docs/authentication/production#auth-cloud-explicit-python)
-- In the Cloud Console, go to the Create service account key page.
+- In the Cloud Console, go to the [Service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) page.
 - Go to the Create Service Account Key page
 - From the Service account list, select New service account.
 - In the Service account name field, enter a name.
@@ -55,6 +58,11 @@ Deprecated - use a User accounts to access the resources while running YellowBot
 ```
 gcloud auth application-default login
 ```
+
+### Configure Firestore in Datastore mode
+[Tutorial](https://cloud.google.com/appengine/docs/standard/python3/using-cloud-datastore)
+Firestore in Datastore mode has [free quota too](https://cloud.google.com/datastore/pricing)
+
 
 
 ### Python installation and environment setup
@@ -200,6 +208,11 @@ gcloud app deploy -v 1 --quiet
 ### Misc GAE commands
 
 How to check for [gcloud configurations](https://www.the-swamp.info/blog/configuring-gcloud-multiple-projects/):
+
+Get information on the current App Engine app, location included (it's possible to omit the project id)
+```
+gcloud app describe --project <projectId>
+```
 
 Create a new configuration to connect a new account to the project id
 ```
