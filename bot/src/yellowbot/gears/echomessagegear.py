@@ -18,7 +18,7 @@ class EchoMessageGear(BaseGear):
     PARAM_MESSAGE = GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE  # The message to echo
 
     def __init__(self):
-        BaseGear.__init__(self, EchoMessageGear.__name__, self.INTENTS)
+        super().__init__(self, EchoMessageGear.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
 
     def process_intent(self, intent, params):

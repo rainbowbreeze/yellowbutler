@@ -23,7 +23,7 @@ class WeatherGear(BaseGear):
     PARAM_CITY_NAME = GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME  # The city name
 
     def __init__(self, api_key):
-        BaseGear.__init__(self, WeatherGear.__name__, self.INTENTS)
+        super().__init__(self, WeatherGear.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
         self._api_key = api_key
 

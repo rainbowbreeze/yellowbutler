@@ -27,7 +27,7 @@ class NotifyAdminGear(BaseGear):
         features are disabled
         :type test_mode: bool
         """
-        BaseGear.__init__(self, NotifyAdminGear.__name__, self.INTENTS)
+        super().__init__(self, NotifyAdminGear.__name__, self.INTENTS)
         self._config_service = config_service
         self._logger = LoggingService.get_logger(__name__)
 

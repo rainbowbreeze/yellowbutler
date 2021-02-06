@@ -23,7 +23,7 @@ class CommitStripGear(BaseGear):
     PARAM_SILENT = GlobalBag.COMMITSTRIP_PARAM_SILENT  # No notification if there is nothing new 
 
     def __init__(self):
-        BaseGear.__init__(self, CommitStripGear.__name__, self.INTENTS)
+        super().__init__(self, CommitStripGear.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
 
     def process_intent(self, intent, params):
