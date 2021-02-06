@@ -26,11 +26,6 @@ def print_header(file_loc, print_cols = False):
 ```
 
 
-### GAE and data storing
-https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-python
-
-
-
 ### Testing
 
 #### Run Unit tests
@@ -52,22 +47,9 @@ Fixtures:
 - [UnitTest and fixtures](https://docs.pytest.org/en/stable/unittest.html#mixing-pytest-fixtures-into-unittest-testcase-subclasses-using-marks)
 
 
+
 #### Mock requests call
-[Responses](https://github.com/getsentry/responses) seems a good library to mock Request calls.
-
-
-
-
-#### GAE and Unit Testing
-Reference links
-- [Local Unit Testing for Python 2](https://cloud.google.com/appengine/docs/standard/python/tools/localunittesting)- For python 2.x, and testbed is not supported on python 3.x runtime [post](https://groups.google.com/g/google-appengine/c/yuAofPuxYtE/m/z4rRIggECgAJ)
-- [Concepts, use and testing Cloud Datastore in local](https://groups.google.com/g/google-appengine/c/cBXfhk3HfRI)
-- [Datastore emulator for unit testing](https://groups.google.com/g/google-appengine/c/yuAofPuxYtE/m/KQYeFUcBCgAJ), with a link to a repo with unit test examples
-
-To emulate the Datastore, it's necessary to launch the GAE project using the local app server, dev_appserver.py, configured to provide [Datastore emulation](https://cloud.google.com/appengine/docs/standard/python/tools/migrate-cloud-datastore-emulator)
-```
-dev_appserver.py --application=%YOUR_APPLICATION_ID --support_datastore_emulator=true --dev_appserver_log_level=debug app.yaml
-```
+[Responses](https://github.com/getsentry/responses) seems a good library to mock Requests calls.
 
 
 
@@ -118,6 +100,54 @@ FLASK_APP=wsgi/flaskapp.py flask run
 
 
 ## App Engine notes
+
+
+### GAE and data storing
+https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-python
+
+
+
+### Testing
+
+#### GAE and Unit Testing
+Reference links
+- [Local Unit Testing for Python 2](https://cloud.google.com/appengine/docs/standard/python/tools/localunittesting)- For python 2.x, and testbed is not supported on python 3.x runtime [post](https://groups.google.com/g/google-appengine/c/yuAofPuxYtE/m/z4rRIggECgAJ)
+- [Concepts, use and testing Cloud Datastore in local](https://groups.google.com/g/google-appengine/c/cBXfhk3HfRI)
+- [Datastore emulator for unit testing](https://groups.google.com/g/google-appengine/c/yuAofPuxYtE/m/KQYeFUcBCgAJ), with a link to a repo with unit test examples
+
+To emulate the Datastore, it's necessary to launch the GAE project using the local app server, dev_appserver.py, configured to provide [Datastore emulation](https://cloud.google.com/datastore/docs/tools/datastore-emulator)
+```
+dev_appserver.py --application=%YOUR_APPLICATION_ID --support_datastore_emulator=true --dev_appserver_log_level=debug app.yaml
+```
+
+
+#### Running the local development server, also for testing purposes
+The GAE [local development server](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app#local-dev-server) can be used to run this project, emaulating an application running in production, and potentially also emulate services like Cloud Datastore, Cloud Bigtable and Cloud Pub/Sub locally.
+To run the local development server, _from bot/src_
+```
+dev_appserver.py --application=%PROJECT_ID% app.yaml
+```
+
+GAE_ENV environmental var distinguishes between local development server and real GAE environment
+```
+import os
+print(os.getenv('GAE_ENV', ''))
+```
+- 'localdev' when the local development server is used
+- '' when launched with python and with gunicorn
+- 'standard' when in production
+
+[Advanced commands](https://cloud.google.com/appengine/docs/standard/python3/tools/local-devserver-command) for the local development server.
+[Old reference](https://cloud.google.com/appengine/docs/standard/python/tools/using-local-server) for python 2.x, but still has good example that work with python 3.
+
+
+
+### Local Datastore emulator
+The local development server launches also the datastore emulator. To check local datastore content: http://localhost:8000/datastore (there is also the scheduler, task manager, etc)
+
+To clear the local datastore for an application: dev_appserver.py --clear_datastore=yes app.yaml
+
+
 
 ### Scheduler
 Create a cron.yaml following

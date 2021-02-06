@@ -18,10 +18,13 @@ sudo apt-get install apt-transport-https ca-certificates gnupg
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 sudo apt-get update && sudo apt-get install google-cloud-sdk
 sudo apt-get install google-cloud-sdk-app-engine-python google-cloud-sdk-app-engine-python-extras
-sudo apt-get install google-cloud-sdk-datastore-emulator
 ```
 Note: _Updating and removing components using gcloud components is disabled if you installed Cloud SDK using apt-get or yum. To manage the Cloud SDK in this case, continue using the package management tool used during installation._
 
+To use the local development server in App Engine, also the datastore emulator has to be installed:
+```
+sudo apt-get install google-cloud-sdk-datastore-emulator
+```
 
 
 ## Google Cloud SDK project initialization
@@ -54,7 +57,7 @@ Details on the [different types of authentication available](https://cloud.googl
 - Click Create. A JSON file that contains your key downloads to your computer.
 - Put this file under bot/src folder with the name service_account.json (defaul convention of the Google Cloud SDK)
 
-Deprecated - use a User accounts to access the resources while running YellowBot locally (not suggested, and it won't work once deployed to GAE)
+Deprecated - use a User accounts to access the resources while running YellowBot locally (not suggested, and it won't work once deployed to GAE - more on what is does and what it's a non best-security practice [here](https://www.bernardorodrigues.org/post/bypass-app-engine-auth-local))
 ```
 gcloud auth application-default login
 ```
@@ -126,22 +129,22 @@ Check for [API quota](https://console.developers.google.com/iam-admin/quotas) us
 
 
 ## Run YellowBot locally
-Assuming working directory is bot/src - this is important for module's relative paths, configuration path, etc
+Assuming working directory is bot/src - this is important for module's relative paths, configuration path, etc.
+The different ways to launch the app are in the [official reference](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app).
 
 ### From CL, as normal python app
-As per [official reference](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app), it's possible to run locally the app launching the python script that starts flask environment
-_(dir is bot/scr, with venv activated)_
+Run locally the app launching the python script that starts flask environment. _(dir is bot/scr, with venv activated)_
 ```
 FLASK_APP=wsgi/flaskapp.py flask run
 ```
-alternatively:
+Alternatively:
 ```
 export FLASK_APP=wsgi/flaskapp.py
 flask run
 ```
 _(if run with python wsgi/flaskapp.py, it doesn't work)_
 
-Test with: 
+Test if everything works with: 
 ```
 curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
 ```
@@ -156,7 +159,7 @@ Test with:
 curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
 ```
 
-There is also the option to use the [local development server](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app#local-dev-server), dev_appserver.py - this is useful to emulate services like Cloud Datastore, Cloud Bigtable and Cloud Pub/Sub. Unfortunately, [offical docs](https://cloud.google.com/appengine/docs/standard/python/migrate-to-python3/testing#testing-on-app-engine) says: _The [local development server](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app#local-dev-server) that is included in the Cloud SDK is available in alpha for Python 3 apps. We recommend you use standard Python 3 tools instead of this local development server._
+There is also the option to use the [local development server](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app#local-dev-server), dev_appserver.py - this is useful to emulate an application running in production, and potentially also emulate services like Cloud Datastore, Cloud Bigtable and Cloud Pub/Sub locally. More on the dev-oriented [README.md](src/README.md)
 
 
 
@@ -183,6 +186,7 @@ from Cloud Shell or local
 gcloud app logs tail -s default 
 ```
 
+It's possible to use .gcloudignore file to specify files and directories that will not be uploaded to App Engine when the app is deployed.
 
 
 ### Using Google Cloud Shell
