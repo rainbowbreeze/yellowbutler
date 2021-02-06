@@ -35,7 +35,7 @@ class NewsReportGear(BaseGear):
         :type api_key: str 
         """
 
-        BaseGear.__init__(self, NewsReportGear.__name__, self.INTENTS)
+        super().__init__(self.__class__.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
         self._test_mode = test_mode
         self._youtube_api_key = youtube_api_key
