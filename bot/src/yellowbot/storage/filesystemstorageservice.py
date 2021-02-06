@@ -8,9 +8,9 @@ Examples
 """
 from tinydb import TinyDB, Query
 
-from yellowbot.storage.storageservice import StorageService
+from yellowbot.storage.basestorageservice import BaseStorageService
 
-class FilesystemStorageService(StorageService):
+class FilesystemStorageService(BaseStorageService):
     """Implement a StorageService using TinyDB, so using a simple file as a db
     """
 
