@@ -1,19 +1,18 @@
-"""
-Test datastore service
+"""Test filesystem storage service
 """
 
 from unittest import TestCase
 
 import os
 
-from yellowbot.storage.datastoreservice import DatastoreService
+from yellowbot.storage.filesystemstorageservice import FilesystemStorageService
 
 DB_FILE_NAME = os.path.join(os.path.dirname(__file__), "test_db.json")
 
 
-class TestDatastoreService(TestCase):
+class TestFilesystemStorageService(TestCase):
     def setUp(self):
-        self._service = DatastoreService(DB_FILE_NAME)
+        self._service = FilesystemStorageService(DB_FILE_NAME)
         pass
 
     def tearDown(self):
@@ -21,7 +20,7 @@ class TestDatastoreService(TestCase):
         pass
 
     def test_write_and_read(self):
-        self._service.write({
+        self._service.save({
                 'key1': "key1_value",
                 'key2': 3,
                 'key3': "long text string"

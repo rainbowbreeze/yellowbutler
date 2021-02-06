@@ -1,4 +1,4 @@
-"""Implement a datastore service
+"""Implement a storage service based on the filesystem
 
 Currently it uses TinyDB, but it's transparent (more or less) to the outside world
  https://pypi.python.org/pypi/tinydb/
@@ -8,20 +8,22 @@ Examples
 """
 from tinydb import TinyDB, Query
 
+from yellowbot.storage.storageservice import StorageService
 
-class DatastoreService:
-    """
+class FilesystemStorageService(StorageService):
+    """Implement a StorageService using TinyDB, so using a simple file as a db
     """
 
     def __init__(self, file_name):
-        """
+        """Initialize the class
 
         :param file_name: file name where data are persisted
         :type file_name: str
         """
+        super().__init__()
         self._db = TinyDB(file_name)
 
-    def write(self, document):
+    def save(self, document):
         """
         Insert a new document into the table.
 
