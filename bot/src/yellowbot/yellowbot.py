@@ -244,6 +244,11 @@ class YellowBot:
             self._logger.info("No gear found to process intent {}".format(intent))
             return "No gear to process your intent"
 
+    # TODO
+    # def initialize(clients, cache=None):
+    #   if not isinstance(clients, list):
+    #     clients = [clients]
+
     def tick_scheduler(self):
         """Check for tasks to run for the scheduler service and, in case, executes them.
 
