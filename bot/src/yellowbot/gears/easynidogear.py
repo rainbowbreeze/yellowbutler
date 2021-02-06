@@ -32,7 +32,7 @@ class EasyNidoGear(BaseGear):
         :param bambini: array with names and ids of the kids to ask information for
         :type bambini: array
         """
-        super().__init__(self, EasyNidoGear.__name__, self.INTENTS)
+        super().__init__(self.__class__.__name__, self.INTENTS)
         self._username = email
         self._password = password
         self._bambini = bambini

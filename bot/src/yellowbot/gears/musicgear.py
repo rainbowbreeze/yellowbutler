@@ -31,7 +31,7 @@ class MusicGear(BaseGear):
         features are disabled
         :type test_mode: bool
         """
-        super().__init__(self, MusicGear.__name__, self.INTENTS)
+        super().__init__(self.__class__.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
         self._destination_url = destination_url
         self._test_mode = test_mode

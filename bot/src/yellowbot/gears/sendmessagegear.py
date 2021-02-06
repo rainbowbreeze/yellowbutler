@@ -32,7 +32,7 @@ class SendMessageGear(BaseGear):
         features are disabled
         :type test_mode: bool
         """
-        super().__init__(self, SendMessageGear.__name__, self.INTENTS)
+        super().__init__(self.__class__.__name__, self.INTENTS)
         self._config_service = config_service
         self._logger = LoggingService.get_logger(__name__)
 
