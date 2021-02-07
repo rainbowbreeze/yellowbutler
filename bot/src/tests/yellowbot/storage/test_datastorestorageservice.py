@@ -47,8 +47,7 @@ class TestDatastoreStorageService(TestCase):
         pass
 
     def tearDown(self):
-        # TODO clean-up the datastore for the specific entity used during this test
-        pass
+        self._datastore.delete_all(DummyEntity)
 
     def test_delete_all(self):
         # Check for errors if no entities are stored

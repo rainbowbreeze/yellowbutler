@@ -20,6 +20,7 @@ Codice da vedere
 
 from google.cloud import datastore
 
+from yellowbot.loggingservice import LoggingService
 from yellowbot.storage.basestorageservice import BaseStorageService, BaseEntity
 
 class DatastoreStorageService(BaseStorageService):
@@ -34,7 +35,9 @@ class DatastoreStorageService(BaseStorageService):
         """Initialize the class
         """
         super().__init__()
-        self._client = datastore.Client()  # Client will contain the class 
+        self._client = datastore.Client()  # Client will contain the class
+        self._logger = LoggingService.get_logger(__name__)
+
 
     def put(self, entity: BaseEntity) -> int:
         """Save an entity in the datastore
@@ -78,6 +81,7 @@ class DatastoreStorageService(BaseStorageService):
         if not issubclass(entity_class, BaseEntity):
             raise ValueError("Param entity_class has to be subclass of BaseEntity")
 
+        self._logger.info("Getting all the entities of kind {}".format(entity_class.get_entity_name()))
         kind = entity_class.get_entity_name()
         query = self._client.query(kind=kind)
 
@@ -137,6 +141,7 @@ class DatastoreStorageService(BaseStorageService):
         if not issubclass(entity_class, BaseEntity):
             raise ValueError("Param entity_class has to be subclass of BaseEntity")
 
+        self._logger.info("Deleting all the entities of kind {}".format(entity_class.get_entity_name()))
         kind = entity_class.get_entity_name()
         query = self._client.query(kind=kind)
         query.keys_only()
