@@ -20,6 +20,12 @@ class NewsItemEntity(BaseEntity):
         self.last_check: None
         self.param1: None
 
+    @staticmethod
+    def get_entity_name() -> str:
+        """Returns the name of the class only, not the package + name
+        """
+        return __class__.__name__
+
     def to_dict(self) -> dict:
         """Transform the entity values in a dict
         
@@ -35,3 +41,17 @@ class NewsItemEntity(BaseEntity):
         if hasattr(self, "param1"):
             fields["param1"] = self.param1
         return fields
+
+    def from_dict(self, source_dict: dict):
+        """Create the entity data from a dict
+        """
+        if hasattr(source_dict, "url"):
+            self.url = source_dict["url"]
+        if hasattr(source_dict, "last_check"):
+            self.last_check = source_dict["last_check"]
+        if hasattr(source_dict, "param1"):
+            self.param1 = source_dict["param1"]
+
+        return self
+        
+

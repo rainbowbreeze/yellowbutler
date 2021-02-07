@@ -12,14 +12,21 @@ class BaseEntity():
     """
 
     id: int
-    entity_name: str
 
     NO_ID = 0  # when the id has this value, it means it hasn't been assigned
 
     def __init__(self) -> None:
         self.id = BaseEntity.NO_ID  # 0 means no id
-        self.entity_name = self.__class__.__name__
         # Change in inherited initialization method, if needed
+
+    @staticmethod
+    def get_entity_name() -> str:
+        """Returns the name of the class. Has to be overwritten by subclasses
+
+        To keep it easy, subclasses can return __class__.__name__
+         (return only the name of the class, not the whole path)
+        """
+        raise ValueError("Method get_entity_name has not been implemented")
 
     def to_dict(self) -> dict:
         """Transform the entity data in a dictionaty.
@@ -31,3 +38,11 @@ class BaseEntity():
         """
 
         raise ValueError("Method to_dict in {} has not been implemented".format(self.__class__.__name__))
+
+    def from_dict(self, source_dict: dict):
+        """Create the entity from a dict
+
+        It has to be implemented in subclasses
+        """
+
+        raise ValueError("Method from_dict has not been implemented")    

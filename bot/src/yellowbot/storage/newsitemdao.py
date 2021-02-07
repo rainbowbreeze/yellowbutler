@@ -6,9 +6,12 @@ It could use different types of storage service, and the one to use is injected
 
 """
 
+from yellowbot.storage.basestorageservice import BaseStorageService
+from yellowbot.storage.newsitementity import NewsItemEntity
+
 class NewsItemDao:
 
-    def __init__(self, storage_service):
+    def __init__(self, storage_service: BaseStorageService):
         """Initialize the class
 
         :param storage_service: the storage service to use
@@ -17,7 +20,7 @@ class NewsItemDao:
 
         self._storage_service = storage_service
 
-    def get_newsitem(self, url):
+    def get_newsitem(self, url: str) -> NewsItemEntity:
         """Search for a news item on the storage, given its url
 
         :param url: the url of the news item
@@ -30,7 +33,7 @@ class NewsItemDao:
         self._storage_service.query()
         return None
 
-    def save_newsitem(self, newsitem):
+    def save_newsitem(self, newsitem: NewsItemEntity) -> NewsItemEntity:
         """Save a news item into the storage
 
         :param newsitem: the news item to save
@@ -40,7 +43,8 @@ class NewsItemDao:
         :rtype: NewsItemEntity
         """
 
-        self._storage_service.save(newsitem)
+        self._storage_service.put(newsitem)
+        return newsitem
 
 
 
