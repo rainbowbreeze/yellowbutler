@@ -42,7 +42,7 @@ class DatastoreStorageService(BaseStorageService):
 
 
     def put(self, entity: BaseEntity) -> int:
-        """Save an entity in the datastore
+        """Save an entity in the datastore, or update an existing one
 
         :param entity: the entity to save
         :type entity: a class that inherits BaseEntity
