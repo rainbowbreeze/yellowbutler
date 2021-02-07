@@ -3,8 +3,13 @@
 
 ## Python notes
 
-How to use type hints: https://docs.python.org/3/library/typing.html
-TODO: check static types with [MyPy](https://mypy.readthedocs.io/en/stable/)
+### Type Hints
+- How to use type hints: https://docs.python.org/3/library/typing.html
+- TODO: check static types with [MyPy](https://mypy.readthedocs.io/en/stable/)
+
+Optional[...] is a shorthand notation for Union[..., None] -> [explaination](https://stackoverflow.com/a/51710151)
+
+### Misc
 Data structures: https://docs.python.org/3/tutorial/datastructures.html
 
 

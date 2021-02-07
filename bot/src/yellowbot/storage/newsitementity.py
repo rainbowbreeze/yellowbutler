@@ -8,6 +8,7 @@ from yellowbot.storage.baseentity import BaseEntity
 class NewsItemEntity(BaseEntity):
     """Entity to store information about a news item
     """
+    
     url: str
     last_check: datetime.date
     param1: str

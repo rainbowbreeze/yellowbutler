@@ -18,6 +18,8 @@ Codice da vedere
 - https://github.com/cirbuk/datastore-orm/blob/master/datastore_orm/model.py
 """
 
+from typing import Optional
+
 from google.cloud import datastore
 
 from yellowbot.loggingservice import LoggingService
@@ -70,7 +72,7 @@ class DatastoreStorageService(BaseStorageService):
 
         return entity.id
 
-    def get_all(self, entity_class) -> dict:
+    def get_all(self, entity_class) -> list:
         """Returns all the entities for the given type
 
         :param entity_class: the final Entity where to put data
@@ -96,7 +98,7 @@ class DatastoreStorageService(BaseStorageService):
 
         return entity_list
 
-    def get_by_id(self, entity_class, entity_id: int) -> BaseEntity:
+    def get_by_id(self, entity_class, entity_id: int) -> Optional[BaseEntity]:
         """Finds a specific entity given its id
 
         :param entity_class: the final Entity where to put data
@@ -175,11 +177,3 @@ class DatastoreStorageService(BaseStorageService):
         new_entity.from_dict(datastore_item)
         new_entity.id = datastore_item.key.id
         return new_entity
-
-
-
-
-
-
-
-

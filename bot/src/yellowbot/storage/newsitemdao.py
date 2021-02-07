@@ -3,8 +3,9 @@
 It could use different types of storage service, and the one to use is injected
  during the class initialization
 
-
 """
+
+from typing import Optional
 
 from yellowbot.storage.basestorageservice import BaseStorageService
 from yellowbot.storage.newsitementity import NewsItemEntity
@@ -20,7 +21,7 @@ class NewsItemDao:
 
         self._storage_service = storage_service
 
-    def get_newsitem(self, url: str) -> NewsItemEntity:
+    def get_newsitem(self, url: str) -> Optional[NewsItemEntity]:
         """Search for a news item on the storage, given its url
 
         :param url: the url of the news item
