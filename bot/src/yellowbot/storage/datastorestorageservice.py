@@ -20,20 +20,19 @@ Codice da vedere
 
 from google.cloud import datastore
 
-from yellowbot.storage.basestorageservice import BaseStorageService
-from yellowbot.storage.baseentity import BaseEntity
+from yellowbot.storage.basestorageservice import BaseStorageService, BaseEntity
 
 class DatastoreStorageService(BaseStorageService):
     """This class implements the storage interface using Google Cloud Firestore in Datastore mode
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the class
         """
         super().__init__()
         self._client = datastore.Client()  # Client will contain the class 
 
-    def put(self, entity):
+    def put(self, entity: BaseEntity) -> int:
         """Save an entity in the datastore
 
         :param entity: the entity to save
@@ -43,13 +42,14 @@ class DatastoreStorageService(BaseStorageService):
         :rtype: int
         """
         
-        # Datastore requires a Type for the entities to save into the db.
-        # The name of the specific entity class is used
+        # Datastore requires a Kind for the entities to save into the db.
+        #  https://cloud.google.com/datastore/docs/concepts/entities#kinds_and_identifiers
+        #  The name of the specific entity class is used
 
-        if entity.id:
-            key = self._client.key(entity.entity_name, entity.id)
-        else:
+        if BaseEntity.NO_ID == entity.id:
             key = self._client.key(entity.entity_name)
+        else:
+            key = self._client.key(entity.entity_name, entity.id)
 
         with self._client.transaction():       
             datastore_entity = datastore.Entity(key=key)

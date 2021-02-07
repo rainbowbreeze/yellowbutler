@@ -11,12 +11,17 @@ class BaseEntity():
        Generally the class name is used, so the same entities have the same name
     """
 
-    def __init__(self):
-        self.id = None
+    id: int
+    entity_name: str
+
+    NO_ID = 0  # when the id has this value, it means it hasn't been assigned
+
+    def __init__(self) -> None:
+        self.id = BaseEntity.NO_ID  # 0 means no id
         self.entity_name = self.__class__.__name__
         # Change in inherited initialization method, if needed
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Transform the entity data in a dictionaty.
 
         It has to be implemented in subclasses

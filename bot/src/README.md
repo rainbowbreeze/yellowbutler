@@ -3,6 +3,11 @@
 
 ## Python notes
 
+How to use type hints: https://docs.python.org/3/library/typing.html
+TODO: check static types with [MyPy](https://mypy.readthedocs.io/en/stable/)
+Data structures: https://docs.python.org/3/tutorial/datastructures.html
+
+
 ### Documentation format
 For documentation, the python reStructured Text format is used, following the suggestions on [this article](https://realpython.com/documenting-python-code/#documenting-your-python-code-base-using-docstrings)
 
