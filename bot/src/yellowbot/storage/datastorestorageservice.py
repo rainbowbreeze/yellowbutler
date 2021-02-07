@@ -46,8 +46,11 @@ class DatastoreStorageService(BaseStorageService):
         :rtype: int
         """
         
+        # Just to be sure the given class is a subclass of BaseEntity
+        if not isinstance(entity, BaseEntity):
+            raise ValueError("Param entity has to be subclass of BaseEntity")
+
         kind: str = entity.get_entity_name()
-        print("kind = {}".format(kind))
         if BaseEntity.NO_ID == entity.id:
             key = self._client.key(kind)
         else:
@@ -64,19 +67,18 @@ class DatastoreStorageService(BaseStorageService):
 
         return entity.id
 
-    def query_all(self, kind:str, entity_class) -> dict:
+    def get_all(self, entity_class) -> dict:
         """Returns all the entities for the given type
 
-        :param kind: the name of the class that will store the entities retrived
-        :type kind: str
-
-        :param entity_class:
+        :param entity_class: the final Entity where to put data
         :type entity_class: a subclass of BaseEntity
         """
 
+        # Just to be sure the given class is a subclass of BaseEntity
         if not issubclass(entity_class, BaseEntity):
             raise ValueError("Param entity_class has to be subclass of BaseEntity")
 
+        kind = entity_class.get_entity_name()
         query = self._client.query(kind=kind)
 
         datastore_results = list(query.fetch())
@@ -84,27 +86,91 @@ class DatastoreStorageService(BaseStorageService):
         entity_list = []
         for datastore_item in datastore_results:
             # Create a new entity to store the data
-            new_entity = entity_class()
-            new_entity.from_dict(datastore_item)
-            new_entity.id = datastore_item.key.id
+            new_entity = self._create_entity_from_datastore(entity_class,  datastore_item)
             entity_list.append(new_entity)
             # print("ID {} - {}".format(entity.id, entity))
 
         return entity_list
 
+    def get_by_id(self, entity_class, entity_id: int) -> BaseEntity:
+        """Finds a specific entity given its id
 
-    def delete_all(self, kind:str) -> None:
+        :param entity_class: the final Entity where to put data
+        :type entity_class: a subclass of BaseEntity
+
+        :param entity_id: the id of the entity
+        :type entity_id: int
+        """
+
+        # Just to be sure the given class is a subclass of BaseEntity
+        if not issubclass(entity_class, BaseEntity):
+            raise ValueError("Param entity_class has to be subclass of BaseEntity")
+
+        kind = entity_class.get_entity_name()
+        key = self._client.key(kind, entity_id)
+        datastore_result = self._client.get(key)
+
+        new_entity = None
+        if not None is datastore_result:
+            new_entity = self._create_entity_from_datastore(entity_class,  datastore_result)
+
+        #query = self._client.query(kind=kind)
+        #query.key_filter(key, "=")
+        #datastore_results = list(query.fetch())
+
+        # new_entity = None
+
+        #if len(datastore_results) > 0:
+        #    # Create a new entity to store the data
+        #    new_entity = self._create_entity_from_datastore(entity_class,  datastore_results[0])
+ 
+        return new_entity
+
+    def delete_all(self, entity_class) -> None:
         """Delete all the entiries of the given type
 
-        :param kind: the name of the class that will store the entities retrived
-        :type kind: str
-
+        :param entity_class: the class of the Entity to delete
+        :type entity_class: a subclass of BaseEntity
         """
+
+        # Just to be sure the given class is a subclass of BaseEntity
+        if not issubclass(entity_class, BaseEntity):
+            raise ValueError("Param entity_class has to be subclass of BaseEntity")
+
+        kind = entity_class.get_entity_name()
         query = self._client.query(kind=kind)
         query.keys_only()
 
         datastore_keys = list(query.fetch())
         self._client.delete_multi(datastore_keys)
+
+    def delete_by_id(self, entity_class, entity_id: int) -> None:
+        """Delete a specific entity given its id
+
+        :param entity_class: the final Entity where to put data
+        :type entity_class: a subclass of BaseEntity
+
+        :param entity_id: the id of the entity
+        :type entity_id: int
+        """
+
+        # Just to be sure the given class is a subclass of BaseEntity
+        if not issubclass(entity_class, BaseEntity):
+            raise ValueError("Param entity_class has to be subclass of BaseEntity")
+
+        kind = entity_class.get_entity_name()
+        key = self._client.key(kind, entity_id)
+        self._client.delete(key)
+
+
+    def _create_entity_from_datastore(self, entity_class, datastore_item) -> BaseEntity:
+        """Instantiace a new entity using data from Datastore
+        """
+        new_entity = entity_class()
+        new_entity.from_dict(datastore_item)
+        new_entity.id = datastore_item.key.id
+        return new_entity
+
 
 
 

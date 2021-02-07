@@ -2,14 +2,14 @@
 https://docs.python.org/3/tutorial/datastructures.html#dictionaries
 """
 
-from datetime import date
+import datetime
 from yellowbot.storage.baseentity import BaseEntity
 
 class NewsItemEntity(BaseEntity):
     """Entity to store information about a news item
     """
     url: str
-    last_check: date
+    last_check: datetime.date
     param1: str
 
     def __init__(self) -> None:
@@ -45,11 +45,12 @@ class NewsItemEntity(BaseEntity):
     def from_dict(self, source_dict: dict):
         """Create the entity data from a dict
         """
-        if hasattr(source_dict, "url"):
+        if "url" in source_dict:
             self.url = source_dict["url"]
-        if hasattr(source_dict, "last_check"):
+        if "last_check" in source_dict:
+            # While saving to Datastore, a DatetimeWithNanoseconds is returned instead of a Datetime.date
             self.last_check = source_dict["last_check"]
-        if hasattr(source_dict, "param1"):
+        if "param1" in source_dict:
             self.param1 = source_dict["param1"]
 
         return self
