@@ -34,7 +34,10 @@ def print_header(file_loc, print_cols = False):
 
   # Code starts after an empty line
 ```
+Other examples: [1](https://googleapis.dev/python/datastore/latest/_modules/google/cloud/datastore/query.html#Query.add_filter), 
 
+Reference
+- [PEP 257 -- Docstring Conventions, 2001](https://www.python.org/dev/peps/pep-0257/)
 
 ### Testing
 

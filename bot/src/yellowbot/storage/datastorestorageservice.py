@@ -49,6 +49,8 @@ class DatastoreStorageService(BaseStorageService):
 
         :returns: the id of the entity
         :rtype: int
+
+        :raises: ValueError if entity is not a subclass of BaseEntity
         """
         
         # Just to be sure the given class is a subclass of BaseEntity
@@ -77,6 +79,8 @@ class DatastoreStorageService(BaseStorageService):
 
         :param entity_class: the final Entity where to put data
         :type entity_class: a subclass of BaseEntity
+
+        :raises: ValueError if entity_class is not a subclass of BaseEntity
         """
 
         # Just to be sure the given class is a subclass of BaseEntity
@@ -106,6 +110,8 @@ class DatastoreStorageService(BaseStorageService):
 
         :param entity_id: the id of the entity
         :type entity_id: int
+
+        :raises: ValueError if entity_class is not a subclass of BaseEntity
         """
 
         # Just to be sure the given class is a subclass of BaseEntity
@@ -137,6 +143,8 @@ class DatastoreStorageService(BaseStorageService):
 
         :param entity_class: the class of the Entity to delete
         :type entity_class: a subclass of BaseEntity
+
+        :raises: ValueError if entity_class is not a subclass of BaseEntity
         """
 
         # Just to be sure the given class is a subclass of BaseEntity
@@ -159,6 +167,8 @@ class DatastoreStorageService(BaseStorageService):
 
         :param entity_id: the id of the entity
         :type entity_id: int
+
+        :raises: ValueError if entity_class is not a subclass of BaseEntity
         """
 
         # Just to be sure the given class is a subclass of BaseEntity
