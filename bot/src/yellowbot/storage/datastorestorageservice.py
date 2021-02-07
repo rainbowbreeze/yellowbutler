@@ -90,7 +90,6 @@ class DatastoreStorageService(BaseStorageService):
         self._logger.info("Getting all the entities of kind {}".format(entity_class.get_entity_name()))
         kind = entity_class.get_entity_name()
         query = self._client.query(kind=kind)
-
         datastore_results = list(query.fetch())
 
         entity_list = []
@@ -122,21 +121,55 @@ class DatastoreStorageService(BaseStorageService):
         key = self._client.key(kind, entity_id)
         datastore_result = self._client.get(key)
 
+        # Using a query, instead
+        #query = self._client.query(kind=kind)
+        #key = self._client.key(kind, entity_id)
+        #query.key_filter(key, "=")        
+        #results = list(query.fetch())
+
         new_entity = None
         if not None is datastore_result:
             new_entity = self._create_entity_from_datastore(entity_class,  datastore_result)
-
-        #query = self._client.query(kind=kind)
-        #query.key_filter(key, "=")
-        #datastore_results = list(query.fetch())
-
-        # new_entity = None
-
-        #if len(datastore_results) > 0:
-        #    # Create a new entity to store the data
-        #    new_entity = self._create_entity_from_datastore(entity_class,  datastore_results[0])
  
         return new_entity
+
+    def get_by_property(self, entity_class, property_name: str, operator: str, property_value: object) -> list:
+        """Finds a specific entity given its id
+
+        :param entity_class: the final Entity where to put data
+        :type entity_class: a subclass of BaseEntity
+
+        :param property_name: the id of the entity
+        :type property_name: str
+
+        :param operator: what's the comparison applied between the property and the value
+        :type operator: str
+
+        :param property_value: what's the comparison applied between the property and the value
+        :type property_value: int, str, bool, float, NoneType, datetime.datetime
+
+        :returns: a list of entity matching the search criteria
+        :rtype: list
+
+        :raises: ValueError if entity_class is not a subclass of BaseEntity
+        """
+
+        # Just to be sure the given class is a subclass of BaseEntity
+        if not issubclass(entity_class, BaseEntity):
+            raise ValueError("Param entity_class has to be subclass of BaseEntity")
+
+        kind = entity_class.get_entity_name()
+        query = self._client.query(kind=kind)
+        query.add_filter(property_name, operator, property_value)
+        datastore_results = list(query.fetch())
+
+        entity_list = []
+        for datastore_item in datastore_results:
+            # Create a new entity to store the data
+            new_entity = self._create_entity_from_datastore(entity_class,  datastore_item)
+            entity_list.append(new_entity)
+
+        return entity_list
 
     def delete_all(self, entity_class) -> None:
         """Delete all the entiries of the given type

@@ -66,10 +66,10 @@ class TestDatastoreStorageService(TestCase):
         self.assertIsNotNone(entity_id1)
         self.assertEqual(entity_id1, test_entity1.id)
 
-        test_items = self._datastore.get_all(DummyEntity)
-        self.assertEqual(1, len(test_items))
-        self.assertEqual(test_entity1.id, test_items[0].id)
-        self.assertEqual(test_entity1.url, test_items[0].url)
+        read_entities = self._datastore.get_all(DummyEntity)
+        self.assertEqual(1, len(read_entities))
+        self.assertEqual(test_entity1.id, read_entities[0].id)
+        self.assertEqual(test_entity1.url, read_entities[0].url)
         # Checks timestamp() because the returned object from Datastore is a DatetimeWithNanoseconds
         # self.assertEqual(test_entity1.last_check.timestamp(), test_items[0].last_check.timestamp())
 
@@ -79,8 +79,8 @@ class TestDatastoreStorageService(TestCase):
         self.assertIsNotNone(entity_id2)
         self.assertEqual(entity_id2, test_entity2.id)
         # And check total database elements
-        test_items = self._datastore.get_all(DummyEntity)
-        self.assertEqual(2, len(test_items))
+        read_entities = self._datastore.get_all(DummyEntity)
+        self.assertEqual(2, len(read_entities))
 
         # Add entity 3 to the datastore
         test_entity3 = self._create_dummy_entity()
@@ -88,30 +88,49 @@ class TestDatastoreStorageService(TestCase):
         self.assertIsNotNone(entity_id3)
         self.assertEqual(entity_id3, test_entity3.id)
         # And check total database elements
-        test_items = self._datastore.get_all(DummyEntity)
-        self.assertEqual(3, len(test_items))
+        read_entities = self._datastore.get_all(DummyEntity)
+        self.assertEqual(3, len(read_entities))
+
 
         # ---- Tests for retrieving entities from the datastore using keys ----
-        # Get entity 2
+        # Get entity 2 by id
         read_entity = self._datastore.get_by_id(DummyEntity, entity_id2)
         self.assertIsNotNone(read_entity)
         self.assertEqual(test_entity2.id, read_entity.id)
         self.assertEqual(test_entity2.url, read_entity.url)
         #self.assertEqual(test_entity2.last_check.timestamp(), read_entity.last_check.timestamp())
 
-        # Get entity 3
+        # Get entity 3 by id
         read_entity = self._datastore.get_by_id(DummyEntity, entity_id3)
         self.assertIsNotNone(read_entity)
         self.assertEqual(test_entity3.id, read_entity.id)
         self.assertEqual(test_entity3.url, read_entity.url)
         #self.assertEqual(test_entity3.last_check.timestamp(), read_entity.last_check.timestamp())
 
-        # Get entity 1
+        # Get entity 1 by id
         read_entity = self._datastore.get_by_id(DummyEntity, entity_id1)
         self.assertIsNotNone(read_entity)
         self.assertEqual(test_entity1.id, read_entity.id)
         self.assertEqual(test_entity1.url, read_entity.url)
         #self.assertEqual(test_entity3.last_check.timestamp(), read_entity.last_check.timestamp())
+
+        # Unable to read an entity by wrong id
+        read_entity = self._datastore.get_by_id(DummyEntity, 123123812381)
+        self.assertIsNone(read_entity)
+
+        # Get entity 2 by url
+        read_entities = self._datastore.get_by_property(DummyEntity, "url", "=", test_entity2.url)
+        self.assertEqual(1, len(read_entities))
+        read_entity = read_entities[0]
+        self.assertIsNotNone(read_entity)
+        self.assertEqual(test_entity2.id, read_entity.id)
+        self.assertEqual(test_entity2.url, read_entity.url)
+        #self.assertEqual(test_entity2.last_check.timestamp(), read_entity.last_check.timestamp())
+
+        # Unable to read an entity by wrong url
+        read_entities = self._datastore.get_by_property(DummyEntity, "url", "=", "RANDOM_URL_NOT_EXISTING")
+        self.assertEqual(0, len(read_entities))
+
 
         # ---- Tests for updating entities from the datastore ----
         test_entity2_new = self._create_dummy_entity()
@@ -124,6 +143,7 @@ class TestDatastoreStorageService(TestCase):
         self.assertEqual(test_entity2.id, read_entity.id)
         self.assertEqual(test_entity2.url, read_entity.url)
         #self.assertEqual(test_entity4.last_check.timestamp(), read_entity.last_check.timestamp())
+        
 
         # ---- Tests for deleting entities from the datastore ----
         # Delete 1 entity
@@ -133,13 +153,13 @@ class TestDatastoreStorageService(TestCase):
         # To be sure, check database for entity 1
         read_entity = self._datastore.get_by_id(DummyEntity, entity_id1)
         self.assertIsNone(read_entity)
-        test_items = self._datastore.get_all(DummyEntity)
-        self.assertEqual(2, len(test_items))
+        read_entities = self._datastore.get_all(DummyEntity)
+        self.assertEqual(2, len(read_entities))
 
         # Delete all the entities
         self._datastore.delete_all(DummyEntity)
-        test_items = self._datastore.get_all(DummyEntity)
-        self.assertEqual(0, len(test_items))
+        read_entities = self._datastore.get_all(DummyEntity)
+        self.assertEqual(0, len(read_entities))
 
     def _create_dummy_entity(self) -> DummyEntity:
         """Created an entity with some test data
