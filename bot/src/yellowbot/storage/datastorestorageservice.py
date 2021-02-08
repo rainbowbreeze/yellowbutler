@@ -18,12 +18,16 @@ Codice da vedere
 - https://github.com/cirbuk/datastore-orm/blob/master/datastore_orm/model.py
 """
 
-from typing import Optional
+from typing import List, Optional, Type, TypeVar, Union
+import datetime
 
 from google.cloud import datastore
 
 from yellowbot.loggingservice import LoggingService
 from yellowbot.storage.basestorageservice import BaseStorageService, BaseEntity
+
+BE = TypeVar('BE', bound=BaseEntity)
+# See here for explanation: https://www.python.org/dev/peps/pep-0484/#the-type-of-class-objects
 
 class DatastoreStorageService(BaseStorageService):
     """This class implements the storage interface using Google Cloud Firestore in Datastore mode
@@ -41,7 +45,7 @@ class DatastoreStorageService(BaseStorageService):
         self._logger = LoggingService.get_logger(__name__)
 
 
-    def put(self, entity: BaseEntity) -> int:
+    def put(self, entity: BE) -> int:
         """Save an entity in the datastore, or update an existing one
 
         :param entity: the entity to save
@@ -74,7 +78,7 @@ class DatastoreStorageService(BaseStorageService):
 
         return entity.id
 
-    def get_all(self, entity_class) -> list:
+    def get_all(self, entity_class: Type[BE]) -> List[BE]:
         """Returns all the entities for the given type
 
         :param entity_class: the final Entity where to put data
@@ -101,7 +105,7 @@ class DatastoreStorageService(BaseStorageService):
 
         return entity_list
 
-    def get_by_id(self, entity_class, entity_id: int) -> Optional[BaseEntity]:
+    def get_by_id(self, entity_class: Type[BE], entity_id: int) -> Optional[BE]:
         """Finds a specific entity given its id
 
         :param entity_class: the final Entity where to put data
@@ -133,7 +137,13 @@ class DatastoreStorageService(BaseStorageService):
  
         return new_entity
 
-    def get_by_property(self, entity_class, property_name: str, operator: str, property_value: object) -> list:
+    def get_by_property(
+        self,
+        entity_class: Type[BE],
+        property_name: str,
+        operator: str,
+        property_value: Union[int, str, bool, float, None, datetime.date]
+    ) -> List[BE]:
         """Finds a specific entity given its id
 
         :param entity_class: the final Entity where to put data
@@ -171,7 +181,7 @@ class DatastoreStorageService(BaseStorageService):
 
         return entity_list
 
-    def delete_all(self, entity_class) -> None:
+    def delete_all(self, entity_class: Type[BE]) -> None:
         """Delete all the entiries of the given type
 
         :param entity_class: the class of the Entity to delete
@@ -192,7 +202,7 @@ class DatastoreStorageService(BaseStorageService):
         datastore_keys = list(query.fetch())
         self._client.delete_multi(datastore_keys)
 
-    def delete_by_id(self, entity_class, entity_id: int) -> None:
+    def delete_by_id(self, entity_class: Type[BE], entity_id: int) -> None:
         """Delete a specific entity given its id
 
         :param entity_class: the final Entity where to put data
@@ -213,7 +223,11 @@ class DatastoreStorageService(BaseStorageService):
         self._client.delete(key)
 
 
-    def _create_entity_from_datastore(self, entity_class, datastore_item) -> BaseEntity:
+    def _create_entity_from_datastore(
+        self,
+        entity_class: Type[BE],
+        datastore_item: datastore.entity.Entity
+    ) -> BE:
         """Instantiace a new entity using data from Datastore
         """
         new_entity = entity_class()

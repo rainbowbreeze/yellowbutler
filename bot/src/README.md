@@ -4,7 +4,10 @@
 ## Python notes
 
 ### Type Hints
+- [PEP0484 (Type Hints) - May 2015](https://www.python.org/dev/peps/pep-0484/), and [many others PEPs](https://marketplace.visualstudio.com/items?itemName=ms-pyright.pyright)
+- [Type hints cheat sheet (Python 3)](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html)
 - How to use type hints: https://docs.python.org/3/library/typing.html
+- StackOverflow example: https://stackoverflow.com/a/25320495
 - TODO: check static types with [MyPy](https://mypy.readthedocs.io/en/stable/)
 
 Optional[...] is a shorthand notation for Union[..., None] -> [explaination](https://stackoverflow.com/a/51710151)

@@ -14,10 +14,13 @@ import requests
 import arrow
 
 from types import SimpleNamespace
+from typing import List
 
 from yellowbot.gears.basegear import BaseGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
+from yellowbot.storage.basestorageservice import BaseStorageService
+from yellowbot.storage.newsitementity import NewsItemEntity
 
 class NewsReportGear(BaseGear):
     """Check updates from different sources and send them to a specific surface
@@ -27,20 +30,25 @@ class NewsReportGear(BaseGear):
     PARAM_SILENT = GlobalBag.CHECKFORNEWS_PARAM_SILENT  # No notification if there is nothing new 
 
     def __init__(self,
-                 youtube_api_key,
-                 test_mode = False):
+                 youtube_api_key: str,
+                 storage_service: BaseStorageService):
         """Constructor
 
         :param youtube_api_key: the API key to use for YouTube API v3 calls
         :type api_key: str 
+
+        :param storage_service: the storage service to use. Caller object will decide the specific implementation
+        :type storaga_service: BaseStorageService subclass
         """
 
         super().__init__(self.__class__.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
-        self._test_mode = test_mode
         self._youtube_api_key = youtube_api_key
+        self._stotage_service = storage_service
 
-    def process_intent(self, intent, params):
+    def process_intent(self,
+                       intent: str,
+                       params: List[str]) -> str:
         if NewsReportGear.INTENTS[0] != intent:
             message = "Call to {} using wrong intent {}".format(__name__, intent)
             self._logger.info(message)

@@ -4,9 +4,13 @@ Subclasses have to implement the most important method, using the storage
 they prefer
 """
 
-from typing import Optional
+from typing import List, Optional, Type, TypeVar, Union
+import datetime
 
 from yellowbot.storage.baseentity import BaseEntity
+
+BE = TypeVar('BE', bound=BaseEntity)
+# See here for explanation: https://www.python.org/dev/peps/pep-0484/#the-type-of-class-objects
 
 class BaseStorageService():
     """Define a generic interface for a storage service
@@ -16,7 +20,7 @@ class BaseStorageService():
         """
         pass
 
-    def put(self, entity: BaseEntity) -> int:
+    def put(self, entity: BE) -> int:
         """Save an entity in the datastore, or update an existing one
 
         :param entity: the entity to save
@@ -30,7 +34,7 @@ class BaseStorageService():
         
         raise ValueError("put method wasn't implemented for {}".format(self.__class__.__name__))
 
-    def get_all(self, entity_class) -> list:
+    def get_all(self, entity_class: Type[BE]) -> List[BE]:
         """Returns all the entities for the given type
 
         :param entity_class: the final Entity where to put data
@@ -41,7 +45,7 @@ class BaseStorageService():
 
         raise ValueError("get_all method wasn't implemented for {}".format(self.__class__.__name__))
 
-    def get_by_id(self, entity_class, entity_id: int) -> Optional[BaseEntity]:
+    def get_by_id(self, entity_class: Type[BE], entity_id: int) -> Optional[BE]:
         """Finds a specific entity given its id
 
         :param entity_class: the final Entity where to put data
@@ -55,7 +59,13 @@ class BaseStorageService():
 
         raise ValueError("get_by_id method wasn't implemented for {}".format(self.__class__.__name__))
 
-    def get_by_property(self, entity_class, property_name: str, operator: str, property_value: object) -> list:
+    def get_by_property(
+        self,
+        entity_class: Type[BE],
+        property_name: str,
+        operator: str,
+        property_value: Union[int, str, bool, float, None, datetime.date]
+    ) -> List[BE]:
         """Finds a specific entity given its id
 
         :param entity_class: the final Entity where to put data
@@ -78,7 +88,7 @@ class BaseStorageService():
 
         raise ValueError("get_by_property method wasn't implemented for {}".format(self.__class__.__name__))
 
-    def delete_all(self, entity_class) -> None:
+    def delete_all(self, entity_class: Type[BE]) -> None:
         """Delete all the entiries of the given type
 
         :param entity_class: the class of the Entity to delete
@@ -89,7 +99,7 @@ class BaseStorageService():
 
         raise ValueError("delete_all method wasn't implemented for {}".format(self.__class__.__name__))
 
-    def delete_by_id(self, entity_class, entity_id: int) -> None:
+    def delete_by_id(self, entity_class: Type[BE], entity_id: int) -> None:
         """Delete a specific entity given its id
 
         :param entity_class: the final Entity where to put data
