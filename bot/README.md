@@ -102,6 +102,14 @@ https://code.visualstudio.com/docs/python/tutorial-flask
 Enable tests
 https://code.visualstudio.com/docs/python/testing
 
+Optional- Install [PyLance](https://devblogs.microsoft.com/python/announcing-pylance-fast-feature-rich-language-support-for-python-in-visual-studio-code/) for a better Python support.  
+If PyLance will report error in missing imports for local libraries, it is because it starts to process from the project root folder. [See issue](https://github.com/microsoft/pylance-release/issues/519). To solve, follow the [Unresolved import warnings](https://github.com/microsoft/pylance-release/blob/main/TROUBLESHOOTING.md#unresolved-import-warnings) and add this line to the .vscode/setting.json on the root folder
+```
+{
+    "python.analysis.extraPaths": ["./bot/src"]
+}
+```
+
 
 
 ## Configuring gears
