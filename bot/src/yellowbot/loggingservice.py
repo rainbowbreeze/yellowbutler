@@ -10,6 +10,7 @@ class LoggingService:
     def init():
         logging.basicConfig(
             level=logging.INFO,
+            #level=logging.DEBUG,
             format= "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             datefmt='%m-%d %H:%M')
 

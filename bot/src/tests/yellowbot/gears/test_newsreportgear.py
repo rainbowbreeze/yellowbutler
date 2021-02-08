@@ -126,3 +126,5 @@ class TestNewsReportGear(TestCase):
         self.assertEqual(2, len(new_videos))
         self.assertEqual("New video published: The 7 Types of VR Users 2 - https://www.youtube.com/watch?v=WFeny7l1Ev4", new_videos[0])
         self.assertEqual("New video published: Valve's next VR projects are SCARILY similar to Sword Art Online - https://www.youtube.com/watch?v=veVx0AuhHFw", new_videos[1])
+
+        #TODO Test id last_check is saved over different calls

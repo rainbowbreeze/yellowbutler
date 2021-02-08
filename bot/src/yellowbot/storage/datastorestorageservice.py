@@ -61,10 +61,12 @@ class DatastoreStorageService(BaseStorageService):
         if not isinstance(entity, BaseEntity):
             raise ValueError("Param entity has to be subclass of BaseEntity")
 
-        kind: str = entity.get_entity_name()
+        kind = entity.get_entity_name()
         if BaseEntity.NO_ID == entity.id:
+            self._logger.debug("Saving a new item of kind {}".format(kind))
             key = self._client.key(kind)
         else:
+            self._logger.debug("Updating an existing item of kind {} with id {}".format(kind, entity.id))
             key = self._client.key(kind, entity.id)
 
         with self._client.transaction():       
@@ -91,8 +93,8 @@ class DatastoreStorageService(BaseStorageService):
         if not issubclass(entity_class, BaseEntity):
             raise ValueError("Param entity_class has to be subclass of BaseEntity")
 
-        self._logger.info("Getting all the entities of kind {}".format(entity_class.get_entity_name()))
         kind = entity_class.get_entity_name()
+        self._logger.info("Getting all the entities of kind {}".format(kind))
         query = self._client.query(kind=kind)
         datastore_results = list(query.fetch())
 

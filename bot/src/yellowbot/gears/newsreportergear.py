@@ -161,9 +161,8 @@ class NewsReportGear(BaseGear):
                 # Forge specific messagge to return to the caller
                 video_update_messages.append("Error getting information on YouTube channel {}".format(channel_id))
                 return video_update_messages
-
             news_item.param1 = upload_playlist_id
-
+        
         # Search latest videos in the upload playlist
         try:
             all_videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
@@ -177,14 +176,15 @@ class NewsReportGear(BaseGear):
 
         # Find in the db the last check date
         if hasattr(news_item, "last_check"):
-            last_check: Arrow = arrow.get(news_item.last_check)
+            self._logger.debug("Found last_check in the stored entity: {}".format(news_item.last_check))
+            last_check_date: Arrow = arrow.get(news_item.last_check)
         else:
-            last_check = fallback_check_date
-        print(last_check)
+            self._logger.debug("Stored entity has no last_check property")
+            last_check_date = fallback_check_date
 
         self._logger.info("Comparing published date of {} vides agains {}".format(
             len(all_videos),
-            last_check
+            last_check_date
         ))
 
         # Discard all the videos older that a certain date
@@ -192,13 +192,15 @@ class NewsReportGear(BaseGear):
         for video in all_videos:
             # Get date from the video
             video_published = arrow.get(video.published)
-            if video_published > last_check:
+            if video_published > last_check_date:
                 post_check_videos.append(video)
         self._logger.info("Found {} video(s) after the last check".format(len(post_check_videos)))
 
         # Store the values
         try:
-            news_item.last_check = last_check
+            # Convert Arrow object back to datetime
+            news_item.last_check = arrow.utcnow().datetime
+            self._logger.debug("Updating the news entity with new date {}".format(news_item.last_check))
             self._storage.put(news_item)
         except BaseException as e:
             self._logger.error(e)
