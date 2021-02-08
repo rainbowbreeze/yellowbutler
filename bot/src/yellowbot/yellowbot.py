@@ -14,6 +14,8 @@ from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.nluengine import NluEngine
 from yellowbot.schedulerservice import SchedulerService
+from yellowbot.storage.datastorestorageservice import DatastoreStorageService
+from yellowbot.storage.basestorageservice import BaseStorageService
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 
@@ -104,9 +106,14 @@ class YellowBot:
         # CommitStrip gear
         self._gears.append(CommitStripGear())
 
+        if test_mode:
+            storage_service = BaseStorageService()
+        else:
+            storage_service : DatastoreStorageService()
         # CheckForNews gear
         self._gears.append(NewsReportGear(
-            self._config_service.get_config("youtube_api")
+            self._config_service.get_config("youtube_api"),
+            storage_service
         ))
 
     def get_config(self, key_to_read, throw_error=True):

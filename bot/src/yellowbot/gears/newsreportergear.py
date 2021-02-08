@@ -14,13 +14,17 @@ import requests
 import arrow
 
 from types import SimpleNamespace
-from typing import List
+from typing import List, Optional, TypeVar, Union
+from distutils.util import strtobool
 
 from yellowbot.gears.basegear import BaseGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.storage.basestorageservice import BaseStorageService
 from yellowbot.storage.newsitementity import NewsItemEntity
+
+BSS = TypeVar('BSS', bound=BaseStorageService)
+# See here for explanation: https://www.python.org/dev/peps/pep-0484/#the-type-of-class-objects
 
 class NewsReportGear(BaseGear):
     """Check updates from different sources and send them to a specific surface
@@ -29,9 +33,11 @@ class NewsReportGear(BaseGear):
     INTENTS = [GlobalBag.CHECKFORNEWS_INTENT]
     PARAM_SILENT = GlobalBag.CHECKFORNEWS_PARAM_SILENT  # No notification if there is nothing new 
 
-    def __init__(self,
-                 youtube_api_key: str,
-                 storage_service: BaseStorageService):
+    def __init__(
+        self,
+        youtube_api_key: str,
+        storage_service: BSS
+    ) -> None:
         """Constructor
 
         :param youtube_api_key: the API key to use for YouTube API v3 calls
@@ -46,9 +52,11 @@ class NewsReportGear(BaseGear):
         self._youtube_api_key = youtube_api_key
         self._stotage_service = storage_service
 
-    def process_intent(self,
-                       intent: str,
-                       params: List[str]) -> str:
+    def process_intent(
+        self,
+        intent: str,
+        params: List[str]
+    ) -> Union[Optional[str], List[str]]:
         if NewsReportGear.INTENTS[0] != intent:
             message = "Call to {} using wrong intent {}".format(__name__, intent)
             self._logger.info(message)
@@ -57,11 +65,12 @@ class NewsReportGear(BaseGear):
         # Defaul value for silent param
         silent = False
         if NewsReportGear.PARAM_SILENT in params:
-            silent = params[NewsReportGear.PARAM_SILENT]
+            # https://stackoverflow.com/a/35412300
+            silent = bool(strtobool(params[NewsReportGear.PARAM_SILENT]))
 
         return self._find_daily_news(silent)
 
-    def _find_daily_news(self, silent):
+    def _find_daily_news(self, silent: bool) -> Union[Optional[str], List[str]]:
         """Analyze all the different news sources, notifying in case new contents are found
 
         :param silent: if True, doesn't produce any value when new content is not found
@@ -97,7 +106,10 @@ class NewsReportGear(BaseGear):
         
         return message
 
-    def _analize_youtube_channel(self, channel_url):
+    def _analize_youtube_channel(
+        self,
+        channel_url: str
+    ) -> List[SimpleNamespace]:
         """Analyze a YouTube channel searching for new videos
 
         :param channel_url: the full url of the Youtube channel to analyze. E.g.: https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA
@@ -139,7 +151,7 @@ class NewsReportGear(BaseGear):
 
         # Register them in the DB
 
-    def _youtube_extract_channel_id_from_url(self, channel_url):
+    def _youtube_extract_channel_id_from_url(self, channel_url: str) -> str:
         """Extract the channel id from the channel URL
 
         For https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA, it returns UCSbdMXOI_3HGiFviLZO6kNA
@@ -154,7 +166,11 @@ class NewsReportGear(BaseGear):
         # More elegant regex solution: https://stackoverflow.com/questions/51166723/extract-youtube-channel-id-from-channel-url-android
         return channel_url[len('https://www.youtube.com/channel/'):]
 
-    def _youtube_find_upload_playlist_from_channel(self, api_key, channel_id):
+    def _youtube_find_upload_playlist_from_channel(
+        self,
+        api_key: str,
+        channel_id: str
+    ) -> str:
         """Find upload playlist id for a given channel
 
         :param api_key: the API key to use for YouTube API v3 calls
@@ -194,7 +210,11 @@ class NewsReportGear(BaseGear):
         return upload_id
 
 
-    def _youtube_find_new_videos_in_a_playlist(self, api_key, playlist_id):
+    def _youtube_find_new_videos_in_a_playlist(
+        self,
+        api_key: str,
+        playlist_id: str
+    ) -> List[SimpleNamespace]:
         """Given a playlist, it searched for its latest videos
 
         :param api_key: the API key to use for YouTube API v3 calls
@@ -218,11 +238,12 @@ class NewsReportGear(BaseGear):
                 req.raise_for_status()
             results = req.json()
         except BaseException as e:
-            self._logger.exception(e)
-            return "Error while getting playlist information for playlist {}: {}".format(
+            self._logger.error("Error while getting playlist information for playlist {}: {}".format(
                 playlist_id,
                 repr(e)
-            )
+            ))
+            self._logger.exception(e)
+            raise e
 
         latest_videos = []
         try:
@@ -241,6 +262,8 @@ class NewsReportGear(BaseGear):
                 )
                 latest_videos.append(video)
         except BaseException as e:
-            return "Exception happened while parsing YouTube data {}".format(repr(e))        
+            self._logger.error("Exception happened while parsing YouTube data {}".format(repr(e)))
+            self._logger.exception(e)
+            raise e
 
         return latest_videos

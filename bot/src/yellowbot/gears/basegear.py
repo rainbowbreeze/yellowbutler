@@ -5,7 +5,7 @@ A gear defines a way to solve one or more intents, and can be seen as a
 
 Adding new gears adds more features to the main app.
 """
-from typing import List, Union
+from typing import List, Optional, Union
 
 class BaseGear:
     """Defines basic attributes and methods of all gears
@@ -57,7 +57,7 @@ class BaseGear:
         self,
         intent: str,
         params: List[str]
-    ) -> Union[str, List[str]]:
+    ) -> Union[Optional[str], List[str]]:
         """Process the intent. Need to be implemented in every subclass
 
         :param intent: the specific intent to process

@@ -11,6 +11,7 @@ import arrow
 
 from yellowbot.gears.newsreportergear import NewsReportGear
 from yellowbot.globalbag import GlobalBag
+from yellowbot.storage.basestorageservice import BaseStorageService
 
 class TestNewsReportGear(TestCase):
     TESTDATA_YOUTUBE_CHANNEL_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_youtube_channel.txt")
@@ -18,7 +19,7 @@ class TestNewsReportGear(TestCase):
 
     def setUp(self):
         self._youtube_key = 'mock_youtube_key'
-        self._gear = NewsReportGear(self._youtube_key)
+        self._gear = NewsReportGear(self._youtube_key, BaseStorageService())
 
     def tearDown(self):
         pass
