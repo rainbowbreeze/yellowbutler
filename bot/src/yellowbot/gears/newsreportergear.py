@@ -69,9 +69,9 @@ class NewsReportGear(BaseGear):
         # Defaul value for silent param
         silent = False
         if NewsReportGear.PARAM_SILENT in params:
-            # https://stackoverflow.com/a/35412300
-            silent = bool(strtobool(params[NewsReportGear.PARAM_SILENT]))
+            silent = params[NewsReportGear.PARAM_SILENT]
 
+        self._logger.info("Start processing new news to report")
         return self._find_daily_news(silent)
 
     def _find_daily_news(self, silent: bool) -> Optional[str]:
