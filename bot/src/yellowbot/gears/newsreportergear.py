@@ -16,6 +16,7 @@ import arrow
 from types import SimpleNamespace
 from typing import List, Optional, TypeVar, Union
 from distutils.util import strtobool
+import datetime
 
 from yellowbot.gears.basegear import BaseGear
 from yellowbot.globalbag import GlobalBag
@@ -50,7 +51,7 @@ class NewsReportGear(BaseGear):
         super().__init__(self.__class__.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
         self._youtube_api_key = youtube_api_key
-        self._stotage_service = storage_service
+        self._storage = storage_service
 
     def process_intent(
         self,
@@ -89,17 +90,16 @@ class NewsReportGear(BaseGear):
         for channel_url in channel_urls:
             self._logger.info("Checking for news on {}".format(channel_url))
             #TODO check for errors
-            videos = self._analize_youtube_channel(channel_url)
+            videos = self._analize_youtube_channel(channel_url, datetime.datetime.now())
             #TODO check for errors
             for video in videos:
-                video_publish_date = arrow.get(video.published)
-                if today.format("YYYY-MM-DD") == video_publish_date.format("YYYY-MM-DD"):
-                    self._logger.debug("Found new video {}".format(video.url))
-                    # Good, the video was published today
-                    message = 'New video published: {}\n{}'.format(
-                        video.title,
-                        video.url
-                    )
+                self._logger.info("Found new video {}".format(video.url))
+                # Good, the video was published today
+                message = 'New video published: {}\n{}'.format(
+                    video.title,
+                    video.url
+                )
+                break
         
         if not message and not silent:
             message = "No new videos for today"
@@ -108,12 +108,16 @@ class NewsReportGear(BaseGear):
 
     def _analize_youtube_channel(
         self,
-        channel_url: str
+        channel_url: str,
+        last_check: datetime.date
     ) -> List[SimpleNamespace]:
         """Analyze a YouTube channel searching for new videos
 
         :param channel_url: the full url of the Youtube channel to analyze. E.g.: https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA
         :type channel_url: str
+
+        :param last_check_date: last check date for the videos
+        :type channel_url: datetime.date
 
         :returns: TDB, the list of the latest channel videos
         :rtype: list
@@ -122,34 +126,59 @@ class NewsReportGear(BaseGear):
         # Every channel as a special playlist called upload, with all the 
         #  latest uploaded videos in the channel. Checking for videos
         #  in this playlist has a YouTube API quota cost of 1, while
-        #  performing a normal search on all the new videos of a channel has
+        #  performing a normal search on all the new videos for a channel has
         #  a quota cost of 100.
         # So, it's wortwhile to first check for the upload playlist id for
         #  the channel, cache it, and then search for new videos inside
         #  this playlist
 
-        # Search in the database if it has already the "upload" playlist id 
-        #  for the given channel.
-        # This pla
+        # Search in the database if it has already information for the given
+        #  channel, included the playlist id 
+        try:
+            news_items = self._storage.get_by_property(NewsItemEntity, "url", "=", channel_url)
+        except BaseException as e:
+            self._logger.error(e)
+            news_items = None
 
-        channel_id = self._youtube_extract_channel_id_from_url(channel_url)
+        if news_items is None or 0 == len(news_items):
+            # Creates the item
+            news_item = NewsItemEntity()
+            news_item.url = channel_url
+        else:
+            news_item = news_items[0]
 
-        # Find the upload playlist id for the given channel
-        upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, channel_id)
+        # Retrieve the key from the DB. otherwise obtain it from a YouTube API call
+        if hasattr(news_items, "param1") and news_item.param1:
+            upload_playlist_id = news_item.param1
+        else:
+            channel_id = self._youtube_extract_channel_id_from_url(channel_url)
+            # Find the upload playlist id for the given channel
+            upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, channel_id)
+            #TODO error management
+            news_item.param1 = upload_playlist_id
 
         # Search latest videos in the upload playlist
-        videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
-        return videos
+        all_videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
 
         # Find in the db the last check date
+        #TODO last_check is from the NewsItemEntity, not passed as parameter
 
         # Discard all the videos older that a certain date
+        post_check_videos = []
+        for video in all_videos:
+            if self._published_post_check(last_check, video.published):
+                post_check_videos.append(video)
 
-        # Check if updates for the remaining videos have been already provided
+        # Store the values
+        try:
+            news_item.last_check = last_check
+            self._storage.put(news_item)
+        except BaseException as e:
+            self._logger.error(e)
 
         # Send alerts for the next videos
+        return post_check_videos
 
-        # Register them in the DB
 
     def _youtube_extract_channel_id_from_url(self, channel_url: str) -> str:
         """Extract the channel id from the channel URL
@@ -267,3 +296,16 @@ class NewsReportGear(BaseGear):
             raise e
 
         return latest_videos
+
+    def _published_post_check(
+        self,
+        last_check: datetime.date,
+        video_published: datetime.date
+    ) -> bool:
+        """Check if a given content was published after a certain data
+        """
+        last_check_date = arrow.get(last_check)
+        video_publish_date = arrow.get(video_published)
+
+        last_check_date = arrow.utcnow()
+        return last_check_date.format("YYYY-MM-DD") == video_publish_date.format("YYYY-MM-DD")

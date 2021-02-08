@@ -105,8 +105,5 @@ class TestNewsReportGear(TestCase):
             content_type='application/json'
         )
 
-
-
         result = self._gear._find_daily_news(False)
-
         self.assertEqual('No new videos for today', result)
