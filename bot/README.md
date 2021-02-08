@@ -154,7 +154,7 @@ _(if run with python wsgi/flaskapp.py, it doesn't work)_
 
 Test if everything works with: 
 ```
-curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
+curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world\"}}"
 ```
 
 ### From CL, as a GAE app
@@ -164,7 +164,7 @@ gunicorn -b :5000 wsgi.flaskapp:app
 ```
 Test with: 
 ```
-curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world!\"}}"
+curl -X POST http://127.0.0.1:5000/yellowbot/api/v1.0/intent -H "X-Authorization:authorized_key_1" -H "Content-Type: application/json" -d "{\"intent\":\"echo_message\", \"params\":{\"message\":\"Hello world\"}}"
 ```
 
 There is also the option to use the [local development server](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app#local-dev-server), dev_appserver.py - this is useful to emulate an application running in production, and potentially also emulate services like Cloud Datastore, Cloud Bigtable and Cloud Pub/Sub locally. More on the dev-oriented [README.md](src/README.md)

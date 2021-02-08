@@ -87,7 +87,7 @@ class TestNewsReportGear(TestCase):
         self.assertEqual('2021-01-12T19:13:35Z', item.published)
 
     @responses.activate
-    def test_find_daily_news(self):
+    def test_analize_youtube_channel(self):
         testdata1 = open(self.TESTDATA_YOUTUBE_CHANNEL_FILENAME).read()
         testdata2 = open(self.TESTDATA_YOUTUBE_PLAYLIST_FILENAME).read()
         responses.add(
@@ -105,5 +105,24 @@ class TestNewsReportGear(TestCase):
             content_type='application/json'
         )
 
-        result = self._gear._find_daily_news(False)
-        self.assertEqual('No new videos for today', result)
+        new_videos = self._gear._analize_youtube_channel(
+            "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
+            arrow.utcnow()
+        )
+        # There are no videos for current data, as all the mock data refers to past vides
+        self.assertEqual(0, len(new_videos))
+
+        new_videos = self._gear._analize_youtube_channel(
+            "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
+            arrow.get("2021-02-02T00:15:04Z")
+        )
+        self.assertEqual(1, len(new_videos))
+        self.assertEqual("New video published: The 7 Types of VR Users 2 - https://www.youtube.com/watch?v=WFeny7l1Ev4", new_videos[0])
+
+        new_videos = self._gear._analize_youtube_channel(
+            "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
+            arrow.get("2021-01-26T10:00:10Z")
+        )
+        self.assertEqual(2, len(new_videos))
+        self.assertEqual("New video published: The 7 Types of VR Users 2 - https://www.youtube.com/watch?v=WFeny7l1Ev4", new_videos[0])
+        self.assertEqual("New video published: Valve's next VR projects are SCARILY similar to Sword Art Online - https://www.youtube.com/watch?v=veVx0AuhHFw", new_videos[1])

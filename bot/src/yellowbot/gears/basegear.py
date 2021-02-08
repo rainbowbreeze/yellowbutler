@@ -57,7 +57,7 @@ class BaseGear:
         self,
         intent: str,
         params: List[str]
-    ) -> Union[Optional[str], List[str]]:
+    ) -> Optional[str]:
         """Process the intent. Need to be implemented in every subclass
 
         :param intent: the specific intent to process

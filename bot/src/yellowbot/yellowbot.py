@@ -106,11 +106,8 @@ class YellowBot:
         # CommitStrip gear
         self._gears.append(CommitStripGear())
 
-        if test_mode:
-            storage_service = BaseStorageService()
-        else:
-            storage_service : DatastoreStorageService()
         # CheckForNews gear
+        storage_service = DatastoreStorageService() if not test_mode else BaseStorageService()
         self._gears.append(NewsReportGear(
             self._config_service.get_config("youtube_api"),
             storage_service

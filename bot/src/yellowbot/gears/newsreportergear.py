@@ -10,6 +10,8 @@ Requirements
 - arrow
 """
 
+from logging import Logger
+from arrow.arrow import Arrow
 import requests
 import arrow
 
@@ -57,7 +59,8 @@ class NewsReportGear(BaseGear):
         self,
         intent: str,
         params: List[str]
-    ) -> Union[Optional[str], List[str]]:
+    ) -> Optional[str]:
+
         if NewsReportGear.INTENTS[0] != intent:
             message = "Call to {} using wrong intent {}".format(__name__, intent)
             self._logger.info(message)
@@ -71,7 +74,7 @@ class NewsReportGear(BaseGear):
 
         return self._find_daily_news(silent)
 
-    def _find_daily_news(self, silent: bool) -> Union[Optional[str], List[str]]:
+    def _find_daily_news(self, silent: bool) -> Optional[str]:
         """Analyze all the different news sources, notifying in case new contents are found
 
         :param silent: if True, doesn't produce any value when new content is not found
@@ -84,43 +87,39 @@ class NewsReportGear(BaseGear):
         channel_urls = [
             'https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA'
         ]
-        today = arrow.utcnow()
+        # use when last check date is not available for a news source
+        #  Default is 5 days in the past
+        fallback_check_date: Arrow = arrow.utcnow().shift(days=-6) 
 
-        message = None
+        messages = []
         for channel_url in channel_urls:
             self._logger.info("Checking for news on {}".format(channel_url))
-            #TODO check for errors
-            videos = self._analize_youtube_channel(channel_url, datetime.datetime.now())
-            #TODO check for errors
-            for video in videos:
-                self._logger.info("Found new video {}".format(video.url))
-                # Good, the video was published today
-                message = 'New video published: {}\n{}'.format(
-                    video.title,
-                    video.url
-                )
-                break
-        
-        if not message and not silent:
-            message = "No new videos for today"
+
+            #TODO distinguish between different news sources
+            messages.extend(self._analize_youtube_channel(channel_url, fallback_check_date))
+
+        if 0 == len(messages) and not silent:
+            message = "No new news for today"
+        else:
+            message = "\n".join(messages)
         
         return message
 
     def _analize_youtube_channel(
         self,
         channel_url: str,
-        last_check: datetime.date
-    ) -> List[SimpleNamespace]:
+        fallback_check_date: Arrow
+    ) -> List[str]:
         """Analyze a YouTube channel searching for new videos
 
         :param channel_url: the full url of the Youtube channel to analyze. E.g.: https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA
         :type channel_url: str
 
-        :param last_check_date: last check date for the videos
-        :type channel_url: datetime.date
+        :param fallback_check_date: date to use for checking, in case no previous check was performed on the news source
+        :type fallback_check_date: datetime.date
 
-        :returns: TDB, the list of the latest channel videos
-        :rtype: list
+        :returns: a list of str, each one containing a new content (video) found on the channel. It could also potentially contains an error message
+        :rtype: list[str]
         """
 
         # Every channel as a special playlist called upload, with all the 
@@ -134,40 +133,68 @@ class NewsReportGear(BaseGear):
 
         # Search in the database if it has already information for the given
         #  channel, included the playlist id 
+        news_items = None
         try:
             news_items = self._storage.get_by_property(NewsItemEntity, "url", "=", channel_url)
         except BaseException as e:
             self._logger.error(e)
-            news_items = None
 
         if news_items is None or 0 == len(news_items):
             # Creates the item
+            self._logger.info("This is the first time the source {} is processed for updates".format(channel_url))
             news_item = NewsItemEntity()
             news_item.url = channel_url
         else:
             news_item = news_items[0]
 
-        # Retrieve the key from the DB. otherwise obtain it from a YouTube API call
+        video_update_messages: List[str] = []  # Initialize the return var
+
+        # param1 may have the special upload playlist id. otherwise obtain it from a YouTube API call
         if hasattr(news_items, "param1") and news_item.param1:
             upload_playlist_id = news_item.param1
         else:
             channel_id = self._youtube_extract_channel_id_from_url(channel_url)
             # Find the upload playlist id for the given channel
-            upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, channel_id)
-            #TODO error management
+            try:
+                upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, channel_id)
+            except BaseException as e:
+                # Forge specific messagge to return to the caller
+                video_update_messages.append("Error getting information on YouTube channel {}".format(channel_id))
+                return video_update_messages
+
             news_item.param1 = upload_playlist_id
 
         # Search latest videos in the upload playlist
-        all_videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
+        try:
+            all_videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
+        except BaseException as e:
+                # Forge specific messagge to return to the caller
+                video_update_messages.append("Error getting information on playlist {} for channel".format(
+                    channel_url,
+                    upload_playlist_id)
+                )
+                return video_update_messages
 
         # Find in the db the last check date
-        #TODO last_check is from the NewsItemEntity, not passed as parameter
+        if hasattr(news_item, "last_check"):
+            last_check: Arrow = arrow.get(news_item.last_check)
+        else:
+            last_check = fallback_check_date
+        print(last_check)
+
+        self._logger.info("Comparing published date of {} vides agains {}".format(
+            len(all_videos),
+            last_check
+        ))
 
         # Discard all the videos older that a certain date
         post_check_videos = []
         for video in all_videos:
-            if self._published_post_check(last_check, video.published):
+            # Get date from the video
+            video_published = arrow.get(video.published)
+            if video_published > last_check:
                 post_check_videos.append(video)
+        self._logger.info("Found {} video(s) after the last check".format(len(post_check_videos)))
 
         # Store the values
         try:
@@ -176,8 +203,15 @@ class NewsReportGear(BaseGear):
         except BaseException as e:
             self._logger.error(e)
 
-        # Send alerts for the next videos
-        return post_check_videos
+        # Create alerts for the new videos
+        for video in post_check_videos:
+            message = 'New video published: {} - {}'.format(
+                video.title,
+                video.url
+            )
+            video_update_messages.append(message)
+
+        return video_update_messages
 
 
     def _youtube_extract_channel_id_from_url(self, channel_url: str) -> str:
@@ -202,6 +236,8 @@ class NewsReportGear(BaseGear):
     ) -> str:
         """Find upload playlist id for a given channel
 
+        :raises: BaseException if there are some errors in using the Youtube API
+
         :param api_key: the API key to use for YouTube API v3 calls
         :type api_key: str
 
@@ -210,8 +246,10 @@ class NewsReportGear(BaseGear):
 
         :returns: the id of the special "upload" playlist
         :rtype: str
+
         """
 
+        self._logger.info("Retrieving YouTube channel information for {}".format(channel_id))
         url = 'https://youtube.googleapis.com/youtube/v3/channels?part=contentDetails&id={}&key={}'.format(
             channel_id,
             api_key
@@ -222,22 +260,23 @@ class NewsReportGear(BaseGear):
             if not req.ok:
                 req.raise_for_status()
             results = req.json()
+            self._logger.debug("Data read from channel: {}".format(results))
         except BaseException as e:
-            self._logger.exception(e)
-            return "Error while getting information for channel {}: {}".format(
+            self._logger.error("Error while getting information for channel {}: {}".format(
                 channel_id,
                 repr(e)
-            )
+            ))
+            raise e
 
         upload_id = None
         try:
             channel_items = results['items']
             upload_id = channel_items[0]['contentDetails']['relatedPlaylists']['uploads']
         except BaseException as e:
-            return "Exception happened while parsing YouTube data {}".format(repr(e))        
+            self._logger.error("Exception happened while parsing YouTube data {}".format(repr(e)))
+            raise e
 
         return upload_id
-
 
     def _youtube_find_new_videos_in_a_playlist(
         self,
@@ -245,6 +284,8 @@ class NewsReportGear(BaseGear):
         playlist_id: str
     ) -> List[SimpleNamespace]:
         """Given a playlist, it searched for its latest videos
+
+        :raises: BaseException if there are some errors in using the Youtube API
 
         :param api_key: the API key to use for YouTube API v3 calls
         :type api_key: str
@@ -256,6 +297,7 @@ class NewsReportGear(BaseGear):
         :rtype: list
         """
 
+        self._logger.info("Retrieving playlist information for {}".format(playlist_id))
         url = 'https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId={}&key={}'.format(
             playlist_id,
             api_key
@@ -266,12 +308,12 @@ class NewsReportGear(BaseGear):
             if not req.ok:
                 req.raise_for_status()
             results = req.json()
+            self._logger.debug("Data read from playlist: {}".format(results))
         except BaseException as e:
             self._logger.error("Error while getting playlist information for playlist {}: {}".format(
                 playlist_id,
                 repr(e)
             ))
-            self._logger.exception(e)
             raise e
 
         latest_videos = []
@@ -291,21 +333,14 @@ class NewsReportGear(BaseGear):
                 )
                 latest_videos.append(video)
         except BaseException as e:
-            self._logger.error("Exception happened while parsing YouTube data {}".format(repr(e)))
-            self._logger.exception(e)
+            self._logger.error("Exception happened while parsing data for playlist {}: {}".format(
+                playlist_id,
+                repr(e)
+            ))
             raise e
 
+        self._logger.debug("{} videos found on the playlist {}".format(
+            len(latest_videos),
+            playlist_id
+        ))
         return latest_videos
-
-    def _published_post_check(
-        self,
-        last_check: datetime.date,
-        video_published: datetime.date
-    ) -> bool:
-        """Check if a given content was published after a certain data
-        """
-        last_check_date = arrow.get(last_check)
-        video_publish_date = arrow.get(video_published)
-
-        last_check_date = arrow.utcnow()
-        return last_check_date.format("YYYY-MM-DD") == video_publish_date.format("YYYY-MM-DD")
