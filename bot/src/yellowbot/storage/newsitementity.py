@@ -10,7 +10,7 @@ class NewsItemEntity(BaseEntity):
     """
     
     url: str
-    last_check: datetime.date
+    last_check: datetime.datetime
     param1: str
 
     def __init__(self) -> None:
