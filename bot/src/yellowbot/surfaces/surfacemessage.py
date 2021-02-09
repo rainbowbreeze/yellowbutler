@@ -1,16 +1,22 @@
+"""A class to deliver messages to interaction surfaces
 """
 
-"""
-
+from typing import Optional
 
 class SurfaceMessage:
+    """Represents a message that can be sent through an interaction surface
     """
-    Represents a message that can be sent through an interaction surface
-    """
+    surface_id: str
+    channel_id: str
+    text: str
 
-    def __init__(self, surface_id, channel_id, text):
-        """
-        Creates a new message
+    def __init__(
+        self,
+        surface_id: str,
+        channel_id: str,
+        text: str
+    ) -> None:
+        """Creates a new message
 
         :param surface_id: the surface name originating the message
         :type surface_id: str
@@ -22,19 +28,24 @@ class SurfaceMessage:
         :type text: str
         """
         # str() because can arrive something different from a string
-        self.surface_id = self._none_if_emtpy_otherwise_value(surface_id)
+        self.surface_id =  self._none_if_emtpy_otherwise_value(surface_id)
         self.channel_id = self._none_if_emtpy_otherwise_value(channel_id)
         self.text = self._none_if_emtpy_otherwise_value(text)
 
-    def _none_if_emtpy_otherwise_value(self, string):
-        """
-        Return None if the string is None or empty or full of spaces, otherwise
-         the string value
+    def _none_if_emtpy_otherwise_value(
+        self,
+        string: object
+    ) -> Optional[str]:
+        """Return None if the string is None or empty or full of spaces, otherwise
+        the string value
 
         Based on https://stackoverflow.com/a/24534152
 
         :param string: the string to check
-        :return string: str
+        :type string: str
+
+        :returns: None if the string is empty, otherwise the string
+        :rtype: str
         """
 
         # Check for strip() to a non str object raises and error, so the check

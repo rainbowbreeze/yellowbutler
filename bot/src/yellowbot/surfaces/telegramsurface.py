@@ -1,10 +1,9 @@
+"""Class to interact with Telegram surface
 """
-Class to interact with Telegram surface
-"""
-import logging
+
+from typing import ClassVar, Optional
 
 import telepot
-import urllib3
 
 from yellowbot.loggingservice import LoggingService
 from yellowbot.surfaces.baseinteractionsurface import BaseInteractionSurface
@@ -12,8 +11,7 @@ from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 
 class TelegramSurface(BaseInteractionSurface):
-    """
-    Allow YellowBot to interact with Telegram.
+    """Allow YellowBot to interact with Telegram.
 
     Each instance of this class correspond to a bot managed in Telegram
 
@@ -23,18 +21,18 @@ class TelegramSurface(BaseInteractionSurface):
      but are all part of the same "brain" under the hood
     """
 
-    # Define if fixes for various environments have been applied
-    _FIX_ConnectionResetError_APPLIED = False
-    _FIX_PythonAnywhereFree_APPLIED = False
+    # Define if fixes for various environments have been applied, as class variable with ClassVar
+    _FIX_ConnectionResetError_APPLIED: ClassVar[bool] = False
+    _FIX_PythonAnywhereFree_APPLIED: ClassVar[bool] = False
 
-    def __init__(self,
-                 surface_name,
-                 auth_token,
-                 webhook_url,
-                 running_on_pythonanywhere=False,
-                 test_mode=False):
-        """
-        Create the surface and initialize the elements
+    def __init__(
+        self,
+        surface_name: str,
+        auth_token: str,
+        webhook_url: str,
+        test_mode:bool = False
+    ) -> None:
+        """Create the surface and initialize the elements
 
         :param surface_name: a name that identify uniquely the Telegram bot
         connected with this surface instance
@@ -46,15 +44,12 @@ class TelegramSurface(BaseInteractionSurface):
         :param webhook_url: webhook url for the connected bot
         :type webhook_url: str
 
-        :param running_on_pythonanywhere: the whole app is running locally, so no need
-        to set
-        :type running_on_pythonanywhere: bool
-
         :param test_mode: class instance created for test purposes, some
         features are disabled
         :type test_mode: bool
         """
-        BaseInteractionSurface.__init__(self, surface_name)
+
+        super().__init__(surface_name)
         # Initialise and interact with Telegram only if not in test mode
         self._logger = LoggingService.get_logger(__name__)
 
@@ -64,7 +59,7 @@ class TelegramSurface(BaseInteractionSurface):
             self.telegram_bot = telepot.Bot(auth_token)
             self._set_webhook(webhook_url)
 
-    def send_message(self, message):
+    def send_message(self, message: SurfaceMessage) -> Optional[str]:
         # Do not send empty message or message while testing
         if self._test_mode:
             return "Message not really sent in test mode"
@@ -80,9 +75,8 @@ class TelegramSurface(BaseInteractionSurface):
         # It returns a string with the message id, not the whole message object
         return str(message["message_id"]) if "message_id" in message else None
 
-    def _fix_connection_reset_error(self):
-        """
-        Tries to fix ConnectionResetError: [Errno 104] Connection reset by peer.
+    def _fix_connection_reset_error(self) -> None:
+        """Tries to fix ConnectionResetError: [Errno 104] Connection reset by peer.
         It happens first time a request is sent to the bot via Telegram,
          and the bot doesn't reply, but the request is processed. Simply,
          the telepot library is unable to send a reply to Telegram
@@ -94,8 +88,6 @@ class TelegramSurface(BaseInteractionSurface):
          that only force_independent_connection is required to solve the issue
         I'm leaving the code commented for future references and (hopefully
           not) future issues
-
-        :return:
         """
 
         if TelegramSurface._FIX_ConnectionResetError_APPLIED:
@@ -115,9 +107,8 @@ class TelegramSurface(BaseInteractionSurface):
 
         TelegramSurface._FIX_ConnectionResetError_APPLIED = True
 
-    def _set_webhook(self, new_webhook_url):
-        """
-        Sets the bot webhook url
+    def _set_webhook(self, new_webhook_url: str) -> None:
+        """Sets the bot webhook url
         :param new_webhook_url: new webhook to register for the bot
         :type new_webhook_url: str
         """
@@ -144,9 +135,11 @@ class TelegramSurface(BaseInteractionSurface):
             self._logger.info("Webhook is already set to %s", webhook_info.get('url'))
 
     @staticmethod
-    def from_telegram_update_to_message(surface_name, update):
-        """
-        Transform a Telegram update in a SurfaceMessage
+    def from_telegram_update_to_message(
+        surface_name: str,
+        update: dict
+    ) -> Optional[SurfaceMessage]:
+        """Transform a Telegram update in a SurfaceMessage
 
         :param surface_name: the telegram bot that originated the update
         :type surface_name: str
@@ -154,7 +147,7 @@ class TelegramSurface(BaseInteractionSurface):
         :param update: the Telegram update
         :type update: dict
 
-        :return: The message generated from the update, otherwise None if
+        :returns: The message generated from the update, otherwise None if
         the update is not a text message
         :rtype: SurfaceMessage
         """
@@ -170,14 +163,14 @@ class TelegramSurface(BaseInteractionSurface):
             return None
 
     @staticmethod
-    def from_telegram_update_to_auth_key(update):
+    def from_telegram_update_to_auth_key(update: str) -> Optional[str]:
         """
         From a Telegram update, generates the authorization key
 
         :param update: the Telegram update
         :type update: dict
 
-        :return: the authorization code generated
+        :returns: the authorization code generated
         :rtype: str
         """
 
@@ -194,4 +187,3 @@ class TelegramSurface(BaseInteractionSurface):
         except TypeError:
             # Wrong types in the fields
             return None
-
