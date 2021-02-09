@@ -1,6 +1,11 @@
 """Base class for all the entities that need to be processed by the storage service
 """
 
+# Reference for the  type hint of the same (enclosing) class
+# https://stackoverflow.com/questions/33533148/how-do-i-type-hint-a-method-with-the-type-of-the-enclosing-class
+
+from typing import ClassVar
+
 class BaseEntity():
     """The class represents a basic data entity to save into the db
 
@@ -11,9 +16,8 @@ class BaseEntity():
        Generally the class name is used, so the same entities have the same name
     """
 
+    NO_ID: ClassVar[int] = 0  # when the id has this value, it means it hasn't been assigned
     id: int
-
-    NO_ID = 0  # when the id has this value, it means it hasn't been assigned
 
     def __init__(self) -> None:
         self.id = BaseEntity.NO_ID  # 0 means no id
@@ -39,7 +43,7 @@ class BaseEntity():
 
         raise ValueError("Method to_dict in {} has not been implemented".format(self.__class__.__name__))
 
-    def from_dict(self, source_dict: dict):
+    def from_dict(self, source_dict: dict) -> 'BaseEntity':
         """Create the entity from a dict
 
         It has to be implemented in subclasses

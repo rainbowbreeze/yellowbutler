@@ -5,6 +5,9 @@ https://docs.python.org/3/tutorial/datastructures.html#dictionaries
 import datetime
 from yellowbot.storage.baseentity import BaseEntity
 
+# Reference for the  type hint of the same (enclosing) class
+# https://stackoverflow.com/questions/33533148/how-do-i-type-hint-a-method-with-the-type-of-the-enclosing-class
+
 class NewsItemEntity(BaseEntity):
     """Entity to store information about a news item
     """
@@ -43,7 +46,7 @@ class NewsItemEntity(BaseEntity):
             fields["param1"] = self.param1
         return fields
 
-    def from_dict(self, source_dict: dict):
+    def from_dict(self, source_dict: dict) -> 'NewsItemEntity':
         """Create the entity data from a dict
         """
         if "url" in source_dict:

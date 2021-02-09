@@ -9,8 +9,8 @@ import datetime
 
 from yellowbot.storage.baseentity import BaseEntity
 
-BE = TypeVar('BE', bound=BaseEntity)
 # See here for explanation: https://www.python.org/dev/peps/pep-0484/#the-type-of-class-objects
+BE = TypeVar('BE', bound=BaseEntity)
 
 class BaseStorageService():
     """Define a generic interface for a storage service
