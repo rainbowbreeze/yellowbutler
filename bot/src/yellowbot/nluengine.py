@@ -1,7 +1,7 @@
 """
 From sentences in natural language, derive intents and parameters
 """
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 from yellowbot.globalbag import GlobalBag
 
 
@@ -16,7 +16,7 @@ class NluEngine:
     def infer_intent_and_args(
         self,
         message: Optional[str]
-    ) -> Tuple[Optional[str], Dict[str, str]]:
+    ) -> Tuple[Optional[str], Dict[str, Union[str, bool]]]:
         """Given a sentence, infers intent and arguments
 
         :param message: the sentence to understand
@@ -29,7 +29,7 @@ class NluEngine:
         if message is None: return None, {}
 
         intent = None
-        params: Dict[str, str] = {}  # A dict, not a set (unordered collection of unique items, use set() to initialize)
+        params: Dict[str, Union[str, bool]] = {}  # A dict, not a set (unordered collection of unique items, use set() to initialize)
 
         # Check for EasyNido intent
         headers = ["asilo", "/asilo"]
@@ -51,6 +51,8 @@ class NluEngine:
         if message.lower().find("soundhound") > 0:
             # Finds the author and title, with Italian or English message
             begin_search_string = None
+            end_string = None
+            separator_string = None
             if message.lower().startswith("appena usato"):
                 # Italian language
                 begin_search_string = "Appena usato SoundHound per trovare "
@@ -74,7 +76,7 @@ class NluEngine:
                 # Unknown language
                 begin_search_string = None
 
-            if begin_search_string:
+            if begin_search_string and end_string and separator_string:
                 end_pos = message.find(end_string)
                 title_and_author = message[len(begin_search_string):end_pos].strip()
                 end_pos = title_and_author.find(separator_string)

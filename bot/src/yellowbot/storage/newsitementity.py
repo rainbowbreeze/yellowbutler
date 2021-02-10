@@ -29,7 +29,7 @@ class NewsItemEntity(BaseEntity):
     def get_entity_name() -> str:
         """Returns the name of the class only, not the package + name
         """
-        return __class__.__name__
+        return "NewsItemEntity"
 
     def to_dict(self) -> Dict[str, Any]:
         """Transform the entity values in a dict

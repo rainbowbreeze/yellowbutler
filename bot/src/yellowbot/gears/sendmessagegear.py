@@ -118,9 +118,11 @@ class SendMessageGear(BaseGear):
             test_mode=test_mode
         )
 
-    def _send_message(self, message: SurfaceMessage):
-        """
-        Sends a message to one of the interaction surfaces.
+    def _send_message(
+        self,
+        message: SurfaceMessage
+    ) -> Optional[str]:
+        """Sends a message to one of the interaction surfaces.
 
         :param message: the message received that needs to be handled
         :type message: SurfaceMessage

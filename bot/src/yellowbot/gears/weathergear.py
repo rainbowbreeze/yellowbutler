@@ -136,4 +136,4 @@ class WeatherGear(BaseGear):
 
         time = arrow.get(epoch)  # UTC
         time = time.to(timezone)  # Local time
-        return time.format("HH:mm")
+        return str(time.format("HH:mm"))

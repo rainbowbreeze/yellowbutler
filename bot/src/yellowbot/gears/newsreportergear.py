@@ -279,7 +279,6 @@ class NewsReportGear(BaseGear):
             ))
             raise e
 
-        upload_id = None
         try:
             channel_items = results['items']
             upload_id = channel_items[0]['contentDetails']['relatedPlaylists']['uploads']
