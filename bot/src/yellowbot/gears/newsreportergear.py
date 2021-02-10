@@ -83,8 +83,16 @@ class NewsReportGear(BaseGear):
         """
 
         channel_urls = [
+            # VR - ThrillSeeker
             "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
-            "https://www.youtube.com/channel/UCN0FGqUt7e79xKoPAZQ8tww"
+            # VR - Cas and Chary VR
+            "https://www.youtube.com/channel/UCN0FGqUt7e79xKoPAZQ8tww",
+            # Network - The Hook Up
+            "https://www.youtube.com/channel/UC2gyzKcHbYfqoXA5xbyGXtQ",
+            # Network - Crosstalk Solutions
+            "https://www.youtube.com/channel/UCVS6ejD9NLZvjsvhcbiDzjw",
+            # Misc - Two Minute Papers
+            "https://www.youtube.com/channel/UCbfYPyITQ-7l4upoX8nvctg"
         ]
         # use when last check date is not available for a news source
         #  Default is 5 days in the past
