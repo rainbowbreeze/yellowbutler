@@ -42,7 +42,7 @@ from yellowbot.surfaces.telegramsurface import TelegramSurface
 
 # Init logging
 LoggingService.init()
-_logger = LoggingService.get_logger("flaskapp")
+_logger = LoggingService.get_logger(__name__)
 
 # Flask init
 app = Flask(__name__)
