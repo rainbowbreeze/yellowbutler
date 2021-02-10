@@ -12,8 +12,7 @@ from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 
 class SchedulerTask:
-    """
-    Define a task processed by the scheduler.
+    """Define a task processed by the scheduler.
 
     All the time are in the format HH:mm, ISO_8601, https://en.wikipedia.org/wiki/ISO_8601#Times
     And the timezone is expressed afterward
@@ -22,15 +21,16 @@ class SchedulerTask:
       01:34, "GMT", or "UTC" or "Europe/Paris"
       etc
     """
-    def __init__(self,
-                 name,
-                 when,
-                 timezone,
-                 intent,
-                 params=None,
-                 surface_id=None,
-                 surface_channel_id=None,
-                 default_message=None):
+    def __init__(
+        self,
+        name: str,
+        when: str,
+        timezone: str,
+        intent: str,
+        params: dict = None,
+        surface_id: str = None,
+        surface_channel_id: str = None,
+        default_message: str = None):
         """
         Create a new task for the scheduler service
         :param name: name of the task

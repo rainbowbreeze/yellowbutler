@@ -3,6 +3,7 @@ Read configurations from a file
 """
 import json
 import os
+from typing import Any, List
 
 from json_minify import json_minify
 
@@ -11,14 +12,16 @@ from yellowbot.loggingservice import LoggingService
 
 
 class ConfigService:
-    def __init__(self,
-                 config_file=GlobalBag.CONFIG_FILE):
-        """
-        Initialize this class.
+    def __init__(
+        self,
+        config_file: str = GlobalBag.CONFIG_FILE
+    ) -> None:
+        """Initialize this class.
 
         :param config_file: JSON file with app configuration.
         :type config_file: str
         """
+
         # Create the logger and initialise it
         self._logger = LoggingService.get_logger(__name__)
         self._logger.info("Config service is starting")
@@ -26,9 +29,9 @@ class ConfigService:
         # Load the config file
         self._load_config_file(config_file)
 
-    def _load_config_file(self, config_file):
-        """
-        Load config key/value pairs from a file
+    def _load_config_file(self, config_file: str) -> None:
+        """Load config key/value pairs from a file
+        
         :param config_file: name of the config file.
           When only the filename is passed, this method searches the file
            inside the root folder where the app was started.
@@ -42,8 +45,9 @@ class ConfigService:
            expected behavior under GAE.
         :type config_file: str
 
-        :return:
+        :returns:
         """
+
         self._config = {}
         if not os.path.isfile(config_file):
             # Folder where this file is, can work also without the abspath,
@@ -65,17 +69,21 @@ class ConfigService:
         if len(self._config.keys()) == 0:
             raise ValueError("Empty configuration file {}".format(full_config_path))
 
-    def get_config(self, key_to_read, throw_error=True):
-        """
-        Read a value from the configuration, throwing an error if it doesn't exist
+    def get_config(
+        self,
+        key_to_read: str,
+        throw_error: bool = True
+    ) -> Any:
+        """Read a value from the configuration, throwing an error if it doesn't exist
         :param key_to_read: the key to read
         :type key_to_read: str
 
         :param throw_error: if False, doesn't throw an error, but return None instead
         :type throw_error: bool
 
-        :return: the object associated wit the config key
+        :returns: the object associated wit the config key
         """
+
         try:
             return self._config[key_to_read]
         except KeyError as e:
@@ -85,11 +93,15 @@ class ConfigService:
             else:
                 return None
 
-    def change_authorized_keys(self, new_keys):
-        """
-        Substitutes old authorization keys with new ones. Useful for testing
+    def change_authorized_keys(
+        self,
+        new_keys: List[str]
+    ) -> None:
+        """Substitutes old authorization keys with new ones. Useful for testing
         purposes
+
         :param new_keys: new keys to use
         :type new_keys: str
         """
+
         self._config["authorized_keys"] = new_keys

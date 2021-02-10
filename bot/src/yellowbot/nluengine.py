@@ -1,20 +1,23 @@
 """
 From sentences in natural language, derive intents and parameters
 """
+from typing import Dict, Optional, Tuple
 from yellowbot.globalbag import GlobalBag
 
 
 class NluEngine:
-    """
-    Very simply implementation of an NLU engine based on simple regex rules:
+    """Very simply implementation of an NLU engine based on simple regex rules:
     transform sentences in intent and parameters
     """
-    def __init__(self):
+
+    def __init__(self) -> None:
         pass
 
-    def infer_intent_and_args(self, message):
-        """
-        Given a sentence, infers intent and arguments
+    def infer_intent_and_args(
+        self,
+        message: Optional[str]
+    ) -> Tuple[Optional[str], Dict[str, str]]:
+        """Given a sentence, infers intent and arguments
 
         :param message: the sentence to understand
         :type message: str
@@ -23,10 +26,10 @@ class NluEngine:
         :rtype: str, dict
         """
         # Initial checks
-        if message is None: return None, None
+        if message is None: return None, {}
 
         intent = None
-        params = {}  # A dict, not a set (unordered collection of unique items, use set() to initialize)
+        params: Dict[str, str] = {}  # A dict, not a set (unordered collection of unique items, use set() to initialize)
 
         # Check for EasyNido intent
         headers = ["asilo", "/asilo"]
@@ -47,6 +50,7 @@ class NluEngine:
         # SoundHound word is the word trigger
         if message.lower().find("soundhound") > 0:
             # Finds the author and title, with Italian or English message
+            begin_search_string = None
             if message.lower().startswith("appena usato"):
                 # Italian language
                 begin_search_string = "Appena usato SoundHound per trovare "

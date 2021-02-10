@@ -12,9 +12,9 @@ class SurfaceMessage:
 
     def __init__(
         self,
-        surface_id: str,
-        channel_id: str,
-        text: str
+        surface_id: Optional[str],
+        channel_id: Optional[str],
+        text: Optional[str]
     ) -> None:
         """Creates a new message
 

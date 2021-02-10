@@ -1,7 +1,9 @@
 """YellowBot main class, everything starts from here
 """
 
+from typing import Any, Dict, List, Optional
 from yellowbot.configservice import ConfigService
+from yellowbot.gears.basegear import BaseGear
 from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.musicgear import MusicGear
@@ -23,12 +25,13 @@ class YellowBot:
     """The Yellow bot core class. Orchestrate the connections between the external world and the gears
     """
 
-    def __init__(self,
-                 nlu_engine=None,
-                 scheduler=None,
-                 config_file=GlobalBag.CONFIG_FILE,
-                 test_mode=False
-                 ):
+    def __init__(
+        self,
+        nlu_engine: NluEngine = None,
+        scheduler: SchedulerService = None,
+        config_file:str = GlobalBag.CONFIG_FILE,
+        test_mode: bool = False
+    ) -> None:
         """Init the bot
 
         :param nlu_engine: engine to use to extract intent and arguments
@@ -60,7 +63,7 @@ class YellowBot:
         # self._datastore = DatastoreService(db_filename)
 
         # Registers gears
-        self._gears = []
+        self._gears: List[BaseGear] = []
         self._register_gears(test_mode)
 
         # Assigns the NLU engine
@@ -69,7 +72,7 @@ class YellowBot:
         # Assigns the scheduler service
         self._scheduler = scheduler if scheduler is not None else SchedulerService(GlobalBag.SCHEDULER_FILE)
 
-    def _register_gears(self, test_mode):
+    def _register_gears(self, test_mode: bool) -> None:
         """Registers all the gears in the bot
 
         :param test_mode: class instance created for test purposes, some
@@ -113,7 +116,11 @@ class YellowBot:
             storage_service
         ))
 
-    def get_config(self, key_to_read, throw_error=True):
+    def get_config(
+        self,
+        key_to_read: str,
+        throw_error:bool = True
+    ) -> Any:
         """Read a value from the configuration, throwing an error if it doesn't exist
         :param key_to_read: the key to read
         :type key_to_read: str
@@ -128,7 +135,7 @@ class YellowBot:
         return self._config_service.get_config(key_to_read, throw_error)
         # TODO fix this workaround for Flask
 
-    def is_client_authorized(self, key):
+    def is_client_authorized(self, key: str) -> bool:
         """Checks if the key is among the ones authorized to use the bot
 
         :param key: the key to check for authorization. Authorized keys are
@@ -147,7 +154,7 @@ class YellowBot:
                 return True
         return False
 
-    def change_authorized_keys(self, new_keys):
+    def change_authorized_keys(self, new_keys: List[str]):
         """Substitutes old authorization keys with new ones. Useful for testing purposes
 
         :param new_keys: new keys to use
@@ -157,7 +164,7 @@ class YellowBot:
         self._config_service.change_authorized_keys(new_keys)
         # TODO fix workaround for tests
 
-    def notify_admin(self, message):
+    def notify_admin(self, message: str) -> Optional[str]:
         """Sends a notification to the admin.
         
         Use in very few cases and, under the hood, it's the usual intent
@@ -178,7 +185,7 @@ class YellowBot:
             }
         )
 
-    def receive_message(self, message):
+    def receive_message(self, message: SurfaceMessage) -> None:
         """Process a message that hits one of the interaction surface.
         Use this method when YellowBot acts as a chatbot
 
@@ -219,7 +226,11 @@ class YellowBot:
             }
         )
 
-    def process_intent(self, intent, params):
+    def process_intent(
+        self,
+        intent: str,
+        params: Dict[str, Any]
+    ) -> Optional[str]:
         """Process an intent. Use this method when YellowBot acts behind a REST API or something similar
 
         :param intent: the intent to execute
