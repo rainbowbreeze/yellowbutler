@@ -60,7 +60,7 @@ FLASK_TELEGRAM_BOT_LURCH_WEBHOOK = yellowbot.get_config("telegram_lurch_webhook_
 # See http://flask.pocoo.org/docs/0.10/errorhandling/#logging-to-a-file
 
 
-def receive_message_thread(yellowbot, message):
+def receive_message_thread(yellowbot: YellowBot, message):
     """
     Thread function to send messages to YellowBot
 
@@ -73,7 +73,7 @@ def receive_message_thread(yellowbot, message):
     yellowbot.receive_message(message)
 
 
-def tick_scheduler_thread(yellowbot):
+def tick_scheduler_thread(yellowbot: YellowBot):
     """
     Therad function to launch the scheduler service in YellowBot
 

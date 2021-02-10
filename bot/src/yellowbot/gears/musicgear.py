@@ -4,6 +4,7 @@ A YellowBot gear to add title and artist of a song to a Google Spreadsheet
 Requirements
 - requests
 """
+from typing import Any, ClassVar, Dict, List, Optional
 import requests
 
 from yellowbot.gears.basegear import BaseGear
@@ -15,13 +16,15 @@ class MusicGear(BaseGear):
     """
     Remember different kind of music
     """
-    INTENTS = [GlobalBag.TRACE_MUSIC_INTENT]
-    PARAM_TITLE = GlobalBag.TRACE_MUSIC_PARAM_TITLE
-    PARAM_AUTHOR = GlobalBag.TRACE_MUSIC_PARAM_AUTHOR
+    INTENTS: ClassVar[List[str]] = [GlobalBag.TRACE_MUSIC_INTENT]
+    PARAM_TITLE: ClassVar[str] = GlobalBag.TRACE_MUSIC_PARAM_TITLE
+    PARAM_AUTHOR: ClassVar[str]  = GlobalBag.TRACE_MUSIC_PARAM_AUTHOR
 
-    def __init__(self,
-                 destination_url,
-                 test_mode=False):
+    def __init__(
+        self,
+        destination_url: str,
+        test_mode:bool = False
+    ) -> None:
         """
 
         :param destination_url: url where send the author and title
@@ -36,7 +39,11 @@ class MusicGear(BaseGear):
         self._destination_url = destination_url
         self._test_mode = test_mode
 
-    def process_intent(self, intent, params):
+    def process_intent(
+        self,
+        intent: str,
+        params: Dict[str, Any]
+    ) -> Optional[str]:
         if MusicGear.INTENTS[0] != intent:
             message = "Call to {} using wrong intent {}".format(__name__, intent)
             self._logger.info(message)

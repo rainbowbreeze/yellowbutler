@@ -1,29 +1,35 @@
-"""
-A gear to send message using a interaction surface
+"""A gear to send message using a interaction surface
 """
 
+from typing import Any, ClassVar, Dict, List, Optional, TypeVar
+
+from yellowbot.configservice import ConfigService
 from yellowbot.gears.basegear import BaseGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
+from yellowbot.surfaces.baseinteractionsurface import BaseInteractionSurface
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 from yellowbot.surfaces.telegramnotifyadminsurface import TelegramNotifyAdminSurface
 from yellowbot.surfaces.telegramsurface import TelegramSurface
 
+# See here for explanation: https://www.python.org/dev/peps/pep-0484/#the-type-of-class-objects
+BIS = TypeVar('BIS', bound=BaseInteractionSurface)
 
 class SendMessageGear(BaseGear):
+    """Send a message to a specific surface
     """
-    Get the weather condition from Yahoo! Weather service
-    """
-    INTENTS = [GlobalBag.SEND_MESSAGE_INTENT]
-    PARAM_SURFACE_ID = GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID
-    PARAM_CHANNEL_ID = GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID
-    PARAM_TEXT = GlobalBag.SEND_MESSAGE_PARAM_TEXT
 
-    def __init__(self,
-                 config_service,
-                 test_mode=False):
-        """
-        Init the class
+    INTENTS: ClassVar[List[str]] = [GlobalBag.SEND_MESSAGE_INTENT]
+    PARAM_SURFACE_ID: ClassVar[str] = GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID
+    PARAM_CHANNEL_ID: ClassVar[str] = GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID
+    PARAM_TEXT: ClassVar[str] = GlobalBag.SEND_MESSAGE_PARAM_TEXT
+
+    def __init__(
+        self,
+        config_service: ConfigService,
+        test_mode: bool = False
+    ) -> None:
+        """Init the class
 
         :param config_service: configuration service
         :type config_service: ConfigService
@@ -32,17 +38,21 @@ class SendMessageGear(BaseGear):
         features are disabled
         :type test_mode: bool
         """
+
         super().__init__(self.__class__.__name__, self.INTENTS)
         self._config_service = config_service
         self._logger = LoggingService.get_logger(__name__)
 
         # Registers the interaction surface
-        self._surfaces = {}
+        self._surfaces: Dict[str, BIS] = {}
         self._register_interaction_surfaces(test_mode)
 
-    def process_intent(self, intent, params):
-        """
-        Sends a message using one of the registered surfaces
+    def process_intent(
+        self,
+        intent: str,
+        params: Dict[str, Any]
+    ) -> Optional[str]:
+        """Sends a message using one of the registered surfaces
 
         :param intent:
         :param params:
@@ -50,9 +60,9 @@ class SendMessageGear(BaseGear):
         """
 
         if SendMessageGear.INTENTS[0] != intent:
-            message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(message)
-            return message
+            return_message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(return_message)
+            return return_message
         if SendMessageGear.PARAM_SURFACE_ID not in params:
             return "Missing {} parameter in the request".format(SendMessageGear.PARAM_SURFACE_ID)
         if SendMessageGear.PARAM_CHANNEL_ID not in params:
@@ -68,7 +78,11 @@ class SendMessageGear(BaseGear):
         self._logger.info("Sending message to surface id {}".format(message.surface_id))
         return self._send_message(message)
 
-    def add_interaction_surface(self, key, interaction_surface):
+    def add_interaction_surface(
+        self,
+        key: str,
+        interaction_surface: BIS
+    ) -> None:
         """
         Add a new interaction surface
 
@@ -80,14 +94,12 @@ class SendMessageGear(BaseGear):
         """
         self._surfaces[key] = interaction_surface
 
-    def _register_interaction_surfaces(self, test_mode):
-        """
-        Registers all the notification surfaces
+    def _register_interaction_surfaces(self, test_mode: bool) -> None:
+        """Registers all the notification surfaces
 
         :param test_mode: class instance created for test purposes, some
         features are disabled
         :type test_mode: bool
-
         """
 
         # NotifyAdmin surface
@@ -106,7 +118,7 @@ class SendMessageGear(BaseGear):
             test_mode=test_mode
         )
 
-    def _send_message(self, message):
+    def _send_message(self, message: SurfaceMessage):
         """
         Sends a message to one of the interaction surfaces.
 

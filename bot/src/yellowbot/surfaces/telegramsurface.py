@@ -64,16 +64,16 @@ class TelegramSurface(BaseInteractionSurface):
         if self._test_mode:
             return "Message not really sent in test mode"
         if not message:
-            return
+            return None
 
         # Sometimes an error happens sending a message with only a _
         #  like "Missing city_name parameter in the request"
         #  and the entire sendMessage call crashes
         # TODO sanitize the message before sending it
         # To check Markdown, please refer to https://core.telegram.org/bots/api#sendmessage
-        message = self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
+        return_message = self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
         # It returns a string with the message id, not the whole message object
-        return str(message["message_id"]) if "message_id" in message else None
+        return str(return_message["message_id"]) if "message_id" in return_message else None
 
     def _fix_connection_reset_error(self) -> None:
         """Tries to fix ConnectionResetError: [Errno 104] Connection reset by peer.
@@ -163,7 +163,7 @@ class TelegramSurface(BaseInteractionSurface):
             return None
 
     @staticmethod
-    def from_telegram_update_to_auth_key(update: str) -> Optional[str]:
+    def from_telegram_update_to_auth_key(update: dict) -> Optional[str]:
         """
         From a Telegram update, generates the authorization key
 

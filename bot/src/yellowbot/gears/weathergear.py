@@ -1,11 +1,12 @@
-"""
-A YellowBot gear to get weather forecast
+"""A YellowBot gear to get weather forecast
 
 Info at https://github.com/AnthonyBloomer/weather-api
 
 Requirements
 -requests
 """
+
+from typing import Any, ClassVar, Dict, List, Optional, Union
 import requests
 import arrow
 
@@ -15,24 +16,34 @@ from yellowbot.loggingservice import LoggingService
 
 
 class WeatherGear(BaseGear):
+    """Get the weather condition from DarkSky Weather service
     """
-    Get the weather condition from Yahoo! Weather service
-    """
-    INTENTS = [GlobalBag.WEATHER_FORECAST_INTENT]
-    PARAM_LOCATION = GlobalBag.WEATHER_FORECAST_PARAM_LOCATION  # The latitude and longitude of the city
-    PARAM_CITY_NAME = GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME  # The city name
 
-    def __init__(self, api_key):
+    INTENTS: ClassVar[List[str]]= [GlobalBag.WEATHER_FORECAST_INTENT]
+    PARAM_LOCATION: ClassVar[str] = GlobalBag.WEATHER_FORECAST_PARAM_LOCATION  # The latitude and longitude of the city
+    PARAM_CITY_NAME: ClassVar[str] = GlobalBag.WEATHER_FORECAST_PARAM_CITY_NAME  # The city name
+
+    def __init__(
+        self,
+        api_key: str
+    ) -> None:
         super().__init__(self.__class__.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
         self._api_key = api_key
 
-    def process_intent(self, intent, params):
+    def process_intent(
+        self,
+        intent: str,
+        params: Dict[str, Any]
+    ) -> Optional[str]:
         return self._read_weather_from_darksky(intent, params)
 
-    def _read_weather_from_darksky(self, intent, params):
-        """
-        Read weather information from DarkSky APIs
+    def _read_weather_from_darksky(
+        self,
+        intent: str,
+        params: Dict[str, Any]
+    ) -> Optional[str]:
+        """Read weather information from DarkSky APIs
         :param intent:
         :param params:
         :return:
@@ -106,9 +117,12 @@ class WeatherGear(BaseGear):
             self._logger.exception(e)
             return "Exception happened while parsing weather data {}".format(repr(e))
 
-    def _from_epoch_to_time(self, epoch, timezone):
-        """
-        Transform an Epoch time to a time
+    def _from_epoch_to_time(
+        self,
+        epoch: Union[str, int],
+        timezone: str
+    ) -> str:
+        """Transform an Epoch time to a time
 
         :param epoch: Epoch time
         :type epoch: str or int

@@ -3,6 +3,7 @@ https://docs.python.org/3/tutorial/datastructures.html#dictionaries
 """
 
 import datetime
+from typing import Any, Dict
 from yellowbot.storage.baseentity import BaseEntity
 
 # Reference for the  type hint of the same (enclosing) class
@@ -28,16 +29,16 @@ class NewsItemEntity(BaseEntity):
     def get_entity_name() -> str:
         """Returns the name of the class only, not the package + name
         """
-        return __class__.__name__
+        return NewsItemEntity.__class__.__name__
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """Transform the entity values in a dict
         
         :returns: a dict containing the entity values
         :rtype: dict
         """
 
-        fields = {}
+        fields: Dict[str, Any] = {}
         if hasattr(self, "url"):
             fields["url"] = self.url
         if hasattr(self, "last_check"):

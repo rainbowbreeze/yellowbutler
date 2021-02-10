@@ -11,14 +11,12 @@ Requirements
 """
 
 from logging import Logger
-from arrow.arrow import Arrow
 import requests
+from arrow import Arrow
 import arrow
 
 from types import SimpleNamespace
-from typing import List, Optional, TypeVar, Union
-from distutils.util import strtobool
-import datetime
+from typing import Any, Dict, List, Optional, TypeVar, Union
 
 from yellowbot.gears.basegear import BaseGear
 from yellowbot.globalbag import GlobalBag
@@ -58,7 +56,7 @@ class NewsReportGear(BaseGear):
     def process_intent(
         self,
         intent: str,
-        params: List[str]
+        params: Dict[str, Any]
     ) -> Optional[str]:
 
         if NewsReportGear.INTENTS[0] != intent:
@@ -116,7 +114,7 @@ class NewsReportGear(BaseGear):
         :type channel_url: str
 
         :param fallback_check_date: date to use for checking, in case no previous check was performed on the news source
-        :type fallback_check_date: datetime.date
+        :type fallback_check_date: Arrow
 
         :returns: a list of str, each one containing a new content (video) found on the channel. It could also potentially contains an error message
         :rtype: list[str]
@@ -168,9 +166,9 @@ class NewsReportGear(BaseGear):
             all_videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
         except BaseException as e:
                 # Forge specific messagge to return to the caller
-                video_update_messages.append("Error getting information on playlist {} for channel".format(
-                    channel_url,
-                    upload_playlist_id)
+                video_update_messages.append("Error getting information on playlist {} for channel {}".format(
+                    upload_playlist_id,
+                    channel_url)
                 )
                 return video_update_messages
 

@@ -1,24 +1,30 @@
-"""
-Gear to notify administrator about something that has happened
+"""Gear to notify administrator about something that has happened
 """
 
+from typing import Any, ClassVar, Dict, List, Optional, TypeVar
+
+from yellowbot.configservice import ConfigService
 from yellowbot.gears.basegear import BaseGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
+from yellowbot.surfaces.notifyadminsurface import NotifyAdminSurface
 from yellowbot.surfaces.telegramnotifyadminsurface import TelegramNotifyAdminSurface
 
+# See here for explanation: https://www.python.org/dev/peps/pep-0484/#the-type-of-class-objects
+NAS = TypeVar('NAS', bound=NotifyAdminSurface)
 
 class NotifyAdminGear(BaseGear):
     """
     """
-    INTENTS = [GlobalBag.NOTIFY_ADMIN_INTENT]
-    PARAM_MESSAGE = GlobalBag.NOTIFY_ADMIN_PARAM_MESSAGE
+    INTENTS: ClassVar[List[str]] = [GlobalBag.NOTIFY_ADMIN_INTENT]
+    PARAM_MESSAGE: ClassVar[str] = GlobalBag.NOTIFY_ADMIN_PARAM_MESSAGE
 
-    def __init__(self,
-                 config_service,
-                 test_mode=False):
-        """
-        Init the class
+    def __init__(
+        self,
+        config_service: ConfigService,
+        test_mode: bool = False
+    ) -> None:
+        """Init the class
 
         :param config_service: configuration service
         :type config_service: ConfigService
@@ -39,7 +45,11 @@ class NotifyAdminGear(BaseGear):
             test_mode=test_mode
         )
 
-    def process_intent(self, intent, params):
+    def process_intent(
+        self,
+        intent: str,
+        params: Dict[str, Any]
+    ) -> Optional[str]:
         """
         Right now, call YellowBot to send a message, using its configuration
 
@@ -48,9 +58,9 @@ class NotifyAdminGear(BaseGear):
         :return:
         """
         if NotifyAdminGear.INTENTS[0] != intent:
-            message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(message)
-            return message
+            return_message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(return_message)
+            return return_message
         if NotifyAdminGear.PARAM_MESSAGE not in params:
             return "Missing {} parameter in the request".format(NotifyAdminGear.PARAM_MESSAGE)
 
@@ -61,11 +71,15 @@ class NotifyAdminGear(BaseGear):
         message = self._admin_surface.forge_notification(text)
         return self._admin_surface.send_message(message)
 
-    def swap_surface_for_test(self, new_surface):
-        """
-        Changes the surface for test purposes
-        :param new_surface:
-        :return:
-        """
-        self._admin_surface = new_surface
+    def swap_surface_for_test(
+        self,
+        new_admin_surface: NAS
+    ) -> None:
+        """Changes the surface for test purposes
 
+        :param new_admin_surface:
+        :type new_admin_surface: NotifyAdminSurface
+
+        """
+
+        self._admin_surface = new_admin_surface

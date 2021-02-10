@@ -3,6 +3,7 @@
 A surface can be a chat app like Telegram, a textual console and much more
 """
 
+from typing import Optional
 from yellowbot.surfaces.surfacemessage import SurfaceMessage
 
 class BaseInteractionSurface:
@@ -22,7 +23,7 @@ class BaseInteractionSurface:
 
         self._surface_name = surface_name
 
-    def send_message(self, message: SurfaceMessage):
+    def send_message(self, message: SurfaceMessage) -> Optional[str]:
         """
         Send a message to the surface. Has to be implemented in derived
          classes

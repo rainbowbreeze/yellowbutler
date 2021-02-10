@@ -4,7 +4,7 @@
 # Reference for the  type hint of the same (enclosing) class
 # https://stackoverflow.com/questions/33533148/how-do-i-type-hint-a-method-with-the-type-of-the-enclosing-class
 
-from typing import ClassVar
+from typing import Any, ClassVar, Dict
 
 class BaseEntity():
     """The class represents a basic data entity to save into the db
@@ -32,7 +32,7 @@ class BaseEntity():
         """
         raise ValueError("Method get_entity_name has not been implemented")
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """Transform the entity data in a dictionaty.
 
         It has to be implemented in subclasses

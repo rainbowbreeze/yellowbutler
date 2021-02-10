@@ -5,7 +5,7 @@ A gear defines a way to solve one or more intents, and can be seen as a
 
 Adding new gears adds more features to the main app.
 """
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 class BaseGear:
     """Defines basic attributes and methods of all gears
@@ -56,7 +56,7 @@ class BaseGear:
     def process_intent(
         self,
         intent: str,
-        params: List[str]
+        params: Dict[str, Any]
     ) -> Optional[str]:
         """Process the intent. Need to be implemented in every subclass
 
@@ -70,5 +70,4 @@ class BaseGear:
         :rtype: str
         """
 
-        # Union[str, List[str]] - https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html#functions
         raise ValueError("Intent processing for gear {} not implemented".format(self._gear_name))

@@ -26,8 +26,8 @@ from google.cloud import datastore
 from yellowbot.loggingservice import LoggingService
 from yellowbot.storage.basestorageservice import BaseStorageService, BaseEntity
 
-BE = TypeVar('BE', bound=BaseEntity)
 # See here for explanation: https://www.python.org/dev/peps/pep-0484/#the-type-of-class-objects
+BE = TypeVar('BE', bound=BaseEntity)
 
 class DatastoreStorageService(BaseStorageService):
     """This class implements the storage interface using Google Cloud Firestore in Datastore mode
@@ -223,7 +223,6 @@ class DatastoreStorageService(BaseStorageService):
         kind = entity_class.get_entity_name()
         key = self._client.key(kind, entity_id)
         self._client.delete(key)
-
 
     def _create_entity_from_datastore(
         self,

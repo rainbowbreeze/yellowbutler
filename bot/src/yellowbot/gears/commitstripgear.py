@@ -6,6 +6,8 @@ Requirements
 -arrow
 """
 
+from typing import Any, ClassVar, Dict, List, Optional
+from arrow import Arrow
 import feedparser
 import re
 import requests
@@ -19,14 +21,18 @@ class CommitStripGear(BaseGear):
     """Read the CommitStrip RSS and check if there is a new artwork with the same date of today
     """
 
-    INTENTS = [GlobalBag.COMMITSTRIP_INTENT]
-    PARAM_SILENT = GlobalBag.COMMITSTRIP_PARAM_SILENT  # No notification if there is nothing new 
+    INTENTS: ClassVar[List[str]] = [GlobalBag.COMMITSTRIP_INTENT]
+    PARAM_SILENT: ClassVar[str] = GlobalBag.COMMITSTRIP_PARAM_SILENT  # No notification if there is nothing new 
 
     def __init__(self):
         super().__init__(self.__class__.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
 
-    def process_intent(self, intent, params):
+    def process_intent(
+        self,
+        intent: str,
+        params: Dict[str, Any]
+    ) -> Optional[str]:
         if CommitStripGear.INTENTS[0] != intent:
             message = "Call to {} using wrong intent {}".format(__name__, intent)
             self._logger.info(message)
@@ -39,7 +45,7 @@ class CommitStripGear(BaseGear):
 
         return self._find_daily_strip(silent)
 
-    def _find_daily_strip(self, silent):
+    def _find_daily_strip(self, silent: bool) -> Optional[str]:
         """Read CommitStrip RSS, extract latest Strips and check if there is something for today
 
         :param silent: if True, doesn't produce any value when new content is not found
@@ -62,11 +68,15 @@ class CommitStripGear(BaseGear):
         today = arrow.utcnow()
         return self._get_strip_for_date(rssdata, today, silent)
 
-    def _get_strip_for_date(self, rss_content, date_to_compare, silent):
+    def _get_strip_for_date(
+        self,
+        rss_content: str,
+        date_to_compare: Arrow,
+        silent: bool) -> Optional[str]:
         """Parse the RSS stream and check if the most recent item was published on the same date of the specific data param
 
         :param rss_content: the RSS content output of CommitStrip
-        :type rss_content: srt
+        :type rss_content: str
 
         :param date_to_compare: the day CommitStrip should have published something
         :type date_to_compare: arrow
@@ -98,7 +108,10 @@ class CommitStripGear(BaseGear):
                 img_tag = first_entry.content[0].value
                 # <img src="https://www.commitstrip.com/wp-content/uploads/2020/01/Strip-Paywall-650-finalenglish.jpg" alt="" width="650" height="607" class="alignnone size-full wp-image-20822" />
                 img_matches = re.search('src="([^"]+)"', img_tag)
-                return "New CommitStrip content: {}\n{}".format(first_entry.title,img_matches[1])
+                return "New CommitStrip content: {}\n{}".format(
+                    first_entry.title,
+                    img_matches[1]
+                )
             elif not silent:
                 return "No new CommitStrip for today"
             else:

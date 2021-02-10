@@ -6,9 +6,9 @@ from typing import Optional
 class SurfaceMessage:
     """Represents a message that can be sent through an interaction surface
     """
-    surface_id: str
-    channel_id: str
-    text: str
+    surface_id: Optional[str]
+    channel_id: Optional[str]
+    text: Optional[str]
 
     def __init__(
         self,
