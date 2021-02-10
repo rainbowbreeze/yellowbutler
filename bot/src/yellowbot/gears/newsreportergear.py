@@ -83,7 +83,8 @@ class NewsReportGear(BaseGear):
         """
 
         channel_urls = [
-            'https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA'
+            "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
+            "https://www.youtube.com/channel/UCN0FGqUt7e79xKoPAZQ8tww"
         ]
         # use when last check date is not available for a news source
         #  Default is 5 days in the past
@@ -132,6 +133,7 @@ class NewsReportGear(BaseGear):
         # Search in the database if it has already information for the given
         #  channel, included the playlist id 
         news_items = None
+        self._logger.debug("Reading from the db entity for channel_url {}".format(channel_url))
         try:
             news_items = self._storage.get_by_property(NewsItemEntity, "url", "=", channel_url)
         except BaseException as e:
@@ -150,6 +152,7 @@ class NewsReportGear(BaseGear):
         # param1 may have the special upload playlist id. otherwise obtain it from a YouTube API call
         if hasattr(news_items, "param1") and news_item.param1:
             upload_playlist_id = news_item.param1
+            self._logger.debug("Using playlist ID ")
         else:
             channel_id = self._youtube_extract_channel_id_from_url(channel_url)
             # Find the upload playlist id for the given channel

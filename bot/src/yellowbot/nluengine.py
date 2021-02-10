@@ -100,6 +100,13 @@ class NluEngine:
             intent = GlobalBag.COMMITSTRIP_INTENT
             return intent, params
 
+        # Checks for CheckForNews intent
+        headers = ["checkfornews", "/checkfornews"]
+        if any(message.lower().startswith(header) for header in headers):
+            intent = GlobalBag.COMMITSTRIP_INTENT
+            params[GlobalBag.CHECKFORNEWS_PARAM_SILENT] = False
+            return intent, params
+
         # Checks for other intents
 
         return intent, params
