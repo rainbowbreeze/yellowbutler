@@ -133,6 +133,11 @@ TBD
 Enable YoutTube API for the current GCP project and obtain a YouTube API key following [these instructions](https://developers.google.com/youtube/v3/getting-started)
 Check for [API quota](https://console.developers.google.com/iam-admin/quotas) used.
 
+### Telegram Support
+In order to communicate with the external world, YellowBot needs at least one surface. Telegram is the default surface, and in order to configure it, a bot key and a chat_id are required. There are many tutorials and guides that walk thru the process.
+Once configured the bot, add these options to activate quick commands in Telegram interface
+checkfornews - Check news from various sources
+commitstrips - Check for new CommitStrips
 
 
 
