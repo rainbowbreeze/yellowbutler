@@ -113,6 +113,7 @@ class YellowBot:
         storage_service = DatastoreStorageService() if not test_mode else BaseStorageService()
         self._gears.append(NewsReportGear(
             self._config_service.get_config("youtube_api"),
+            self._config_service.get_config("newssources_urls"),
             storage_service
         ))
 

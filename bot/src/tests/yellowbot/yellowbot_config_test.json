@@ -35,5 +35,13 @@
   "darksky_api": "test_darksky_api_key",
 
   //Youtube API key
-  "youtube_api": "mock_youtube_api_key"
+  "youtube_api": "mock_youtube_api_key",
+
+  "newssources_urls": [
+    // VR - ThrillSeeker
+    "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
+    // Network - The Hook Up
+    "https://www.youtube.com/channel/UC2gyzKcHbYfqoXA5xbyGXtQ"
+  ]
+
 }

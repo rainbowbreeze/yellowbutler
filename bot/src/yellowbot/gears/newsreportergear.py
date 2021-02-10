@@ -37,6 +37,7 @@ class NewsReportGear(BaseGear):
     def __init__(
         self,
         youtube_api_key: str,
+        newssources_urls: list,
         storage_service: BSS
     ) -> None:
         """Constructor
@@ -51,6 +52,7 @@ class NewsReportGear(BaseGear):
         super().__init__(self.__class__.__name__, self.INTENTS)
         self._logger = LoggingService.get_logger(__name__)
         self._youtube_api_key = youtube_api_key
+        self._newssources_urls = newssources_urls
         self._storage = storage_service
 
     def process_intent(
@@ -82,28 +84,16 @@ class NewsReportGear(BaseGear):
         :rtype: str
         """
 
-        channel_urls = [
-            # VR - ThrillSeeker
-            "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
-            # VR - Cas and Chary VR
-            "https://www.youtube.com/channel/UCN0FGqUt7e79xKoPAZQ8tww",
-            # Network - The Hook Up
-            "https://www.youtube.com/channel/UC2gyzKcHbYfqoXA5xbyGXtQ",
-            # Network - Crosstalk Solutions
-            "https://www.youtube.com/channel/UCVS6ejD9NLZvjsvhcbiDzjw",
-            # Misc - Two Minute Papers
-            "https://www.youtube.com/channel/UCbfYPyITQ-7l4upoX8nvctg"
-        ]
         # use when last check date is not available for a news source
         #  Default is 5 days in the past
         fallback_check_date: Arrow = arrow.utcnow().shift(days=-6) 
 
         messages = []
-        for channel_url in channel_urls:
-            self._logger.info("Checking for news on {}".format(channel_url))
+        for newssource_url in self._newssources_urls:
+            self._logger.info("Checking for news on {}".format(newssource_url))
 
             #TODO distinguish between different news sources
-            messages.extend(self._analize_youtube_channel(channel_url, fallback_check_date))
+            messages.extend(self._analize_youtube_channel(newssource_url, fallback_check_date))
 
         if 0 == len(messages) and not silent:
             message = "No new news for today"
@@ -158,9 +148,10 @@ class NewsReportGear(BaseGear):
         video_update_messages: List[str] = []  # Initialize the return var
 
         # param1 may have the special upload playlist id. otherwise obtain it from a YouTube API call
-        if hasattr(news_items, "param1") and news_item.param1:
+        upload_playlist_id = None
+        if hasattr(news_item, "param1") and news_item.param1:
             upload_playlist_id = news_item.param1
-            self._logger.debug("Using playlist ID ")
+            self._logger.debug("Using stored playlist ID {}".format(upload_playlist_id))
         else:
             channel_id = self._youtube_extract_channel_id_from_url(channel_url)
             # Find the upload playlist id for the given channel
@@ -307,7 +298,7 @@ class NewsReportGear(BaseGear):
         :rtype: list
         """
 
-        self._logger.info("Retrieving playlist information for {}".format(playlist_id))
+        self._logger.debug("Retrieving playlist information for {}".format(playlist_id))
         url = 'https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId={}&key={}'.format(
             playlist_id,
             api_key

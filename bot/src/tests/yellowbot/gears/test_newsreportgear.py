@@ -19,7 +19,7 @@ class TestNewsReportGear(TestCase):
 
     def setUp(self):
         self._youtube_key = 'mock_youtube_key'
-        self._gear = NewsReportGear(self._youtube_key, BaseStorageService())
+        self._gear = NewsReportGear(self._youtube_key, [], BaseStorageService())
 
     def tearDown(self):
         pass

@@ -28,6 +28,14 @@
   "darksky_api": "API_KEY_FOR_DARKSKY",
 
   //Youtube API key
-  "youtube_api": "YOUTUBE_API_KEY"
+  "youtube_api": "YOUTUBE_API_KEY",
+
+  //A list of sites where to get information
+  "newssources_urls": [
+    // Network - Crosstalk Solutions
+    "https://www.youtube.com/channel/UCVS6ejD9NLZvjsvhcbiDzjw",
+    // Misc - Two Minute Papers
+    "https://www.youtube.com/channel/UCbfYPyITQ-7l4upoX8nvctg"
+  ]
 
 }
