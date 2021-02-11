@@ -83,9 +83,9 @@ class WeatherGear(BaseGear):
             if not req.ok:
                 req.raise_for_status()
             results = req.json()
-        except BaseException as e:
-            self._logger.exception(e)
-            return "Error while getting weather information {}".format(repr(e))
+        except BaseException as err:
+            self._logger.exception("Error while quering the weather service: {}".format(err))
+            return "Error while getting weather information {}".format(repr(err))
 
         try:
             timezone = results["timezone"]
@@ -113,9 +113,9 @@ class WeatherGear(BaseGear):
                 daily_sunset_time,
                 week_summary
             )
-        except BaseException as e:
-            self._logger.exception(e)
-            return "Exception happened while parsing weather data {}".format(repr(e))
+        except BaseException as err:
+            self._logger.exception("Error while getting data from the reply of the weather service: {}".format(err))
+            return "Exception happened while parsing weather data {}".format(repr(err))
 
     def _from_epoch_to_time(
         self,

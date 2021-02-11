@@ -74,4 +74,4 @@ class TestCommitStripGear(TestCase):
         )
 
         result = self._gear._find_daily_strip(False)
-        self.assertEqual('Error while reading RSS feed from CommitStrip: HTTPError(\'404 Client Error: Not Found for url: http://www.commitstrip.com/en/feed/\')', result)
+        self.assertEqual('Error while reading RSS feed from CommitStrip: 404 Client Error: Not Found for url: http://www.commitstrip.com/en/feed/', result)
