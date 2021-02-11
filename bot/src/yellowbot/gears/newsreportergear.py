@@ -98,7 +98,7 @@ class NewsReportGear(BaseGear):
             messages.extend(self._analize_youtube_channel(newssource_url, fallback_check_date))
 
         if 0 == len(messages) and not silent:
-            messages.append("No new news for today")
+            messages.append("No recent news available")
         
         return messages
 
