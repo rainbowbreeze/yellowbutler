@@ -134,8 +134,8 @@ class NewsReportGear(BaseGear):
         self._logger.debug("Reading from the db entity for channel_url {}".format(channel_url))
         try:
             news_items = self._storage.get_by_property(NewsItemEntity, "url", "=", channel_url)
-        except BaseException as e:
-            self._logger.error(e)
+        except BaseException as err:
+            self._logger.exception("Error while reading the entity from the storage: {}".format(err))
 
         if news_items is None or 0 == len(news_items):
             # Creates the item
@@ -157,7 +157,7 @@ class NewsReportGear(BaseGear):
             # Find the upload playlist id for the given channel
             try:
                 upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, channel_id)
-            except BaseException as e:
+            except BaseException as err:
                 # Forge specific messagge to return to the caller
                 video_update_messages.append("Error getting information on YouTube channel {}".format(channel_id))
                 return video_update_messages
@@ -166,7 +166,7 @@ class NewsReportGear(BaseGear):
         # Search latest videos in the upload playlist
         try:
             all_videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
-        except BaseException as e:
+        except BaseException as err:
                 # Forge specific messagge to return to the caller
                 video_update_messages.append("Error getting information on playlist {} for channel {}".format(
                     upload_playlist_id,
@@ -182,19 +182,23 @@ class NewsReportGear(BaseGear):
             self._logger.debug("Stored entity has no last_check property")
             last_check_date = fallback_check_date
 
-        self._logger.info("Comparing published date of {} vides agains {}".format(
+        self._logger.debug("Comparing published date of {} videos agains {}".format(
             len(all_videos),
             last_check_date
         ))
 
         # Discard all the videos older that a certain date
-        post_check_videos = []
+        newer_videos = []
         for video in all_videos:
             # Get date from the video
-            video_published = arrow.get(video.published)
-            if video_published > last_check_date:
-                post_check_videos.append(video)
-        self._logger.info("Found {} video(s) after the last check".format(len(post_check_videos)))
+            published_date = arrow.get(video.published)
+            if published_date > last_check_date:
+                newer_videos.append(video)
+        self._logger.info("Found {} videos, out of {}, newer than {}".format(
+            len(newer_videos),
+            len(all_videos),
+            last_check_date
+        ))
 
         # Store the values
         try:
@@ -202,11 +206,11 @@ class NewsReportGear(BaseGear):
             news_item.last_check = arrow.utcnow().datetime
             self._logger.debug("Updating the news entity with new date {}".format(news_item.last_check))
             self._storage.put(news_item)
-        except BaseException as e:
-            self._logger.error(e)
+        except BaseException as err:
+            self._logger.exception("Error while saving the entity to the storage: {}".format(err))
 
         # Create alerts for the new videos
-        for video in post_check_videos:
+        for video in newer_videos:
             message = 'New video published: {} - {}'.format(
                 video.title,
                 video.url
@@ -263,19 +267,19 @@ class NewsReportGear(BaseGear):
                 req.raise_for_status()
             results = req.json()
             self._logger.debug("Data read from channel: {}".format(results))
-        except BaseException as e:
-            self._logger.error("Error while getting information for channel {}: {}".format(
+        except BaseException as err:
+            self._logger.exception("Error while getting information for channel {}: {}".format(
                 channel_id,
-                repr(e)
+                err
             ))
-            raise e
+            raise err
 
         try:
             channel_items = results['items']
             upload_id = channel_items[0]['contentDetails']['relatedPlaylists']['uploads']
-        except BaseException as e:
-            self._logger.error("Exception happened while parsing YouTube data {}".format(repr(e)))
-            raise e
+        except BaseException as err:
+            self._logger.exception("Exception happened while parsing YouTube data {}".format(err))
+            raise err
 
         return upload_id
 
@@ -310,12 +314,12 @@ class NewsReportGear(BaseGear):
                 req.raise_for_status()
             results = req.json()
             self._logger.debug("Data read from playlist: {}".format(results))
-        except BaseException as e:
-            self._logger.error("Error while getting playlist information for playlist {}: {}".format(
+        except BaseException as err:
+            self._logger.exception("Error while getting playlist information for playlist {}: {}".format(
                 playlist_id,
-                repr(e)
+                err
             ))
-            raise e
+            raise err
 
         latest_videos = []
         try:
@@ -333,12 +337,12 @@ class NewsReportGear(BaseGear):
                     published = video_published
                 )
                 latest_videos.append(video)
-        except BaseException as e:
-            self._logger.error("Exception happened while parsing data for playlist {}: {}".format(
+        except BaseException as err:
+            self._logger.exception("Exception happened while parsing data for playlist {}: {}".format(
                 playlist_id,
-                repr(e)
+                err
             ))
-            raise e
+            raise err
 
         self._logger.debug("{} videos found on the playlist {}".format(
             len(latest_videos),

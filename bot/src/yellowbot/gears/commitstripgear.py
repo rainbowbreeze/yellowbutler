@@ -61,9 +61,10 @@ class CommitStripGear(BaseGear):
             if not req.ok:
                 req.raise_for_status()
             rssdata = req.text
-        except BaseException as e:
-            self._logger.exception(e)
-            return "Error while reading RSS feed from CommitStrip: {}".format(repr(e))
+        except BaseException as err:
+            error_message = "Error while reading RSS feed from CommitStrip: {}".format(err)
+            self._logger.exception(error_message)
+            return error_message
         
         today = arrow.utcnow()
         return self._get_strip_for_date(rssdata, today, silent)
@@ -86,6 +87,8 @@ class CommitStripGear(BaseGear):
 
         :returns: None, or the url of the image published in the specified day
         :rtype: str
+
+        :raises: Error not catched here, are catched in the process intent method
         """
 
         if not rss_content:
@@ -120,7 +123,7 @@ class CommitStripGear(BaseGear):
             # It could be
             # - IndexError if there are no items inside the main feed definition
             err_message = "Something wrong has appened in parsing RSS Data: {}".format(err)
-            self._logger.error(err_message)
+            self._logger.exception(err_message)
             return err_message
 
 

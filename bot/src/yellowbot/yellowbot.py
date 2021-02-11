@@ -1,6 +1,7 @@
 """YellowBot main class, everything starts from here
 """
 
+from sys import exc_info
 from typing import Any, Dict, List, Optional
 from yellowbot.configservice import ConfigService
 from yellowbot.gears.basegear import BaseGear
@@ -217,23 +218,41 @@ class YellowBot:
         if not response_text:
             return
 
-        # create a reply, and send it back
-        self.process_intent(
-            GlobalBag.SEND_MESSAGE_INTENT,
-            {
-                GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: message.surface_id,
-                GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: message.channel_id,
-                GlobalBag.SEND_MESSAGE_PARAM_TEXT: response_text
-            }
-        )
+        # It could happen that the main intent is process, but the following
+        #  intent, that communicates back to the interaction surface, fails
+        #  because of a strange reason, like a misformatted text, etc.
+        # So, as last resource, the error in processed _also_ here, but the
+        #  expectation is that each gear process the error by itself, so
+        #  an error condition here should never happen
+        try:
+            # create a reply, and send it back
+            self.process_intent(
+                GlobalBag.SEND_MESSAGE_INTENT,
+                {
+                    GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: message.surface_id,
+                    GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: message.channel_id,
+                    GlobalBag.SEND_MESSAGE_PARAM_TEXT: response_text
+                }
+            )
+        except BaseException as err:
+            self._logger.exception("Unexpected error is sending the intent result message back to the surface: {}".format(err))
+            # Communicate back to the surface that it was an error
+            self.process_intent(
+                GlobalBag.SEND_MESSAGE_INTENT,
+                {
+                    GlobalBag.SEND_MESSAGE_PARAM_SURFACE_ID: message.surface_id,
+                    GlobalBag.SEND_MESSAGE_PARAM_CHANNEL_ID: message.channel_id,
+                    GlobalBag.SEND_MESSAGE_PARAM_TEXT: "The request was executed, but they were issues in communicating back the result. Please check server logs for more info"
+                }
+            )
 
     def process_intent(
         self,
         intent: str,
         params: Dict[str, Any]
     ) -> Optional[str]:
-        """Process an intent. Use this method when YellowBot acts behind a REST API or something similar
-
+        """Process an intent. Use this method when YellowBot acts behind a REST API or something similar.
+        
         :param intent: the intent to execute
         :type intent: str
 
@@ -253,17 +272,14 @@ class YellowBot:
                 break
 
         # And process it, if a gear has been found
+        # The expectation is that each gear process its own errors, so
+        #  no errors bubble up at this level
         if gear is not None:
-            # self._logger.info("Found gear {}".format(gear.name()))
+            # self._logger.debug("Found gear {}".format(gear.name()))
             return gear.process_intent(intent, params)
         else:
             self._logger.info("No gear found to process intent {}".format(intent))
             return "No gear to process your intent"
-
-    # TODO
-    # def initialize(clients, cache=None):
-    #   if not isinstance(clients, list):
-    #     clients = [clients]
 
     def tick_scheduler(self):
         """Check for tasks to run for the scheduler service and, in case, executes them.

@@ -76,6 +76,7 @@ class MusicGear(BaseGear):
                 return "{} by {} has been added".format(title, author)
             else:
                 return "Error adding the song: status {}, {}".format(response.status_code, response.text)
-        except Exception as e:
-            self._logger.exception(e)
-            return "An error happened while adding the song: {}".format(repr(e))
+        except Exception as err:
+            error_message = "An error happened while adding the song: {}".format(err)
+            self._logger.exception(error_message)
+            return error_message

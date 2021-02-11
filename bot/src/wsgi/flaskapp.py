@@ -70,7 +70,13 @@ def receive_message_thread(yellowbot: YellowBot, message):
     :param message: the message to send
     :type message: SurfaceMessage
     """
-    yellowbot.receive_message(message)
+
+    # The expectaion is that error handling happen inside this method
+    #  so the try here is really for exceptional cases
+    try:
+        yellowbot.receive_message(message)
+    except BaseException as err:
+        _logger.exception("For some reasons, an error bubbled up in the receive_message: {}".format(err))
 
 
 def tick_scheduler_thread(yellowbot: YellowBot):
@@ -80,7 +86,12 @@ def tick_scheduler_thread(yellowbot: YellowBot):
     :param yellowbot:
     :type yellowbot: YellowBot
     """
-    yellowbot.tick_scheduler()
+    # The expectaion is that error handling happen inside this method
+    #  so the try here is really for exceptional cases
+    try:
+        yellowbot.tick_scheduler()
+    except BaseException as err:
+        _logger.exception("For some reasons, an error bubbled up in the schedules: {}".format(err))
 
 
 @app.route("/")
@@ -223,7 +234,7 @@ def telegram_webhook_lurch():
         except KeyError:
             # Any other error is re-raised after the finally clause has been executed
             # Look at https://docs.python.org/3.6/tutorial/errors.html#defining-clean-up-actions
-            _logger.error("Message from Telegram Lurch does not have the right fields\n %s", update)
+            _logger.exception("Message from Telegram Lurch does not have the right fields\n {}".format(update))
         finally:
             # Send an 200, otherwise with 401 or other error codes Telegram
             #  keeps sending the message over and over. But in the data field
@@ -247,17 +258,18 @@ def telegram_webhook_lurch():
 
 
 @app.errorhandler(500)
-def server_error(e):
+def server_error(err):
     """
     Manage uncaught exception
 
     For 500 error, see docs at http://flask.pocoo.org/docs/0.12/api/#flask.Flask.handle_exception
     """
-    _logger.exception('An error occurred during a request.')
-    return """
+
+    _logger.exception("An error occurred during a request: {}".format(err))
+    return"""
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(e), 500
+    """.format(err), 500
 
 
 if __name__ == '__main__':

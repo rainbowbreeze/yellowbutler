@@ -1,6 +1,21 @@
+"""Manage logs for the application
+
+More info at: https://docs.python.org/3.7/howto/logging.html
+
+Best way to log an exception, with python 2.x retrocompatibility:
+  self._logger.exception("Error process the request %s", err)
+Otherwise, use
+  self._logger.exception("Error process the request {}".format(err))
+This line will report a custom message, the exception error text, and
+ a stracktrace
+
+These three produces the same output, as exception method adds Exception info
+to the logging message, and the exception error message
+  self._logger.exception("Error process the request %s", err)
+  self._logger.exception("Error process the request {}".format(err))
+  self._logger.exception("Error process the request {}".format(repr(err)), exc_info=err)
 """
-Manage logs for the application
-"""
+
 import logging
 
 
