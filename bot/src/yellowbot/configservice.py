@@ -62,6 +62,9 @@ class ConfigService:
         if os.path.isfile(full_config_path):
             with open(full_config_path, 'r') as f:
                 json_with_comment = open(full_config_path).read()
+                # An error could be generated here if the config file is not
+                #  OK (a missing , for example). I leave as it is, so a clear output
+                #  is produced server side
                 self._config = json.loads(json_minify(json_with_comment))
         else:
             raise ValueError("Cannot find configuration file {}".format(full_config_path))
