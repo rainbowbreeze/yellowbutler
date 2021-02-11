@@ -14,6 +14,7 @@ import requests
 import arrow
 
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 
@@ -32,18 +33,19 @@ class CommitStripGear(BaseGear):
         self,
         intent: str,
         params: Dict[str, Any]
-    ) -> Optional[str]:
+    ) -> GearExecutionResult:
         if CommitStripGear.INTENTS[0] != intent:
-            message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(message)
-            return message 
+            err_message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(err_message)
+            return GearExecutionResult.ERROR(err_message) 
 
         # Defaul value for silent param
         silent = False
         if CommitStripGear.PARAM_SILENT in params:
             silent = params[CommitStripGear.PARAM_SILENT]
 
-        return self._find_daily_strip(silent)
+        result = self._find_daily_strip(silent)
+        return GearExecutionResult.OK(result)
 
     def _find_daily_strip(self, silent: bool) -> Optional[str]:
         """Read CommitStrip RSS, extract latest Strips and check if there is something for today

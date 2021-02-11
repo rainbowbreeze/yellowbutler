@@ -10,6 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 
@@ -38,14 +39,14 @@ class EasyNidoGear(BaseGear):
         self._bambini = bambini
         self._logger = LoggingService.get_logger(__name__)
 
-    def process_intent(self, intent, params):
+    def process_intent(self, intent, params) -> GearExecutionResult:
         if EasyNidoGear.INTENTS[0] != intent:
-            message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(message)
-            return message
+            err_message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(err_message)
+            return GearExecutionResult.ERROR(err_message)
 
         webservice_data = self._obtain_webservice_data()
-        return webservice_data
+        return GearExecutionResult.OK(webservice_data)
 
     def _obtain_webservice_data(self):
         """

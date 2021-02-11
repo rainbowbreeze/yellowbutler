@@ -8,6 +8,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 import requests
 
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 
@@ -43,15 +44,19 @@ class MusicGear(BaseGear):
         self,
         intent: str,
         params: Dict[str, Any]
-    ) -> Optional[str]:
+    ) -> GearExecutionResult:
+        """
+        """
+
+        err_message = None
         if MusicGear.INTENTS[0] != intent:
-            message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(message)
-            return message
+            err_message = "Call to {} using wrong intent {}".format(__name__, intent)
         if MusicGear.PARAM_TITLE not in params:
-            return "Missing {} parameter in the request".format(MusicGear.PARAM_TITLE)
+            err_message = "Missing {} parameter in the request".format(MusicGear.PARAM_TITLE)
         if MusicGear.PARAM_AUTHOR not in params:
-            return "Missing {} parameter in the request".format(MusicGear.PARAM_AUTHOR)
+            err_message = "Missing {} parameter in the request".format(MusicGear.PARAM_AUTHOR)
+        if err_message:
+            return GearExecutionResult.ERROR(err_message)
 
         # Send the data at given url as form request
         author = params[MusicGear.PARAM_AUTHOR]
@@ -62,7 +67,7 @@ class MusicGear(BaseGear):
         }
 
         if self._test_mode:
-            return "{} by {} has been added".format(title, author)
+            return GearExecutionResult.OK("{} by {} has been added".format(title, author))
 
         try:
             self._logger.info("Sending music trace request to url {}".format(self._destination_url))
@@ -73,10 +78,14 @@ class MusicGear(BaseGear):
                 #  url, a custom check needs to be performed to be really
                 #  sure about the response validity. For now, just check
                 #  the OK status codes range
-                return "{} by {} has been added".format(title, author)
+                message = "{} by {} has been added".format(title, author)
+                self._logger.debug(message)
+                return GearExecutionResult.OK(message)
             else:
-                return "Error adding the song: status {}, {}".format(response.status_code, response.text)
+                message = "Error adding the song: status {}, {}".format(response.status_code, response.text)
+                self._logger.info(message)
+                return GearExecutionResult.OK(message)
         except Exception as err:
             error_message = "An error happened while adding the song: {}".format(err)
             self._logger.exception(error_message)
-            return error_message
+            return GearExecutionResult.ERROR(error_message)

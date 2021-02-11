@@ -19,6 +19,7 @@ from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, TypeVar, Union
 
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.storage.basestorageservice import BaseStorageService
@@ -59,12 +60,12 @@ class NewsReportGear(BaseGear):
         self,
         intent: str,
         params: Dict[str, Any]
-    ) -> Optional[str]:
+    ) -> GearExecutionResult:
 
         if NewsReportGear.INTENTS[0] != intent:
-            message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(message)
-            return message 
+            err_message = "Call to {} using wrong intent {}".format(__name__, intent)
+            self._logger.info(err_message)
+            return GearExecutionResult.ERROR(err_message )
 
         # Defaul value for silent param
         silent = False
@@ -72,9 +73,10 @@ class NewsReportGear(BaseGear):
             silent = params[NewsReportGear.PARAM_SILENT]
 
         self._logger.info("Start processing new news to report")
-        return self._find_daily_news(silent)
+        news_list = self._find_daily_news(silent)
+        return GearExecutionResult(GearExecutionResult.RESULT_OK, news_list)
 
-    def _find_daily_news(self, silent: bool) -> Optional[str]:
+    def _find_daily_news(self, silent: bool) -> Optional[List[str]]:
         """Analyze all the different news sources, notifying in case new contents are found
 
         :param silent: if True, doesn't produce any value when new content is not found
@@ -96,11 +98,9 @@ class NewsReportGear(BaseGear):
             messages.extend(self._analize_youtube_channel(newssource_url, fallback_check_date))
 
         if 0 == len(messages) and not silent:
-            message = "No new news for today"
-        else:
-            message = "\n".join(messages)
+            messages.append("No new news for today")
         
-        return message
+        return messages
 
     def _analize_youtube_channel(
         self,
@@ -276,7 +276,7 @@ class NewsReportGear(BaseGear):
 
         try:
             channel_items = results['items']
-            upload_id = channel_items[0]['contentDetails']['relatedPlaylists']['uploads']
+            upload_id = str(channel_items[0]['contentDetails']['relatedPlaylists']['uploads'])
         except BaseException as err:
             self._logger.exception("Exception happened while parsing YouTube data {}".format(err))
             raise err

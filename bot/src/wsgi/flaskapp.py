@@ -160,12 +160,20 @@ def process_intent():
 
     _logger.info("Routing call for intent {}".format(intent))
     try:
-        message = yellowbot.process_intent(intent, params)  # Process the intent
-        return make_response(jsonify(message=message), 200)
+        execution_result = yellowbot.process_intent(intent, params)  # Process the intent
+        #TODO check for return code
+        _logger.info(execution_result.get_messages())
+        return make_response(
+            jsonify(message=execution_result.get_messages()),
+            200
+        )
     except Exception as e:
         # If something goes wrong, like missing parameters or errors in
         #  the gear process, flow falls here
-        _logger.warning("Error %s processing intent %s", e.__class__, e.args[0])
+        _logger.warning("Error {} processing intent {}".format(
+            e.__class__,
+            e.args[0]
+        ))
         abort(make_response(
             jsonify(message=e.args[0]), 400)
         )

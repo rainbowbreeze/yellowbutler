@@ -7,6 +7,8 @@ Adding new gears adds more features to the main app.
 """
 from typing import Any, Dict, List, Optional, Union
 
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
+
 class BaseGear:
     """Defines basic attributes and methods of all gears
     """
@@ -57,7 +59,7 @@ class BaseGear:
         self,
         intent: str,
         params: Dict[str, Any]
-    ) -> Optional[str]:
+    ) -> GearExecutionResult:
         """Process the intent. Need to be implemented in every subclass
 
         :param intent: the specific intent to process

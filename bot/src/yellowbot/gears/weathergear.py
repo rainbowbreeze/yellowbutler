@@ -11,6 +11,7 @@ import requests
 import arrow
 
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 
@@ -35,8 +36,21 @@ class WeatherGear(BaseGear):
         self,
         intent: str,
         params: Dict[str, Any]
-    ) -> Optional[str]:
-        return self._read_weather_from_darksky(intent, params)
+    ) -> GearExecutionResult:
+        """
+        """
+        err_message = None
+        if WeatherGear.INTENTS[0] != intent:
+            err_message = "Call to {} using wrong intent {}".format(__name__, intent)
+        if WeatherGear.PARAM_LOCATION not in params:
+            err_message = "Missing {} parameter in the request".format(WeatherGear.PARAM_LOCATION)
+        if WeatherGear.PARAM_CITY_NAME not in params:
+            err_message = "Missing {} parameter in the request".format(WeatherGear.PARAM_CITY_NAME)
+        if err_message:
+            return GearExecutionResult.ERROR(err_message)
+
+        message = self._read_weather_from_darksky(intent, params)
+        return GearExecutionResult.OK(message)
 
     def _read_weather_from_darksky(
         self,

@@ -3,8 +3,10 @@ Scheduler service, to run specific tasks at specific times
 """
 import json
 import os
+from typing import List
 
 import arrow
+from arrow.arrow import Arrow
 from json_minify import json_minify
 
 from yellowbot.loggingservice import LoggingService
@@ -21,6 +23,7 @@ class SchedulerTask:
       01:34, "GMT", or "UTC" or "Europe/Paris"
       etc
     """
+
     def __init__(
         self,
         name: str,
@@ -76,7 +79,9 @@ class SchedulerService:
     * Interaction surface details to output task results
     """
 
-    def __init__(self, tasks_file):
+    _tasks: List[SchedulerTask]
+
+    def __init__(self, tasks_file: str) -> None:
         """
 
         :param tasks_file:
@@ -84,10 +89,9 @@ class SchedulerService:
         """
         # Create the logger and initialise it
         self._logger = LoggingService.get_logger(__name__)
-
         self._load_tasks(tasks_file)
 
-    def get_tasks(self):
+    def get_tasks(self) -> List[SchedulerTask] :
         """
         Gets the list of tasks
 
@@ -96,7 +100,7 @@ class SchedulerService:
         """
         return self._tasks
 
-    def _load_tasks(self, tasks_file):
+    def _load_tasks(self, tasks_file: str) -> None:
         """
         Load config key/value pairs from a file
         :param config_file: name of the file. Can be full path or, otherwise,
@@ -137,7 +141,7 @@ class SchedulerService:
         else:
             raise ValueError("Cannot find tasks file {}".format(full_tasks_path))
 
-    def get_current_datetime(self):
+    def get_current_datetime(self) -> Arrow:
         """
         Returns current UTC time
         :return: The current time
@@ -145,7 +149,7 @@ class SchedulerService:
         """
         return arrow.utcnow()
 
-    def find_tasks_for_time(self, execution_time):
+    def find_tasks_for_time(self, execution_time: Arrow) -> List[SchedulerTask]:
         """
         Finds tasks scheduled for the given time
         :param execution_time: time when the task should be executed

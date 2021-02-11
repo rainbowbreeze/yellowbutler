@@ -5,6 +5,7 @@ from typing import Any, ClassVar, Dict, List, Optional, TypeVar
 
 from yellowbot.configservice import ConfigService
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.surfaces.baseinteractionsurface import BaseInteractionSurface
@@ -51,32 +52,38 @@ class SendMessageGear(BaseGear):
         self,
         intent: str,
         params: Dict[str, Any]
-    ) -> Optional[str]:
+    ) -> GearExecutionResult:
         """Sends a message using one of the registered surfaces
 
         :param intent:
         :param params:
-        :return:
+        :returns:
         """
 
+        err_message = None
         if SendMessageGear.INTENTS[0] != intent:
-            return_message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(return_message)
-            return return_message
+            err_message = "Call to {} using wrong intent {}".format(__name__, intent)
         if SendMessageGear.PARAM_SURFACE_ID not in params:
-            return "Missing {} parameter in the request".format(SendMessageGear.PARAM_SURFACE_ID)
+            err_message = "Missing {} parameter in the request".format(SendMessageGear.PARAM_SURFACE_ID)
         if SendMessageGear.PARAM_CHANNEL_ID not in params:
-            return "Missing {} parameter in the request".format(SendMessageGear.PARAM_CHANNEL_ID)
+            err_message = "Missing {} parameter in the request".format(SendMessageGear.PARAM_CHANNEL_ID)
         if SendMessageGear.PARAM_TEXT not in params:
-            return "Missing {} parameter in the request".format(SendMessageGear.PARAM_TEXT)
+            err_message = "Missing {} parameter in the request".format(SendMessageGear.PARAM_TEXT)
+        if err_message:
+            self._logger.info(err_message)
+            return GearExecutionResult.ERROR(err_message)
 
         message = SurfaceMessage(
             params[SendMessageGear.PARAM_SURFACE_ID],
             params[SendMessageGear.PARAM_CHANNEL_ID],
             params[SendMessageGear.PARAM_TEXT]
         )
-        self._logger.info("Sending message to surface id {}".format(message.surface_id))
-        return self._send_message(message)
+        self._logger.info("Sending message to surface id {} at channel {}".format(
+            message.surface_id,
+            message.channel_id
+        ))
+        result = self._send_message(message)
+        return GearExecutionResult.OK(result)
 
     def add_interaction_surface(
         self,
@@ -134,5 +141,3 @@ class SendMessageGear(BaseGear):
             return surface.send_message(message)
         else:
             raise ValueError("Cannot find surface {} to process message".format(message.surface_id))
-
-

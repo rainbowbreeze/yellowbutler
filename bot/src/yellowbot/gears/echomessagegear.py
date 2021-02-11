@@ -6,6 +6,7 @@ Requirements
 """
 from typing import Any, ClassVar, Dict, List, Optional
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 
@@ -26,13 +27,16 @@ class EchoMessageGear(BaseGear):
         self,
         intent: str,
         params: Dict[str, Any]
-    ) -> Optional[str]:
+    ) -> GearExecutionResult:
+
+        err_message = None
         if EchoMessageGear.INTENTS[0] != intent:
-            message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(message)
-            return message 
+            err_message = "Call to {} using wrong intent {}".format(__name__, intent)
         if EchoMessageGear.PARAM_MESSAGE not in params:
-            return "Missing {} parameter in the request".format(EchoMessageGear.PARAM_MESSAGE)
+            err_message = "Missing {} parameter in the request".format(EchoMessageGear.PARAM_MESSAGE)
+        if err_message:
+            self._logger.info(err_message)
+            return GearExecutionResult.ERROR(err_message)
 
         # Very simply gear: return the message passed as input
-        return params.get(EchoMessageGear.PARAM_MESSAGE)
+        return GearExecutionResult.OK(params.get(EchoMessageGear.PARAM_MESSAGE))

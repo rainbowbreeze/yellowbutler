@@ -5,6 +5,7 @@ from typing import Any, ClassVar, Dict, List, Optional, TypeVar
 
 from yellowbot.configservice import ConfigService
 from yellowbot.gears.basegear import BaseGear
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
 from yellowbot.surfaces.notifyadminsurface import NotifyAdminSurface
@@ -49,27 +50,29 @@ class NotifyAdminGear(BaseGear):
         self,
         intent: str,
         params: Dict[str, Any]
-    ) -> Optional[str]:
-        """
-        Right now, call YellowBot to send a message, using its configuration
+    ) -> GearExecutionResult:
+        """Calls YellowBot to send a message, using its configuration
 
         :param intent:
         :param params:
         :return:
         """
+
+        err_message = None
         if NotifyAdminGear.INTENTS[0] != intent:
-            return_message = "Call to {} using wrong intent {}".format(__name__, intent)
-            self._logger.info(return_message)
-            return return_message
+            err_message = "Call to {} using wrong intent {}".format(__name__, intent)
         if NotifyAdminGear.PARAM_MESSAGE not in params:
-            return "Missing {} parameter in the request".format(NotifyAdminGear.PARAM_MESSAGE)
+            err_message = "Missing {} parameter in the request".format(NotifyAdminGear.PARAM_MESSAGE)
+        if err_message:
+            self._logger.info(err_message)
+            return GearExecutionResult.ERROR(err_message)
 
         text = params[NotifyAdminGear.PARAM_MESSAGE]
         self._logger.info("Notify admin about {}".format(text))
 
         # Creates a new message and dispatch it
         message = self._admin_surface.forge_notification(text)
-        return self._admin_surface.send_message(message)
+        return GearExecutionResult.OK(self._admin_surface.send_message(message))
 
     def swap_surface_for_test(
         self,
