@@ -48,7 +48,7 @@ class NewsItemEntity(BaseEntity):
         return fields
 
     def from_dict(self, source_dict: dict) -> 'NewsItemEntity':
-        """Create the entity data from a dict
+        """Fill the entity data from a dict
         """
         if "url" in source_dict:
             self.url = source_dict["url"]

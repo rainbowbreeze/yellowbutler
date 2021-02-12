@@ -1,6 +1,7 @@
 """Test Firestore in Datastore more storage service
 """
 
+from typing import Any, Dict
 from unittest import TestCase
 
 import os
@@ -23,10 +24,10 @@ class DummyEntity(BaseEntity):
 
     @staticmethod
     def get_entity_name() -> str:
-        return __class__.__name__
+        return "DummyEntity"
 
-    def to_dict(self) -> dict:
-        fields = {}
+    def to_dict(self) -> Dict[str, Any]:
+        fields: Dict[str, Any] = {}
         if hasattr(self, "url"):
             fields["url"] = self.url
         if hasattr(self, "last_check"):
