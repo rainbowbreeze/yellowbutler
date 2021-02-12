@@ -22,6 +22,15 @@ class GearExecutionResult:
         # message won't be None in any case
         self._messages = messages if messages is not None else []
 
+    def has_messages(self) -> bool:
+        """Checks if there are messages
+
+        :returns: true if there is at least a message with a value
+        :rtype: bool
+        """
+
+        return len(self._messages) > 0
+
     def get_messages(self) -> List[str]:
         """Returns the messages associated to the execution
 
@@ -33,21 +42,11 @@ class GearExecutionResult:
 
         return self._messages
 
-    def has_messages(self) -> bool:
-        """Checks if there are messages
-
-        :returns: true if there is at least a message with a value
-        :rtype: bool
+    def get_plan_message(self) -> Optional[str]:
+        """Returns all the message contatenated as one single message
         """
 
-        return len(self._messages) > 0
-
-    def get_result(self) -> int:
-        """
-        :returns: the result code of the execution
-        :rtype: int
-        """
-        return self._result
+        return "\n".join(self._messages)
 
     def went_well(self) -> bool:
         """Return how the execution went
@@ -57,6 +56,13 @@ class GearExecutionResult:
         """
 
         return self.RESULT_OK == self._result
+
+    def get_result(self) -> int:
+        """
+        :returns: the result code of the execution
+        :rtype: int
+        """
+        return self._result
 
     @staticmethod
     def OK(single_message: str = None) -> "GearExecutionResult":

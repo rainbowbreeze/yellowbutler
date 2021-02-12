@@ -29,20 +29,29 @@ class TestYellowBot(TestCase):
             YellowBot(config_file="non_existing_file.json")
 
     def test_isAuthorized(self):
-        assert not self._yellowbot.is_client_authorized(None)
-        assert not self._yellowbot.is_client_authorized("Random key")
-        assert self._yellowbot.is_client_authorized("test_key_1")
-        assert self._yellowbot.is_client_authorized("test_key_2")
-        assert not self._yellowbot.is_client_authorized("test_key_3")
+        self.assertFalse(self._yellowbot.is_client_authorized(None))
+        self.assertFalse(self._yellowbot.is_client_authorized("Random key"))
+        self.assertTrue(self._yellowbot.is_client_authorized("test_key_1"))
+        self.assertTrue(self._yellowbot.is_client_authorized("test_key_2"))
+        self.assertFalse(self._yellowbot.is_client_authorized("test_key_3"))
 
     def test_processIntentWithEchoMessageGear(self):
-        assert "My message" == self._yellowbot.process_intent(
+        result = self._yellowbot.process_intent(
             GlobalBag.ECHO_MESSAGE_INTENT,
             {GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE:"My message"})
+        self.assertIsNotNone(result)
+        self.assertTrue(result.went_well())
+        self.assertTrue(result.has_messages())
+        messages = result.get_messages()
+        self.assertEqual(1, len(messages))
+        self.assertEqual("My message", messages[0])
 
-        assert "" == self._yellowbot.process_intent(
+        result = self._yellowbot.process_intent(
             GlobalBag.ECHO_MESSAGE_INTENT,
             {GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE: ""})
+        self.assertIsNotNone(result)
+        self.assertTrue(result.went_well())
+        self.assertFalse(result.has_messages())
 
     def test_receiveMessageForEchoMessageGear(self):
         message = SurfaceMessage(

@@ -21,6 +21,9 @@ class FakeInteractionSurface(BaseInteractionSurface):
         self.last_message = None
 
     def send_message(self, message):
+        """Store the message received, and returns a specific string
+        """
+
         self.last_message = message
         return self.RETURN_TEST
 

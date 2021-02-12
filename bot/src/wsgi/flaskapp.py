@@ -126,10 +126,15 @@ def process_intent():
     # Find the authorization key
     auth_key = request.headers.get("X-Authorization")
 
+    if not auth_key:
+        _logger.warning("Unauthorized access registered with no key provided")
+        abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+
+
     # None or invalid auth key
     if not yellowbot.is_client_authorized(auth_key):
-        _logger.warning("Unauthorized access registered with key %s", auth_key)
-        abort(401)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
+        _logger.warning("Unauthorized access registered with key {}".format(auth_key))
+        abort(403)  # As per https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors
 
     # Extract the intent from the request
     if not request.is_json:
@@ -161,12 +166,20 @@ def process_intent():
     _logger.info("Routing call for intent {}".format(intent))
     try:
         execution_result = yellowbot.process_intent(intent, params)  # Process the intent
-        #TODO check for return code
-        _logger.info(execution_result.get_messages())
-        return make_response(
-            jsonify(message=execution_result.get_messages()),
-            200
-        )
+        if execution_result.went_well():
+            _logger.debug("Gear call returned: {}".format(execution_result.get_messages()))
+            return make_response(
+                jsonify(message=execution_result.get_messages()),
+                200
+            )
+        else:
+            _logger.debug("Error in gear call: {}".format(execution_result.get_messages()))
+            return make_response(
+                jsonify(
+                    message=execution_result.get_plan_message(),
+                    errorcode=execution_result.get_result()),
+                400
+            )
     except Exception as e:
         # If something goes wrong, like missing parameters or errors in
         #  the gear process, flow falls here

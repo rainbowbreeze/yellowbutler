@@ -62,6 +62,11 @@ class BaseGear:
     ) -> GearExecutionResult:
         """Process the intent. Need to be implemented in every subclass
 
+        It is not expected this method raise execptions. If something bad
+         happens processing the intent, it should be managed internally to
+         this method, and the GearExecutionResult should containt the error
+         code and the details.
+
         :param intent: the specific intent to process
         :type intent: str
 
@@ -69,7 +74,7 @@ class BaseGear:
         :type params: dict
 
         :returns: a message with the result of the processing
-        :rtype: str
+        :rtype: GearExecutionResult
         """
 
         raise ValueError("Intent processing for gear {} not implemented".format(self._gear_name))

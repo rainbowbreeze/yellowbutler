@@ -220,7 +220,8 @@ class YellowBot:
 
         # And process it, if a gear has been found
         # The expectation is that each gear process its own errors, so
-        #  no errors bubble up at this level
+        #  no errors bubble up at this level. The gear can inform
+        #  the calling method with return codes in the returned object
         if gear is not None:
             # self._logger.debug("Found gear {}".format(gear.name()))
             return gear.process_intent(intent, params)

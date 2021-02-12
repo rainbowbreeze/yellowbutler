@@ -24,7 +24,7 @@ class TestSendMessageGear(TestCase):
         pass
 
     def test_process_intent(self):
-        assert self._test_surface.last_message is None
+        self.assertIsNone(self._test_surface.last_message)
 
         # TODO check the various missing parameters condition
 
@@ -40,7 +40,12 @@ class TestSendMessageGear(TestCase):
             }
         )
 
-        assert FakeInteractionSurface.RETURN_TEST == result
-        assert surface_id == self._test_surface.last_message.surface_id
-        assert channel_id == self._test_surface.last_message.channel_id
-        assert text == self._test_surface.last_message.text
+        self.assertIsNotNone(result)
+        self.assertTrue(result.went_well())
+        self.assertTrue(result.has_messages())
+        messages = result.get_messages()
+        self.assertEqual(1, len(messages))
+        self.assertEqual(FakeInteractionSurface.RETURN_TEST, messages[0])
+        self.assertEqual(surface_id, self._test_surface.last_message.surface_id)
+        self.assertEqual(channel_id, self._test_surface.last_message.channel_id)
+        self.assertEqual(text, self._test_surface.last_message.text)

@@ -48,6 +48,7 @@ Reference
 Resources:
 - Using PyTest: https://docs.pytest.org/en/latest/
 - http://pytest.readthedocs.io/en/latest/goodpractices.html
+- why using self.assertXXXX vs assert: https://stackoverflow.com/a/45947566
 
 from bot/src folder
 ```

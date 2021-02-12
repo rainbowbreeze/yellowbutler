@@ -38,8 +38,8 @@ class TestFlaskApp(TestCase):
 
     def test_rootUrl(self):
         response = self.app.get("/", follow_redirects=True)
-        assert 200 == response.status_code
-        assert b"YellowBot here, happy to serve at /yellowbot/api/v1.0 :)" in response.get_data()
+        self.assertEqual(200, response.status_code)
+        self.assertTrue(b"YellowBot here, happy to serve at /yellowbot/api/v1.0 :)" in response.get_data())
 
     def test_authorizationForIntent(self):
         # Injects new auth keys
@@ -57,7 +57,7 @@ class TestFlaskApp(TestCase):
             content_type="application/json", # Has to be specified
             follow_redirects=True
         )
-        assert 401 == response.status_code
+        self.assertEqual(401, response.status_code)
 
         # Not valid key passed in auth header
         response = self.app.post(
@@ -67,9 +67,9 @@ class TestFlaskApp(TestCase):
             content_type="application/json", # Has to be specified
             follow_redirects=True
         )
-        assert 401 == response.status_code
+        self.assertEqual(403, response.status_code)
 
-        # Valid key passed in auth header
+        # Valid key passed in auth header, but wrong intent
         response = self.app.post(
             "{}/intent".format(flaskapp.FLASK_BASE_API_ADDRESS),
             headers={"X-Authorization": "auth_for_tests_1"},
@@ -77,7 +77,8 @@ class TestFlaskApp(TestCase):
             content_type="application/json", # Has to be specified
             follow_redirects=True
         )
-        assert 200 == response.status_code
+        self.assertEqual(400, response.status_code)
+        self.assertEqual(b"{\"errorcode\":2,\"message\":\"No gear to process your intent\"}\n", response.data)
 
         # Valid key passed in auth header
         response = self.app.post(
@@ -87,7 +88,8 @@ class TestFlaskApp(TestCase):
             content_type="application/json", # Has to be specified
             follow_redirects=True
         )
-        assert 200 == response.status_code
+        self.assertEqual(400, response.status_code)
+        self.assertEqual(b"{\"errorcode\":2,\"message\":\"No gear to process your intent\"}\n", response.data)
 
     def test_authorizationForTelegram(self):
         # Injects new auth keys
@@ -137,7 +139,7 @@ class TestFlaskApp(TestCase):
             headers={"X-Authorization": "auth_for_tests_1"},
             follow_redirects=True
         )
-        assert 400 == response.status_code
+        self.assertEqual(400, response.status_code)
         assert "application/json" == response.mimetype
         # print(response.get_data(as_text=True))
         assert b"message" in response.get_data()
@@ -150,7 +152,7 @@ class TestFlaskApp(TestCase):
             content_type="application/json",
             follow_redirects=True
         )
-        assert 400 == response.status_code
+        self.assertEqual(400, response.status_code)
         assert "application/json" == response.mimetype
         assert "Invalid json body, cannot parse it" == json.loads(response.get_data())["message"]
 
@@ -164,7 +166,7 @@ class TestFlaskApp(TestCase):
             }),
             follow_redirects=True
         )
-        assert 400 == response.status_code
+        self.assertEqual(400, response.status_code)
         assert "application/json" == response.mimetype
         assert "Missing intent field in the request" == json.loads(response.get_data())["message"]
 
@@ -178,9 +180,10 @@ class TestFlaskApp(TestCase):
             }),
             follow_redirects=True
         )
-        assert 200 == response.status_code
-        assert "application/json" == response.mimetype
-        assert "No gear to process your intent" == json.loads(response.get_data())["message"]
+        self.assertEqual(400, response.status_code)
+        self.assertEqual("application/json", response.mimetype)
+        self.assertEqual("No gear to process your intent", json.loads(response.get_data())["message"])
+        self.assertEqual(2, json.loads(response.get_data())["errorcode"])
 
         # Good intent, but lack of mandatory parameters
         data = {
@@ -193,9 +196,10 @@ class TestFlaskApp(TestCase):
             content_type="application/json",
             follow_redirects=True
         )
-        assert 200 == response.status_code
-        assert "application/json" == response.mimetype
-        assert "Missing message parameter in the request" == json.loads(response.get_data())["message"]
+        self.assertEqual(400, response.status_code)
+        self.assertEqual("application/json", response.mimetype)
+        self.assertEqual("Missing message parameter in the request", json.loads(response.get_data())["message"])
+        self.assertEqual(2, json.loads(response.get_data())["errorcode"])
 
         # Good intent, but wrong parameters
         data = {
@@ -209,9 +213,10 @@ class TestFlaskApp(TestCase):
             content_type="application/json",
             follow_redirects=True
         )
-        assert 200 == response.status_code
-        assert "application/json" == response.mimetype
-        assert "Missing message parameter in the request" == json.loads(response.get_data())["message"]
+        self.assertEqual(400, response.status_code)
+        self.assertEqual("application/json", response.mimetype)
+        self.assertEqual("Missing message parameter in the request", json.loads(response.get_data())["message"])
+        self.assertEqual(2, json.loads(response.get_data())["errorcode"])
 
         # Finally, Good intent and good parameters
         data = {
@@ -225,6 +230,7 @@ class TestFlaskApp(TestCase):
             content_type="application/json",
             follow_redirects=True
         )
-        assert 200 == response.status_code
-        assert "application/json" == response.mimetype
-        assert "Good morning" == json.loads(response.get_data())["message"]
+        self.assertEqual(200, response.status_code)
+        self.assertEqual("application/json", response.mimetype)
+        self.assertEqual(['Good morning'], json.loads(response.get_data())["message"])
+

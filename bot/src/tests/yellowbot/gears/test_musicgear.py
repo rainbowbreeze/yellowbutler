@@ -23,4 +23,9 @@ class TestMusicGear(TestCase):
             }
         )
 
-        assert "Title1 by Author1 has been added" == result
+        self.assertIsNotNone(result)
+        self.assertTrue(result.went_well())
+        self.assertTrue(result.has_messages())
+        messages = result.get_messages()
+        self.assertEqual(1, len(messages))
+        self.assertEqual("Title1 by Author1 has been added", messages[0])

@@ -60,6 +60,12 @@ class TelegramSurface(BaseInteractionSurface):
             self._set_webhook(webhook_url)
 
     def send_message(self, message: SurfaceMessage) -> Optional[str]:
+        """Send a message to Telegram
+
+        :returns: the message_id returned by Telegram once the message is sent
+        :rtype: str
+        """
+
         # Do not send empty message or message while testing
         if self._test_mode:
             return "Message not really sent in test mode"

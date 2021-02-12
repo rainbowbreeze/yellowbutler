@@ -25,7 +25,7 @@ class TestNotifyAdminGear(TestCase):
         pass
 
     def test_process_intent(self):
-        assert self._test_surface.last_message is None
+        self.assertIsNone(self._test_surface.last_message)
 
         # TODO check the various missing parameters condition
 
@@ -37,7 +37,13 @@ class TestNotifyAdminGear(TestCase):
             }
         )
 
-        assert FakeNotifyAdminInteractionSurface.RETURN_TEST == result
-        assert GlobalBag.SURFACE_NOTIFY_ADMIN == self._test_surface.last_message.surface_id
-        assert "Notify_Test_Channel" == self._test_surface.last_message.channel_id
-        assert text == self._test_surface.last_message.text
+        self.assertIsNotNone(result)
+        self.assertTrue(result.went_well())
+        self.assertTrue(result.has_messages())
+        messages = result.get_messages()
+        self.assertEqual(1, len(messages))
+        self.assertEqual(FakeNotifyAdminInteractionSurface.RETURN_TEST, messages[0])
+        self.assertEqual(GlobalBag.SURFACE_NOTIFY_ADMIN, self._test_surface.last_message.surface_id)
+        self.assertEqual("Notify_Test_Channel", self._test_surface.last_message.channel_id)
+        self.assertEqual(text, self._test_surface.last_message.text)
+
