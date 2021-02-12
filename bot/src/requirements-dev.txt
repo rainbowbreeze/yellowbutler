@@ -6,5 +6,6 @@ pytest
 # Mock Request calls
 responses
 
-# ---
+# Optional Static Typing for Python
+mypy
 

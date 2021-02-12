@@ -52,7 +52,7 @@ Resources:
 
 from bot/src folder
 ```
-pip install -r requirements-tests.txt
+pip install -r requirements-dev.txt
 pytest
 ```
 
