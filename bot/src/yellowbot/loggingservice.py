@@ -8,6 +8,7 @@ Otherwise, use
   self._logger.exception("Error process the request {}".format(err))
 This line will report a custom message, the exception error text, and
  a stracktrace
+exception method should only be called from an exception handler
 
 These three produces the same output, as exception method adds Exception info
 to the logging message, and the exception error message

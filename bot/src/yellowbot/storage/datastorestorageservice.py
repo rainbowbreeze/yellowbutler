@@ -124,6 +124,10 @@ class DatastoreStorageService(BaseStorageService):
             raise ValueError("Param entity_class has to be subclass of BaseEntity")
 
         kind = entity_class.get_entity_name()
+        self._logger.debug("Get entity of kind {} and with id = {}".format(
+            kind,
+            entity_id
+        ))
         key = self._client.key(kind, entity_id)
         datastore_result = self._client.get(key)
 
@@ -171,6 +175,12 @@ class DatastoreStorageService(BaseStorageService):
             raise ValueError("Param entity_class has to be subclass of BaseEntity")
 
         kind = entity_class.get_entity_name()
+        self._logger.debug("Searching for entity of kind {} with {} {} ##{}## (## excluded)".format(
+            kind,
+            property_name,
+            operator,
+            property_value
+        ))
         query = self._client.query(kind=kind)
         query.add_filter(property_name, operator, property_value)
         datastore_results = list(query.fetch())
@@ -196,8 +206,8 @@ class DatastoreStorageService(BaseStorageService):
         if not issubclass(entity_class, BaseEntity):
             raise ValueError("Param entity_class has to be subclass of BaseEntity")
 
-        self._logger.info("Deleting all the entities of kind {}".format(entity_class.get_entity_name()))
         kind = entity_class.get_entity_name()
+        self._logger.info("Deleting all the entities of kind {}".format(kind))
         query = self._client.query(kind=kind)
         query.keys_only()
 
@@ -221,6 +231,10 @@ class DatastoreStorageService(BaseStorageService):
             raise ValueError("Param entity_class has to be subclass of BaseEntity")
 
         kind = entity_class.get_entity_name()
+        self._logger.debug("Delete entity of kind {} and with id = {}".format(
+            kind,
+            entity_id
+        ))
         key = self._client.key(kind, entity_id)
         self._client.delete(key)
 
