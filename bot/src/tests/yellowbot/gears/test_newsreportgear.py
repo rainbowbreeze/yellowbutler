@@ -12,6 +12,7 @@ import arrow
 from yellowbot.gears.newsreportergear import NewsReportGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.storage.basestorageservice import BaseStorageService
+from yellowbot.storage.newsitementity import NewsItemEntity
 
 class TestNewsReportGear(TestCase):
     TESTDATA_YOUTUBE_CHANNEL_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_youtube_channel.txt")
@@ -87,7 +88,7 @@ class TestNewsReportGear(TestCase):
         self.assertEqual('2021-01-12T19:13:35Z', item.published)
 
     @responses.activate
-    def test_analize_youtube_channel(self):
+    def test_youtube_analize_channel(self):
         testdata1 = open(self.TESTDATA_YOUTUBE_CHANNEL_FILENAME).read()
         testdata2 = open(self.TESTDATA_YOUTUBE_PLAYLIST_FILENAME).read()
         responses.add(
@@ -105,26 +106,27 @@ class TestNewsReportGear(TestCase):
             content_type='application/json'
         )
 
-        new_videos = self._gear._analize_youtube_channel(
-            "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
+        news_item = NewsItemEntity()
+        news_item.url = "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA"
+        new_videos = self._gear._youtube_analize_channel(
+            news_item,
             arrow.utcnow()
         )
         # There are no videos for current data, as all the mock data refers to past vides
         self.assertEqual(0, len(new_videos))
 
-        new_videos = self._gear._analize_youtube_channel(
-            "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
+        new_videos = self._gear._youtube_analize_channel(
+            news_item,
             arrow.get("2021-02-02T00:15:04Z")
         )
         self.assertEqual(1, len(new_videos))
         self.assertEqual("New video published: The 7 Types of VR Users 2 - https://www.youtube.com/watch?v=WFeny7l1Ev4", new_videos[0])
 
-        new_videos = self._gear._analize_youtube_channel(
-            "https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA",
+        new_videos = self._gear._youtube_analize_channel(
+            news_item,
             arrow.get("2021-01-26T10:00:10Z")
         )
         self.assertEqual(2, len(new_videos))
         self.assertEqual("New video published: The 7 Types of VR Users 2 - https://www.youtube.com/watch?v=WFeny7l1Ev4", new_videos[0])
         self.assertEqual("New video published: Valve's next VR projects are SCARILY similar to Sword Art Online - https://www.youtube.com/watch?v=veVx0AuhHFw", new_videos[1])
 
-        #TODO Test id last_check is saved over different calls

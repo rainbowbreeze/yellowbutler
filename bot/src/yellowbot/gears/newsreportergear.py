@@ -38,7 +38,7 @@ class NewsReportGear(BaseGear):
     def __init__(
         self,
         youtube_api_key: str,
-        newssources_urls: list,
+        newssources_urls: List[str],
         storage_service: BSS
     ) -> None:
         """Constructor
@@ -73,49 +73,102 @@ class NewsReportGear(BaseGear):
             silent = params[NewsReportGear.PARAM_SILENT]
 
         self._logger.info("Start processing new news to report")
-        news_list = self._find_daily_news(silent)
+        news_list = self._find_latest_news(silent)
         return GearExecutionResult(GearExecutionResult.RESULT_OK, news_list)
 
-    def _find_daily_news(self, silent: bool) -> Optional[List[str]]:
+    def _find_latest_news(self, silent: bool) -> Optional[List[str]]:
         """Analyze all the different news sources, notifying in case new contents are found
 
-        :param silent: if True, doesn't produce any value when new content is not found
+        :param silent: if True, doesn't produce any message when new content is not found
         :type silent: bool
 
-        :returns: a message with the result of the processing
-        :rtype: str
+        :returns: a list of messages with the result of the processing
+        :rtype: list[str]
         """
 
-        # use when last check date is not available for a news source
-        #  Default is 5 days in the past
-        fallback_check_date: Arrow = arrow.utcnow().shift(days=-6) 
-
-        messages = []
+        # Contains only the newer news that will be returned
+        final_news_messages = []
         for newssource_url in self._newssources_urls:
             self._logger.info("Checking for news on {}".format(newssource_url))
 
-            #TODO distinguish between different news sources
-            messages.extend(self._analize_youtube_channel(newssource_url, fallback_check_date))
+            # Search in the storage if it has already information for the given
+            #  channel, included the playlist id 
+            news_items = None
+            try:
+                news_items = self._storage.get_by_property(NewsItemEntity, "url", "=", newssource_url)
+            except BaseException as err:
+                self._logger.exception("Error while reading the entity from the storage: {}".format(err))
 
-        if 0 == len(messages) and not silent:
-            messages.append("No recent news available")
+            if news_items is None or 0 == len(news_items):
+                # Creates the item
+                self._logger.info("This is the first time the source {} is processed for updates".format(newssource_url))
+                news_item = NewsItemEntity()
+                news_item.url = newssource_url
+            else:
+                news_item = news_items[0]
+
+            # Find last check date
+            if hasattr(news_item, "last_check"):
+                self._logger.debug("Found last_check in the stored entity: {}".format(news_item.last_check))
+                last_check_date: Arrow = arrow.get(news_item.last_check)
+            else:
+                self._logger.debug("Stored entity has no last_check property")
+                # use when last check date is not available for a news source
+                #  Default is 6 days in the past
+                last_check_date = Arrow = arrow.utcnow().shift(days=-6) 
+
+            # Examines the news url to understand the analyzing process required
+            new_news_messages: List[str] = None
+            if newssource_url.lower().startswith("https://www.youtube.com/channel/"):
+                # A YouTube channel news source
+                new_news_messages = self._youtube_analize_channel(news_item, last_check_date)
+            
+            elif "/feed/" in newssource_url.lower() or "/rss/" in newssource_url.lower():
+                new_news_messages = self._rss_analize_channel(news_item.url, last_check_date)
+
+            else:
+                self._logger.warning("Unsupported news source {}".format(newssource_url))
+                new_news_messages = []
+                new_news_messages.append("I don't know how to process the source {}".format(newssource_url))
+
+            # Adds newest news messages to the ones from other sources
+            final_news_messages.extend(new_news_messages)
+
+            # Save to the storage the item
+            try:
+                # Convert Arrow object back to datetime
+                news_item.last_check = arrow.utcnow().datetime
+                self._logger.debug("Updating the news entity with new date {}".format(news_item.last_check))
+                self._storage.put(news_item)
+            except BaseException as err:
+                self._logger.exception("Error while saving the entity to the storage: {}".format(err))
+
+
+        if 0 == len(final_news_messages) and not silent:
+            final_news_messages.append("No recent news available")
         
-        return messages
+        return final_news_messages
 
-    def _analize_youtube_channel(
+    def _youtube_analize_channel(
         self,
-        channel_url: str,
-        fallback_check_date: Arrow
+        news_item: NewsItemEntity,
+        last_check_date: Arrow
     ) -> List[str]:
-        """Analyze a YouTube channel searching for new videos
+        """Analyze a news source of YouTube channel type, searching for
+         videos published after a certain date
 
-        :param channel_url: the full url of the Youtube channel to analyze. E.g.: https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA
-        :type channel_url: str
+        Example of a channel is https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA
 
-        :param fallback_check_date: date to use for checking, in case no previous check was performed on the news source
-        :type fallback_check_date: Arrow
+        :param news_item: the item containing information on the news source
+         to analyze
+        :type news_item: NewsItemEntity
 
-        :returns: a list of str, each one containing a new content (video) found on the channel. It could also potentially contains an error message
+        :param last_check_date: date to use for checking
+        :type last_check_date: Arrow
+
+        :returns: a list of str, each one containing a new content (video)
+         found on the channel. It could also potentially contains an error
+         message
         :rtype: list[str]
         """
 
@@ -128,24 +181,8 @@ class NewsReportGear(BaseGear):
         #  the channel, cache it, and then search for new videos inside
         #  this playlist
 
-        # Search in the database if it has already information for the given
-        #  channel, included the playlist id 
-        news_items = None
-        self._logger.debug("Reading from the db entity for channel_url {}".format(channel_url))
-        try:
-            news_items = self._storage.get_by_property(NewsItemEntity, "url", "=", channel_url)
-        except BaseException as err:
-            self._logger.exception("Error while reading the entity from the storage: {}".format(err))
-
-        if news_items is None or 0 == len(news_items):
-            # Creates the item
-            self._logger.info("This is the first time the source {} is processed for updates".format(channel_url))
-            news_item = NewsItemEntity()
-            news_item.url = channel_url
-        else:
-            news_item = news_items[0]
-
-        video_update_messages: List[str] = []  # Initialize the return var
+        channel_url = news_item.url
+        new_video_messages: List[str] = []  # Initialize the return var
 
         # param1 may have the special upload playlist id. otherwise obtain it from a YouTube API call
         upload_playlist_id = None
@@ -159,8 +196,8 @@ class NewsReportGear(BaseGear):
                 upload_playlist_id = self._youtube_find_upload_playlist_from_channel(self._youtube_api_key, channel_id)
             except BaseException as err:
                 # Forge specific messagge to return to the caller
-                video_update_messages.append("Error getting information on YouTube channel {}".format(channel_id))
-                return video_update_messages
+                new_video_messages.append("Error getting information on YouTube channel {}".format(channel_id))
+                return new_video_messages
             news_item.param1 = upload_playlist_id
         
         # Search latest videos in the upload playlist
@@ -168,19 +205,11 @@ class NewsReportGear(BaseGear):
             all_videos = self._youtube_find_new_videos_in_a_playlist(self._youtube_api_key, upload_playlist_id)
         except BaseException as err:
                 # Forge specific messagge to return to the caller
-                video_update_messages.append("Error getting information on playlist {} for channel {}".format(
+                new_video_messages.append("Error getting information on playlist {} for channel {}".format(
                     upload_playlist_id,
                     channel_url)
                 )
-                return video_update_messages
-
-        # Find in the db the last check date
-        if hasattr(news_item, "last_check"):
-            self._logger.debug("Found last_check in the stored entity: {}".format(news_item.last_check))
-            last_check_date: Arrow = arrow.get(news_item.last_check)
-        else:
-            self._logger.debug("Stored entity has no last_check property")
-            last_check_date = fallback_check_date
+                return new_video_messages
 
         self._logger.debug("Comparing published date of {} videos agains {}".format(
             len(all_videos),
@@ -188,37 +217,22 @@ class NewsReportGear(BaseGear):
         ))
 
         # Discard all the videos older that a certain date
-        newer_videos = []
         for video in all_videos:
             # Get date from the video
             published_date = arrow.get(video.published)
-            if published_date > last_check_date:
-                newer_videos.append(video)
+            if published_date >= last_check_date:
+                new_video_messages.append("New video published: {} - {}". format(
+                    video.title,
+                    video.url
+                ))
+
         self._logger.info("Found {} videos, out of {}, newer than {}".format(
-            len(newer_videos),
+            len(new_video_messages),
             len(all_videos),
             last_check_date
         ))
 
-        # Store the values
-        try:
-            # Convert Arrow object back to datetime
-            news_item.last_check = arrow.utcnow().datetime
-            self._logger.debug("Updating the news entity with new date {}".format(news_item.last_check))
-            self._storage.put(news_item)
-        except BaseException as err:
-            self._logger.exception("Error while saving the entity to the storage: {}".format(err))
-
-        # Create alerts for the new videos
-        for video in newer_videos:
-            message = 'New video published: {} - {}'.format(
-                video.title,
-                video.url
-            )
-            video_update_messages.append(message)
-
-        return video_update_messages
-
+        return new_video_messages
 
     def _youtube_extract_channel_id_from_url(self, channel_url: str) -> str:
         """Extract the channel id from the channel URL
@@ -349,3 +363,94 @@ class NewsReportGear(BaseGear):
             playlist_id
         ))
         return latest_videos
+
+    def _rss_analize_channel(
+        self,
+        feed_url: str,
+        last_check_date: Arrow
+    ) -> List[str]:
+        """Analyze a RSS feed, searching for articles published after a certain date
+
+        Example of a channel is https://developer.oculus.com/blog/rss/
+
+        :param feed_url: the RSS feed URL to analyze
+        :type feed_url: str
+
+        :param last_check_date: date to use for checking, in case no
+         previous check was performed on the news source
+        :type last_check_date: Arrow
+
+        :returns: a list of str, each one containing a new content (article)
+         found on the channel. It could also potentially contains an error
+         message
+        :rtype: list[str]
+        """
+        
+        import feedparser
+
+        # Initialize the return variable
+        new_feeds_messages: List[str] = []  # Initialize the return var
+
+        rss_content = None
+        try:
+            req = requests.get(feed_url)
+            if not req.ok:
+                req.raise_for_status()
+            rss_content = req.text
+        except BaseException as err:
+            self._logger.exception("Error while getting RSS feed information from {}: {}".format(
+                feed_url,
+                err
+            ))
+            # Forge specific messagge to return to the caller
+            new_feeds_messages.append("Error while getting RSS feed information from {}".format(feed_url))
+            return new_feeds_messages
+
+        if not rss_content:
+            # Forge specific messagge to return to the caller
+            self._logger.info("Empty RSS feed at {}".format(feed_url))
+            new_feeds_messages.append("It seems the RSS feed at {} is empty".format(feed_url))
+            return new_feeds_messages
+
+        try:
+            d = feedparser.parse(rss_content)
+        except BaseException as err:
+            self._logger.exception("Error while parsing RSS feed information from {}: {}".format(
+                feed_url,
+                err
+            ))
+            new_feeds_messages.append("Error while parsing the RSS feed at {}".format(feed_url))
+            return new_feeds_messages
+
+        self._logger.debug("Comparing published date of {} RSS entities agains {}".format(
+            len(d.entries),
+            last_check_date
+        ))
+
+        try:
+            # Discard all the videos older that a certain date
+            for rss_entry in d.entries:
+                # There is also the updated field, in addition to - rss_entry.published
+                published_date = arrow.get(rss_entry.published_parsed)
+                if published_date >= last_check_date:
+                    new_feeds_messages.append("New article published: {} - {}". format(
+                        rss_entry.title,
+                        rss_entry.lint
+                    ))
+
+            self._logger.info("Found {} articles, out of {}, newer than {}".format(
+                len(new_feeds_messages),
+                len(d.entries),
+                last_check_date
+            ))
+        except BaseException as err:
+            self._logger.exception("Error while reading parsed RSS item from {}: {}".format(
+                feed_url,
+                err
+            ))
+            new_feeds_messages.append("Error while reading parsed RSS item at {}".format(feed_url))
+            return new_feeds_messages
+
+        return new_feeds_messages
+
+
