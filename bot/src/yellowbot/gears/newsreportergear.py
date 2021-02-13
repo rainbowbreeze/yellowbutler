@@ -435,7 +435,7 @@ class NewsReportGear(BaseGear):
                 if published_date >= last_check_date:
                     new_feeds_messages.append("New article published: {} - {}". format(
                         rss_entry.title,
-                        rss_entry.lint
+                        rss_entry.link
                     ))
 
             self._logger.info("Found {} articles, out of {}, newer than {}".format(
