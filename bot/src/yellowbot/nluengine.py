@@ -31,12 +31,6 @@ class NluEngine:
         intent = None
         params: Dict[str, Union[str, bool]] = {}  # A dict, not a set (unordered collection of unique items, use set() to initialize)
 
-        # Check for EasyNido intent
-        headers = ["asilo", "/asilo"]
-        if any(message.lower().startswith(header) for header in headers):
-            intent = GlobalBag.EASYNIDO_INTENT_REPORT
-            return intent, params
-
         # Check for weather intent
         headers = ["weather", "meteo", "tempo"]
         for header in headers:
@@ -95,12 +89,6 @@ class NluEngine:
                 intent = GlobalBag.ECHO_MESSAGE_INTENT
                 params[GlobalBag.ECHO_MESSAGE_PARAM_MESSAGE] = message[len(header):].strip()
                 return intent, params
-
-        # Checks for CommitStrip intent
-        headers = ["commitstrip", "/commitstrip"]
-        if any(message.lower().startswith(header) for header in headers):
-            intent = GlobalBag.COMMITSTRIP_INTENT
-            return intent, params
 
         # Checks for CheckForNews intent
         headers = ["checkfornews", "/checkfornews"]

@@ -13,9 +13,6 @@ class GlobalBag:
     Bag for global static vars
     """
 
-    # EasyNido gear
-    EASYNIDO_INTENT_REPORT: ClassVar[str] = "easynido_report"
-
     # Echo message gear
     ECHO_MESSAGE_INTENT: ClassVar[str] = "echo_message"
     ECHO_MESSAGE_PARAM_MESSAGE: ClassVar[str] = "message"
