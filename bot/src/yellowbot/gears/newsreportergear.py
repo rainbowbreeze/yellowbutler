@@ -74,6 +74,7 @@ class NewsReportGear(BaseGear):
 
         self._logger.info("Start processing new news to report")
         news_list = self._find_latest_news(silent)
+        self._logger.info("Finished processing new news to report")
         return GearExecutionResult(GearExecutionResult.RESULT_OK, news_list)
 
     def _find_latest_news(self, silent: bool) -> Optional[List[str]]:
@@ -118,31 +119,35 @@ class NewsReportGear(BaseGear):
                 last_check_date = Arrow = arrow.utcnow().shift(days=-6) 
 
             # Examines the news url to understand the analyzing process required
+            add_to_storage = True
             new_news_messages: List[str] = None
             if newssource_url.lower().startswith("https://www.youtube.com/channel/"):
                 # A YouTube channel news source
                 new_news_messages = self._youtube_analize_channel(news_item, last_check_date)
             
-            elif "/feed/" in newssource_url.lower() or "/rss/" in newssource_url.lower():
+            elif "/feed/" in newssource_url.lower() or "/rss/" in newssource_url.lower() or "/atom.xml" in newssource_url.lower():
                 new_news_messages = self._rss_analize_channel(news_item.url, last_check_date)
 
             else:
                 self._logger.warning("Unsupported news source {}".format(newssource_url))
                 new_news_messages = []
                 new_news_messages.append("I don't know how to process the source {}".format(newssource_url))
+                add_to_storage = False
 
             # Adds newest news messages to the ones from other sources
             final_news_messages.extend(new_news_messages)
 
-            # Save to the storage the item
-            try:
-                # Convert Arrow object back to datetime
-                news_item.last_check = arrow.utcnow().datetime
-                self._logger.debug("Updating the news entity with new date {}".format(news_item.last_check))
-                self._storage.put(news_item)
-            except BaseException as err:
-                self._logger.exception("Error while saving the entity to the storage: {}".format(err))
-
+            if add_to_storage:
+                # Save to the storage the item
+                try:
+                    # Convert Arrow object back to datetime
+                    news_item.last_check = arrow.utcnow().datetime
+                    self._logger.debug("Updating the news entity with new date {}".format(news_item.last_check))
+                    self._storage.put(news_item)
+                except BaseException as err:
+                    self._logger.exception("Error while saving the entity to the storage: {}".format(err))
+            else:
+                self._logger.debug("Skipping saving news item {} to storage".format(newssource_url))
 
         if 0 == len(final_news_messages) and not silent:
             final_news_messages.append("No recent news available")

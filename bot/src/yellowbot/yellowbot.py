@@ -317,7 +317,10 @@ class YellowBot:
         for output_message in messages:
             # Skip empty messages
             if not output_message:
-                self._logger.info("Empty message") #TODO remove the line
+                self._logger.debug("Trying to send an empty message to surface_id {} and channel_id {}".format(
+                    surface_id,
+                    channel_id
+                ))
                 continue
 
             # It could happen that the main intent is process, but the following
@@ -337,7 +340,10 @@ class YellowBot:
                     }
                 )
             except BaseException as err:
-                self._logger.exception("Unexpected error in sending the intent result message back to the surface: {}".format(err))
+                self._logger.exception("Unexpected error in sending the message back to the surface. Message: {} - Error: {}".format(
+                    output_message,
+                    err,
+                ))
                 # Tries to communicate back to the surface that it was an error
                 self.process_intent(
                     GlobalBag.SEND_MESSAGE_INTENT,
