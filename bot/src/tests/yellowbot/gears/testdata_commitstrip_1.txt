@@ -3,124 +3,123 @@
 		<channel>
 		<title>CommitStrip</title>
         <description>The blog relating the daily life of web agency developers</description>
-        <link>http://www.commitstrip.com</link>
-		<lastBuildDate>Tue, 14 Jan 2020 19:03:56 +0000</lastBuildDate>
+        <link>https://www.commitstrip.com</link>
+		<lastBuildDate>Wed, 03 Feb 2021 18:08:57 +0000</lastBuildDate>
 					<item>
-							<title><![CDATA[Other people’s code]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2020/01/14/other-peoples-code/]]></link>
-							<pubDate>Tue, 14 Jan 2020 20:03:56 +0000</pubDate>
+							<title><![CDATA[A theory about PHP]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2021/02/03/a-theory-about-php/]]></link>
+							<pubDate>Wed, 03 Feb 2021 19:07:41 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20820</dc:identifier>
-							<dc:modified>2020-01-14 20:03:56</dc:modified>
-							<dc:created unix="1579032236">2020-01-14 20:03:56</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2020/01/14/other-peoples-code/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/01/Strip-Paywall-650-finalenglish.jpg" alt="" width="650" height="607" class="alignnone size-full wp-image-20822" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2020/01/HeadlineImageTemplate-Récupéré-1.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2020/01/HeadlineImageTemplate-Récupéré-1.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21070</dc:identifier>
+							<dc:modified>2021-02-03 19:08:57</dc:modified>
+							<dc:created unix="1612379261">2021-02-03 19:07:41</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2021/02/03/a-theory-about-php/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2021/02/Stripo-Cest-lhistoire-de-PHP-et-React-800-finalenglish.jpg" alt="" width="800" height="1346" class="alignnone size-full wp-image-21072" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2021/02/HeadlineImageTemplate-.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2021/02/HeadlineImageTemplate-.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[Unintentional framework]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2020/01/08/unintentional-framework/]]></link>
-							<pubDate>Wed, 08 Jan 2020 18:02:27 +0000</pubDate>
+							<title><![CDATA[The best bet for 2030]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/12/01/the-best-bet-for-2030/]]></link>
+							<pubDate>Tue, 01 Dec 2020 16:11:02 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20814</dc:identifier>
-							<dc:modified>2020-01-08 18:02:27</dc:modified>
-							<dc:created unix="1578506547">2020-01-08 18:02:27</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2020/01/08/unintentional-framework/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/01/Strip-Framework-malgré-soi-650-finalenglish.jpg" alt="" width="650" height="616" class="alignnone size-full wp-image-20816" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2020/01/HeadlineImageTemplate-Récupéré.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2020/01/HeadlineImageTemplate-Récupéré.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21058</dc:identifier>
+							<dc:modified>2020-12-02 09:16:02</dc:modified>
+							<dc:created unix="1606839062">2020-12-01 16:11:02</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/12/01/the-best-bet-for-2030/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/12/Strip-Top-langage-web-650-finalenglish.jpg" alt="" width="650" height="644" class="alignnone size-full wp-image-21060" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/12/HeadlineImageTemplate-.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/12/HeadlineImageTemplate-.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[Merry Christmas 2019 !]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2019/12/25/merry-christmas-2019/]]></link>
-							<pubDate>Wed, 25 Dec 2019 21:48:36 +0000</pubDate>
+							<title><![CDATA[Weird bots]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/10/21/weird-bots/]]></link>
+							<pubDate>Wed, 21 Oct 2020 14:42:29 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20808</dc:identifier>
-							<dc:modified>2019-12-25 21:49:10</dc:modified>
-							<dc:created unix="1577310516">2019-12-25 21:48:36</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2019/12/25/merry-christmas-2019/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2019/12/Strip-De-Noel-de-2019-650-finalenglish.jpg" alt="Christmas 2019" width="650" height="1384" class="alignnone size-full wp-image-20809" />
-]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2019/12/HeadlineImageTemplate2.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2019/12/HeadlineImageTemplate2.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21052</dc:identifier>
+							<dc:modified>2020-10-21 14:42:29</dc:modified>
+							<dc:created unix="1603291349">2020-10-21 14:42:29</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/10/21/weird-bots/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/10/Strip-Drole-de-bot-650-finalenglish.jpg" alt="" width="650" height="613" class="alignnone size-full wp-image-21053" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/10/HeadlineImageTemplate-1-2.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/10/HeadlineImageTemplate-1-2.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[Who’s interested?]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2019/11/15/whos-interested/]]></link>
-							<pubDate>Fri, 15 Nov 2019 14:36:58 +0000</pubDate>
+							<title><![CDATA[The ‘no-code’ dream&#8230;]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/10/07/the-no-code-dream/]]></link>
+							<pubDate>Wed, 07 Oct 2020 15:29:28 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20801</dc:identifier>
-							<dc:modified>2019-11-15 14:36:58</dc:modified>
-							<dc:created unix="1573828618">2019-11-15 14:36:58</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2019/11/15/whos-interested/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2019/11/Strip-Raconter-son-expérience-tech-650-finalenglish.jpg" alt="" width="650" height="594" class="alignnone size-full wp-image-20802" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2019/11/HeadlineImageTemplate-Conflit.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2019/11/HeadlineImageTemplate-Conflit.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21043</dc:identifier>
+							<dc:modified>2020-10-07 18:37:27</dc:modified>
+							<dc:created unix="1602084568">2020-10-07 15:29:28</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/10/07/the-no-code-dream/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/10/Strip-PM-et-le-Nocode650-finalenglish.jpg" alt="" width="650" height="882" class="alignnone size-full wp-image-21045" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/10/HeadlineImageTemplate-1-1.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/10/HeadlineImageTemplate-1-1.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[Python, What Else ?]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2019/10/29/python-what-else/]]></link>
-							<pubDate>Tue, 29 Oct 2019 19:14:06 +0000</pubDate>
+							<title><![CDATA[Another day, another daily]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/10/01/daily-meeting/]]></link>
+							<pubDate>Thu, 01 Oct 2020 11:53:45 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20783</dc:identifier>
-							<dc:modified>2019-10-30 08:15:36</dc:modified>
-							<dc:created unix="1572376446">2019-10-29 19:14:06</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2019/10/29/python-what-else/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2019/10/Strip-2019-lannée-du-Python-650-finalenglishLOGO.jpg" alt="" width="650" height="900" class="alignnone size-full wp-image-20785" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2019/10/HeadlineImageTemplate-Conflit-2.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2019/10/HeadlineImageTemplate-Conflit-2.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21036</dc:identifier>
+							<dc:modified>2020-10-01 15:14:50</dc:modified>
+							<dc:created unix="1601553225">2020-10-01 11:53:45</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/10/01/daily-meeting/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/10/Strip-Daily-meeting-650-finalenglish.jpg" alt="" width="650" height="618" class="alignnone size-full wp-image-21038" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/10/HeadlineImageTemplate-.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/10/HeadlineImageTemplate-.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[Everybody loves you]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2019/10/21/everybody-loves-you/]]></link>
-							<pubDate>Mon, 21 Oct 2019 16:29:27 +0000</pubDate>
+							<title><![CDATA[Not the same]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/09/24/not-the-same/]]></link>
+							<pubDate>Thu, 24 Sep 2020 09:34:18 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20773</dc:identifier>
-							<dc:modified>2019-10-21 16:31:41</dc:modified>
-							<dc:created unix="1571675367">2019-10-21 16:29:27</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2019/10/21/everybody-loves-you/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2019/10/Strip-Dev-Drupal-déconsidéré-650-finalenglish.jpg" alt="" width="650" height="604" class="alignnone size-full wp-image-20775" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2019/10/HeadlineImageTemplate-Conflit-1.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2019/10/HeadlineImageTemplate-Conflit-1.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21031</dc:identifier>
+							<dc:modified>2020-09-24 09:34:18</dc:modified>
+							<dc:created unix="1600940058">2020-09-24 09:34:18</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/09/24/not-the-same/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/09/Strip-Réduis-tes-ko-650-finalenglish.jpg" alt="" width="650" height="644" class="alignnone size-full wp-image-21033" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/09/HeadlineImageTemplate-1-2.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/09/HeadlineImageTemplate-1-2.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[Discount]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2019/10/04/discount/]]></link>
-							<pubDate>Fri, 04 Oct 2019 17:36:14 +0000</pubDate>
+							<title><![CDATA[The cloud. It’s… expensive.]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/09/16/the-cloud-its-expensive/]]></link>
+							<pubDate>Wed, 16 Sep 2020 16:04:45 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20763</dc:identifier>
-							<dc:modified>2019-10-04 17:49:34</dc:modified>
-							<dc:created unix="1570210574">2019-10-04 17:36:14</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2019/10/04/discount/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2019/10/Strip-La-ristourne-bidon-650-finalenglishV2.jpg" alt="" width="650" height="599" class="alignnone size-full wp-image-20770" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2019/10/HeadlineImageTemplate-Conflit.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2019/10/HeadlineImageTemplate-Conflit.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21022</dc:identifier>
+							<dc:modified>2020-09-17 07:33:28</dc:modified>
+							<dc:created unix="1600272285">2020-09-16 16:04:45</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/09/16/the-cloud-its-expensive/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/09/Strip-Devis-Cloud-650-finalenglishv2.jpg" alt="" width="650" height="644" class="alignnone size-full wp-image-21027" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/09/HeadlineImageTemplate-1-1.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/09/HeadlineImageTemplate-1-1.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[What’s going on with all these divs?]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2019/09/20/whats-going-on-with-all-these-divs/]]></link>
-							<pubDate>Fri, 20 Sep 2019 17:55:43 +0000</pubDate>
+							<title><![CDATA[Red handed]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/09/11/red-handed/]]></link>
+							<pubDate>Fri, 11 Sep 2020 15:35:03 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20757</dc:identifier>
-							<dc:modified>2019-09-20 17:55:43</dc:modified>
-							<dc:created unix="1569002143">2019-09-20 17:55:43</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2019/09/20/whats-going-on-with-all-these-divs/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2019/09/Strip-Un-beau-Json-650-finalenglish.jpg" alt="" width="650" height="597" class="alignnone size-full wp-image-20759" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2019/09/HeadlineImageTemplate-Conflit-5.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2019/09/HeadlineImageTemplate-Conflit-5.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21015</dc:identifier>
+							<dc:modified>2020-09-14 09:03:45</dc:modified>
+							<dc:created unix="1599838503">2020-09-11 15:35:03</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/09/11/red-handed/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/09/Strip-Incognito-pour-Javascript-650-finalenglish.jpg" alt="" width="650" height="937" class="alignnone size-full wp-image-21017" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/09/HeadlineImageTemplate-v2.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/09/HeadlineImageTemplate-v2.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[The Devil has many faces]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2019/09/16/the-devil-has-many-faces/]]></link>
-							<pubDate>Mon, 16 Sep 2019 17:29:56 +0000</pubDate>
+							<title><![CDATA[Not that simple]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/09/07/not-that-simple/]]></link>
+							<pubDate>Mon, 07 Sep 2020 16:21:45 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20749</dc:identifier>
-							<dc:modified>2019-09-16 17:32:42</dc:modified>
-							<dc:created unix="1568654996">2019-09-16 17:29:56</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2019/09/16/the-devil-has-many-faces/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2019/09/Strip-La-vengeance-de-Flash-650-finalenglish.jpg" alt="" width="650" height="873" class="alignnone size-full wp-image-20750" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2019/09/HeadlineImageTemplate-Conflit-4.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2019/09/HeadlineImageTemplate-Conflit-4.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21010</dc:identifier>
+							<dc:modified>2020-09-07 16:21:45</dc:modified>
+							<dc:created unix="1599495705">2020-09-07 16:21:45</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/09/07/not-that-simple/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/09/Strip-Si-en-fait-cest-pas-si-simple-650-finalenglish.jpg" alt="" width="650" height="604" class="alignnone size-full wp-image-21012" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/09/HeadlineImageTemplate-.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/09/HeadlineImageTemplate-.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item>
 					<item>
-							<title><![CDATA[One small step for a coder&#8230;]]></title>
-							<link><![CDATA[http://www.commitstrip.com/en/2019/09/13/one-small-step-for-a-coder/]]></link>
-							<pubDate>Fri, 13 Sep 2019 16:48:15 +0000</pubDate>
+							<title><![CDATA[Back in the office]]></title>
+							<link><![CDATA[https://www.commitstrip.com/2020/07/08/back-in-the-office/]]></link>
+							<pubDate>Wed, 08 Jul 2020 16:06:18 +0000</pubDate>
 							<dc:creator>CommitStrip</dc:creator>
-							<dc:identifier>20743</dc:identifier>
-							<dc:modified>2019-09-13 16:48:15</dc:modified>
-							<dc:created unix="1568393295">2019-09-13 16:48:15</dc:created>
-							<guid isPermaLink="true"><![CDATA[http://www.commitstrip.com/en/2019/09/13/one-small-step-for-a-coder/]]></guid><category>1</category>
-							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2019/09/Strip-Hubble-VS-Codeurs-650-finalenglish.jpg" alt="" width="650" height="600" class="alignnone size-full wp-image-20745" />]]></content:encoded><enclosure url="http://www.commitstrip.com/wp-content/uploads/2019/09/HeadlineImageTemplate-Conflit-3.jpg"/><media:content url="http://www.commitstrip.com/wp-content/uploads/2019/09/HeadlineImageTemplate-Conflit-3.jpg" height="492" width="940" type="image/jpeg"/>		
+							<dc:identifier>21004</dc:identifier>
+							<dc:modified>2020-07-08 16:06:18</dc:modified>
+							<dc:created unix="1594224378">2020-07-08 16:06:18</dc:created>
+							<guid isPermaLink="true"><![CDATA[https://www.commitstrip.com/2020/07/08/back-in-the-office/]]></guid><category>1</category>
+							<description><![CDATA[]]></description><content:encoded><![CDATA[<img src="https://www.commitstrip.com/wp-content/uploads/2020/07/Strip-Retour-daprès-confinement-650-finalenglish.jpg" alt="" width="650" height="644" class="alignnone size-full wp-image-21006" />]]></content:encoded><enclosure url="https://www.commitstrip.com/wp-content/uploads/2020/07/HeadlineImageTemplate-1-1.jpg"/><media:content url="https://www.commitstrip.com/wp-content/uploads/2020/07/HeadlineImageTemplate-1-1.jpg" height="492" width="940" type="image/jpeg"/>		
 					</item></channel></rss><!-- end of xml string -->
 <!--
 Performance optimized by W3 Total Cache. Learn more: https://www.w3-edge.com/products/
 
 Object Caching 80/80 objects using disk
-Page Caching using disk: enhanced (Requested URI contains query) 
+Page Caching using disk: enhanced (SSL caching disabled) 
 
-Served from: www.commitstrip.com @ 2020-01-18 01:45:02 by W3 Total Cache
+Served from: www.commitstrip.com @ 2021-02-14 23:25:02 by W3 Total Cache
 -->

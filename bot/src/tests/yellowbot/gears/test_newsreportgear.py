@@ -2,6 +2,9 @@
 
 Responses library is used to mock Request calls
 https://github.com/getsentry/responses
+
+Unfortunately, PyTest fixtures feature do not work when pytest is used in unittest.TestCase subclasses, apart from Auto-use fixtures.
+Source: https://docs.pytest.org/en/stable/unittest.html#pytest-features-in-unittest-testcase-subclasses
 """
 
 from unittest import TestCase
@@ -22,6 +25,7 @@ class TestNewsReportGear(TestCase):
     TESTDATA_YOUTUBE_PLAYLIST_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_youtube_playlist.txt")
     TESTDATA_RSS_FEED_1_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_rssfeed_1.txt")
     TESTDATA_ATOM_1_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_atom_1.txt")
+    TESTDATA_COMMITSTRIP_FEED_1_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_commitstrip_1.txt")
 
     def setUp(self):
         self._youtube_key = 'mock_youtube_key'
@@ -136,7 +140,7 @@ class TestNewsReportGear(TestCase):
         self.assertEqual("New video published: Valve's next VR projects are SCARILY similar to Sword Art Online - https://www.youtube.com/watch?v=veVx0AuhHFw", new_videos[1])
 
     @responses.activate
-    def test_rss_analize_channel_rss_feed(self):
+    def test_rss_analize_feed_rss(self):
         testdata1 = open(self.TESTDATA_RSS_FEED_1_FILENAME).read()
         responses.add(
             responses.GET,
@@ -146,21 +150,21 @@ class TestNewsReportGear(TestCase):
             content_type='application/xml'
         )
 
-        new_feeds = self._gear._rss_analize_channel(
+        new_feeds = self._gear._rss_analize_feed(
             "https://developer.oculus.com/blog/rss/",
             arrow.utcnow()
         )
         # There are no videos for current data, as all the mock data refers to past vides
         self.assertEqual(0, len(new_feeds))
 
-        new_feeds = self._gear._rss_analize_channel(
+        new_feeds = self._gear._rss_analize_feed(
             "https://developer.oculus.com/blog/rss/",
             arrow.get("2021-02-01T08:00:10Z")
         )
         self.assertEqual(1, len(new_feeds))
         self.assertEqual("New article published: Introducing App Lab: A New Way to Distribute Oculus Quest Apps - https://developer.oculus.com/blog/introducing-app-lab-a-new-way-to-distribute-oculus-quest-apps/", new_feeds[0])
 
-        new_feeds = self._gear._rss_analize_channel(
+        new_feeds = self._gear._rss_analize_feed(
             "https://developer.oculus.com/blog/rss/",
             arrow.get("2021-01-20T08:00:10Z")
         )
@@ -171,7 +175,7 @@ class TestNewsReportGear(TestCase):
         self.assertEqual("New article published: Now Available: VR Locomotion Design Guide - https://developer.oculus.com/blog/now-available-vr-locomotion-design-guide/", new_feeds[3])
 
     @responses.activate
-    def test_rss_analize_channel_atom_feed(self):
+    def test_rss_analize_feed_atom(self):
         testdata1 = open(self.TESTDATA_ATOM_1_FILENAME).read()
         responses.add(
             responses.GET,
@@ -181,21 +185,21 @@ class TestNewsReportGear(TestCase):
             content_type='application/xml'
         )
 
-        new_feeds = self._gear._rss_analize_channel(
+        new_feeds = self._gear._rss_analize_feed(
             "https://www.home-assistant.io/atom.xml",
             arrow.utcnow()
         )
         # There are items for current data, as all the mock data refers to past vides
         self.assertEqual(0, len(new_feeds))
 
-        new_feeds = self._gear._rss_analize_channel(
+        new_feeds = self._gear._rss_analize_feed(
             "https://www.home-assistant.io/atom.xml",
             arrow.get("2021-02-11T00:00:00+00:00")
         )
         self.assertEqual(1, len(new_feeds))
         self.assertEqual("New article published: Community Highlights: 8th edition - https://www.home-assistant.io/blog/2021/02/12/community-highlights/", new_feeds[0])
 
-        new_feeds = self._gear._rss_analize_channel(
+        new_feeds = self._gear._rss_analize_feed(
             "https://www.home-assistant.io/atom.xml",
             arrow.get("2021-02-02T00:00:00+00:00")
         )
@@ -203,7 +207,7 @@ class TestNewsReportGear(TestCase):
         self.assertEqual("New article published: Community Highlights: 8th edition - https://www.home-assistant.io/blog/2021/02/12/community-highlights/", new_feeds[0])
         self.assertEqual("New article published: 2021.2: Z-Wave... JS! - https://www.home-assistant.io/blog/2021/02/03/release-20212/", new_feeds[1])
 
-        new_feeds = self._gear._rss_analize_channel(
+        new_feeds = self._gear._rss_analize_feed(
             "https://www.home-assistant.io/atom.xml",
             arrow.get("2021-01-22T00:00:00+00:00")
         )
@@ -213,3 +217,70 @@ class TestNewsReportGear(TestCase):
         self.assertEqual("New article published: Security Disclosure 2: vulnerabilities in custom integrations HACS, Font Awesome and others - https://www.home-assistant.io/blog/2021/01/23/security-disclosure2/", new_feeds[2])
         self.assertEqual("New article published: Disclosure: security vulnerabilities in custom integrations HACS, Dwains Dashboard, Font Awesome and others - https://www.home-assistant.io/blog/2021/01/22/security-disclosure/", new_feeds[3])
 
+    @responses.activate
+    def test_rss_analize_feed_commitstrip(self):
+        testdata1 = open(self.TESTDATA_COMMITSTRIP_FEED_1_FILENAME).read()
+        responses.add(
+            responses.GET,
+            "http://www.commitstrip.com/en/feed/",
+            body = testdata1,
+            status = 200,
+            content_type='application/xml'
+        )
+
+        new_feeds = self._gear._rss_analize_feed(
+            "http://www.commitstrip.com/en/feed/",
+            arrow.utcnow()
+        )
+        # There are no videos for current data, as all the mock data refers to past vides
+        self.assertEqual(0, len(new_feeds))
+
+        new_feeds = self._gear._rss_analize_feed(
+            "http://www.commitstrip.com/en/feed/",
+            arrow.get("2021-02-01T08:00:10Z")
+        )
+        self.assertEqual(1, len(new_feeds))
+        self.assertEqual("New CommitStrip content: A theory about PHP - https://www.commitstrip.com/wp-content/uploads/2021/02/Stripo-Cest-lhistoire-de-PHP-et-React-800-finalenglish.jpg", new_feeds[0])
+
+        new_feeds = self._gear._rss_analize_feed(
+            "http://www.commitstrip.com/en/feed/",
+            arrow.get("2020-10-06T08:00:10Z")
+        )
+        self.assertEqual(4, len(new_feeds))
+        self.assertEqual("New CommitStrip content: A theory about PHP - https://www.commitstrip.com/wp-content/uploads/2021/02/Stripo-Cest-lhistoire-de-PHP-et-React-800-finalenglish.jpg", new_feeds[0])
+        self.assertEqual("New CommitStrip content: The best bet for 2030 - https://www.commitstrip.com/wp-content/uploads/2020/12/Strip-Top-langage-web-650-finalenglish.jpg", new_feeds[1])
+        self.assertEqual("New CommitStrip content: Weird bots - https://www.commitstrip.com/wp-content/uploads/2020/10/Strip-Drole-de-bot-650-finalenglish.jpg", new_feeds[2])
+        self.assertEqual("New CommitStrip content: The ‘no-code’ dream&#8230; - https://www.commitstrip.com/wp-content/uploads/2020/10/Strip-PM-et-le-Nocode650-finalenglish.jpg", new_feeds[3])
+
+    @responses.activate
+    def test_simulate_error_in_request(self):
+        # This test also checks that responses are not carried over from one
+        #  test to another, and each test starts the responses routes empty 
+
+        responses.add(
+            responses.GET,
+            "http://www.commitstrip.com/en/feed/",
+            body = "",
+            status = 404,
+            content_type="application/xml"
+        )
+
+        new_feeds = self._gear._rss_analize_feed(
+            "http://www.commitstrip.com/en/feed/",
+            arrow.get("2021-02-01T08:00:10Z")
+        )
+
+        self.assertEqual(1, len(new_feeds))
+        self.assertEqual("Error while getting RSS feed information from http://www.commitstrip.com/en/feed/", new_feeds[0])
+
+    @responses.activate
+    def test_find_latest_news(self):
+        # This test also checks that responses are not carried over from one
+        #  test to another, and each test starts the responses routes empty 
+
+        self._gear._newssources_urls = []
+        new_news = self._gear._find_latest_news(True)
+        self.assertEqual(0, len(new_news))
+        new_news = self._gear._find_latest_news(False)
+        self.assertEqual(1, len(new_news))
+        self.assertEqual("No recent news available", new_news[0])

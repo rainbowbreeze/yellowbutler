@@ -126,7 +126,7 @@ class NewsReportGear(BaseGear):
                 new_news_messages = self._youtube_analize_channel(news_item, last_check_date)
             
             elif "/feed/" in newssource_url.lower() or "/rss/" in newssource_url.lower() or "/atom.xml" in newssource_url.lower():
-                new_news_messages = self._rss_analize_channel(news_item.url, last_check_date)
+                new_news_messages = self._rss_analize_feed(news_item.url, last_check_date)
 
             else:
                 self._logger.warning("Unsupported news source {}".format(newssource_url))
@@ -369,7 +369,7 @@ class NewsReportGear(BaseGear):
         ))
         return latest_videos
 
-    def _rss_analize_channel(
+    def _rss_analize_feed(
         self,
         feed_url: str,
         last_check_date: Arrow
@@ -392,6 +392,7 @@ class NewsReportGear(BaseGear):
         """
         
         import feedparser
+        import re
 
         # Initialize the return variable
         new_feeds_messages: List[str] = []  # Initialize the return var
@@ -446,10 +447,20 @@ class NewsReportGear(BaseGear):
                     entry_date = arrow.get(rss_entry.published_parsed)
 
                 if entry_date >= last_check_date:
-                    new_feeds_messages.append("New article published: {} - {}". format(
-                        rss_entry.title,
-                        rss_entry.link
-                    ))
+                    if "http://www.commitstrip.com/en/feed/" == feed_url:
+                        # Workaround for a special threatment of CommitStrip rss
+                        img_tag = rss_entry.content[0].value
+                        # <img src="https://www.commitstrip.com/wp-content/uploads/2020/01/Strip-Paywall-650-finalenglish.jpg" alt="" width="650" height="607" class="alignnone size-full wp-image-20822" />
+                        img_matches = re.search('src="([^"]+)"', img_tag)
+                        new_feeds_messages.append("New CommitStrip content: {} - {}".format(
+                            rss_entry.title,
+                            img_matches[1]
+                        ))
+                    else:
+                        new_feeds_messages.append("New article published: {} - {}". format(
+                            rss_entry.title,
+                            rss_entry.link
+                        ))
 
             self._logger.info("Found {} articles, out of {}, newer than {}".format(
                 len(new_feeds_messages),

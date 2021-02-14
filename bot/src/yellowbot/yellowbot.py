@@ -6,14 +6,12 @@ from sys import exc_info
 from typing import Any, Dict, List, Optional
 from yellowbot.configservice import ConfigService
 from yellowbot.gears.basegear import BaseGear
-from yellowbot.gears.easynidogear import EasyNidoGear
 from yellowbot.gears.echomessagegear import EchoMessageGear
 from yellowbot.gears.gearexecutionresult import GearExecutionResult
 from yellowbot.gears.musicgear import MusicGear
 from yellowbot.gears.notifyadmingear import NotifyAdminGear
 from yellowbot.gears.sendmessagegear import SendMessageGear
 from yellowbot.gears.weathergear import WeatherGear
-from yellowbot.gears.commitstripgear import CommitStripGear
 from yellowbot.gears.newsreportergear import NewsReportGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.loggingservice import LoggingService
@@ -108,9 +106,6 @@ class YellowBot:
             self._config_service,
             test_mode
         ))
-
-        # CommitStrip gear
-        self._gears.append(CommitStripGear())
 
         # CheckForNews gear
         storage_service = DatastoreStorageService() if not test_mode else BaseStorageService()

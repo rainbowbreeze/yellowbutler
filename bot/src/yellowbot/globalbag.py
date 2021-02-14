@@ -40,10 +40,6 @@ class GlobalBag:
     NOTIFY_ADMIN_INTENT: ClassVar[str] = "notify_admin"
     NOTIFY_ADMIN_PARAM_MESSAGE: ClassVar[str] = "message"
 
-    # CommitStrip 
-    COMMITSTRIP_INTENT: ClassVar[str] = "commitstrip"
-    COMMITSTRIP_PARAM_SILENT: ClassVar[str] = "silent"
-
     # NewsReporter
     CHECKFORNEWS_INTENT: ClassVar[str] = "checkfornews"
     CHECKFORNEWS_PARAM_SILENT: ClassVar[str] = "silent"
