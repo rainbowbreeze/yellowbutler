@@ -8,16 +8,20 @@ from unittest import TestCase
 import responses
 import os
 import arrow
+import pytest
 
 from yellowbot.gears.newsreportergear import NewsReportGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.storage.basestorageservice import BaseStorageService
 from yellowbot.storage.newsitementity import NewsItemEntity
 
+# https://docs.pytest.org/en/stable/warnings.html#deprecationwarning-and-pendingdeprecationwarning
+@pytest.mark.filterwarnings("ignore:To avoid breaking existing software while fixing issue 310.*:DeprecationWarning")
 class TestNewsReportGear(TestCase):
     TESTDATA_YOUTUBE_CHANNEL_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_youtube_channel.txt")
     TESTDATA_YOUTUBE_PLAYLIST_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_youtube_playlist.txt")
     TESTDATA_RSS_FEED_1_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_rssfeed_1.txt")
+    TESTDATA_ATOM_1_FILENAME = os.path.join(os.path.dirname(__file__), "testdata_atom_1.txt")
 
     def setUp(self):
         self._youtube_key = 'mock_youtube_key'
@@ -132,7 +136,7 @@ class TestNewsReportGear(TestCase):
         self.assertEqual("New video published: Valve's next VR projects are SCARILY similar to Sword Art Online - https://www.youtube.com/watch?v=veVx0AuhHFw", new_videos[1])
 
     @responses.activate
-    def test_rss_analize_channel(self):
+    def test_rss_analize_channel_rss_feed(self):
         testdata1 = open(self.TESTDATA_RSS_FEED_1_FILENAME).read()
         responses.add(
             responses.GET,
@@ -153,7 +157,6 @@ class TestNewsReportGear(TestCase):
             "https://developer.oculus.com/blog/rss/",
             arrow.get("2021-02-01T08:00:10Z")
         )
-        # There are no videos for current data, as all the mock data refers to past vides
         self.assertEqual(1, len(new_feeds))
         self.assertEqual("New article published: Introducing App Lab: A New Way to Distribute Oculus Quest Apps - https://developer.oculus.com/blog/introducing-app-lab-a-new-way-to-distribute-oculus-quest-apps/", new_feeds[0])
 
@@ -161,9 +164,52 @@ class TestNewsReportGear(TestCase):
             "https://developer.oculus.com/blog/rss/",
             arrow.get("2021-01-20T08:00:10Z")
         )
-        # There are no videos for current data, as all the mock data refers to past vides
         self.assertEqual(4, len(new_feeds))
         self.assertEqual("New article published: Introducing App Lab: A New Way to Distribute Oculus Quest Apps - https://developer.oculus.com/blog/introducing-app-lab-a-new-way-to-distribute-oculus-quest-apps/", new_feeds[0])
         self.assertEqual("New article published: Art Direction for All-in-One VR Performance - https://developer.oculus.com/blog/art-direction-for-all-in-one-vr-performance/", new_feeds[1])
         self.assertEqual("New article published: Verify Your Oculus Developer Account by February 1 - https://developer.oculus.com/blog/verify-your-oculus-developer-account-by-february-1/", new_feeds[2])
         self.assertEqual("New article published: Now Available: VR Locomotion Design Guide - https://developer.oculus.com/blog/now-available-vr-locomotion-design-guide/", new_feeds[3])
+
+    @responses.activate
+    def test_rss_analize_channel_atom_feed(self):
+        testdata1 = open(self.TESTDATA_ATOM_1_FILENAME).read()
+        responses.add(
+            responses.GET,
+            "https://www.home-assistant.io/atom.xml",
+            body = testdata1,
+            status = 200,
+            content_type='application/xml'
+        )
+
+        new_feeds = self._gear._rss_analize_channel(
+            "https://www.home-assistant.io/atom.xml",
+            arrow.utcnow()
+        )
+        # There are items for current data, as all the mock data refers to past vides
+        self.assertEqual(0, len(new_feeds))
+
+        new_feeds = self._gear._rss_analize_channel(
+            "https://www.home-assistant.io/atom.xml",
+            arrow.get("2021-02-11T00:00:00+00:00")
+        )
+        self.assertEqual(1, len(new_feeds))
+        self.assertEqual("New article published: Community Highlights: 8th edition - https://www.home-assistant.io/blog/2021/02/12/community-highlights/", new_feeds[0])
+
+        new_feeds = self._gear._rss_analize_channel(
+            "https://www.home-assistant.io/atom.xml",
+            arrow.get("2021-02-02T00:00:00+00:00")
+        )
+        self.assertEqual(2, len(new_feeds))
+        self.assertEqual("New article published: Community Highlights: 8th edition - https://www.home-assistant.io/blog/2021/02/12/community-highlights/", new_feeds[0])
+        self.assertEqual("New article published: 2021.2: Z-Wave... JS! - https://www.home-assistant.io/blog/2021/02/03/release-20212/", new_feeds[1])
+
+        new_feeds = self._gear._rss_analize_channel(
+            "https://www.home-assistant.io/atom.xml",
+            arrow.get("2021-01-22T00:00:00+00:00")
+        )
+        self.assertEqual(4, len(new_feeds))
+        self.assertEqual("New article published: Community Highlights: 8th edition - https://www.home-assistant.io/blog/2021/02/12/community-highlights/", new_feeds[0])
+        self.assertEqual("New article published: 2021.2: Z-Wave... JS! - https://www.home-assistant.io/blog/2021/02/03/release-20212/", new_feeds[1])
+        self.assertEqual("New article published: Security Disclosure 2: vulnerabilities in custom integrations HACS, Font Awesome and others - https://www.home-assistant.io/blog/2021/01/23/security-disclosure2/", new_feeds[2])
+        self.assertEqual("New article published: Disclosure: security vulnerabilities in custom integrations HACS, Dwains Dashboard, Font Awesome and others - https://www.home-assistant.io/blog/2021/01/22/security-disclosure/", new_feeds[3])
+

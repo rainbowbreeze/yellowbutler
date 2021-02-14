@@ -430,9 +430,17 @@ class NewsReportGear(BaseGear):
         try:
             # Discard all the videos older that a certain date
             for rss_entry in d.entries:
-                # There is also the updated field, in addition to - rss_entry.published
-                published_date = arrow.get(rss_entry.published_parsed)
-                if published_date >= last_check_date:
+                # There are two fields: updated and published. Some feeds
+                #  use updated, other published. Check one, and then the other
+                # Check also https://feedparser.readthedocs.io/en/latest/reference-entry-updated.html
+                #  because Feedparse, for now, links pubDate to updated, if
+                #  updated is not present
+                try:
+                    entry_date = arrow.get(rss_entry.updated_parsed)
+                except AttributeError as err:
+                    entry_date = arrow.get(rss_entry.published_parsed)
+
+                if entry_date >= last_check_date:
                     new_feeds_messages.append("New article published: {} - {}". format(
                         rss_entry.title,
                         rss_entry.link
