@@ -97,6 +97,12 @@ class NluEngine:
             params[GlobalBag.CHECKFORNEWS_PARAM_SILENT] = False
             return intent, params
 
+        # Checks for CheckForNews intent
+        headers = ["newssources", "/newssources"]
+        if any(message.lower().startswith(header) for header in headers):
+            intent = GlobalBag.NEWSSOURCES_INTENT
+            return intent, params
+
         # Checks for other intents
 
         return intent, params

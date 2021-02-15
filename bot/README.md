@@ -137,6 +137,7 @@ Check for [API quota](https://console.developers.google.com/iam-admin/quotas) us
 In order to communicate with the external world, YellowBot needs at least one surface. Telegram is the default surface, and in order to configure it, a bot key and a chat_id are required. There are many tutorials and guides that walk thru the process.
 Once configured the bot, add these options to activate quick commands in Telegram interface
 checkfornews - Check news from various sources
+newssources - Return the list of news sources
 
 
 

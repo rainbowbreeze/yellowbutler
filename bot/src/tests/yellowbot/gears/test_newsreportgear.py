@@ -17,6 +17,7 @@ from yellowbot.gears.newsreportergear import NewsReportGear
 from yellowbot.globalbag import GlobalBag
 from yellowbot.storage.basestorageservice import BaseStorageService
 from yellowbot.storage.newsitementity import NewsItemEntity
+from yellowbot.gears.gearexecutionresult import GearExecutionResult
 
 # https://docs.pytest.org/en/stable/warnings.html#deprecationwarning-and-pendingdeprecationwarning
 @pytest.mark.filterwarnings("ignore:To avoid breaking existing software while fixing issue 310.*:DeprecationWarning")
@@ -29,15 +30,20 @@ class TestNewsReportGear(TestCase):
 
     def setUp(self):
         self._youtube_key = 'mock_youtube_key'
-        self._gear = NewsReportGear(self._youtube_key, [], BaseStorageService())
+        self._gear = NewsReportGear(self._youtube_key, ["http://ciao.me","http://ciao.you"], BaseStorageService())
 
     def tearDown(self):
         pass
 
+    def test_newssources_intent(self):
+        result = self._gear.process_intent(GlobalBag.NEWSSOURCES_INTENT, None)
+        self.assertTrue(result.went_well())
+        self.assertEqual(1, len(result.get_messages()))
+        self.assertEqual("Here the list of the sources I parse for news:\nhttp://ciao.me\nhttp://ciao.you", result.get_messages()[0])
+
     def test_youtube_extract_channel_id_from_url(self):
         self.assertEqual('UCSbdMXOI_3HGiFviLZO6kNA', self._gear._youtube_extract_channel_id_from_url('https://www.youtube.com/channel/UCSbdMXOI_3HGiFviLZO6kNA'))
         self.assertEqual('UCkRfArvrzheW2E7b6SVT7vQ', self._gear._youtube_extract_channel_id_from_url('https://www.youtube.com/channel/UCkRfArvrzheW2E7b6SVT7vQ'))
-
 
     @responses.activate
     def test_youtube_find_upload_playlist_from_channel(self):

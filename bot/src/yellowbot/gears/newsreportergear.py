@@ -32,7 +32,7 @@ class NewsReportGear(BaseGear):
     """Check updates from different sources and send them to a specific surface
     """
 
-    INTENTS = [GlobalBag.CHECKFORNEWS_INTENT]
+    INTENTS = [GlobalBag.CHECKFORNEWS_INTENT, GlobalBag.NEWSSOURCES_INTENT]
     PARAM_SILENT = GlobalBag.CHECKFORNEWS_PARAM_SILENT  # No notification if there is nothing new 
 
     def __init__(
@@ -62,20 +62,27 @@ class NewsReportGear(BaseGear):
         params: Dict[str, Any]
     ) -> GearExecutionResult:
 
-        if NewsReportGear.INTENTS[0] != intent:
+        if NewsReportGear.INTENTS[0] != intent and NewsReportGear.INTENTS[1] != intent:
             err_message = "Call to {} using wrong intent {}".format(__name__, intent)
             self._logger.info(err_message)
             return GearExecutionResult.ERROR(err_message )
 
-        # Defaul value for silent param
-        silent = False
-        if NewsReportGear.PARAM_SILENT in params:
-            silent = params[NewsReportGear.PARAM_SILENT]
+        if GlobalBag.CHECKFORNEWS_INTENT.lower() == intent.lower():
+            # Defaul value for silent param
+            silent = False
+            if NewsReportGear.PARAM_SILENT in params:
+                silent = params[NewsReportGear.PARAM_SILENT]
 
-        self._logger.info("Start processing new news to report")
-        news_list = self._find_latest_news(silent)
-        self._logger.info("Finished processing new news to report")
-        return GearExecutionResult(GearExecutionResult.RESULT_OK, news_list)
+            self._logger.info("Start processing new news to report")
+            news_list = self._find_latest_news(silent)
+            self._logger.info("Finished processing new news to report")
+            return GearExecutionResult(GearExecutionResult.RESULT_OK, news_list)
+
+        elif GlobalBag.NEWSSOURCES_INTENT.lower() == intent.lower():
+            news_source = "Here the list of the sources I parse for news:\n{}".format(
+                "\n".join(self._newssources_urls)
+            )
+            return GearExecutionResult.OK(news_source)
 
     def _find_latest_news(self, silent: bool) -> Optional[List[str]]:
         """Analyze all the different news sources, notifying in case new contents are found

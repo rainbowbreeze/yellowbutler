@@ -40,7 +40,8 @@ class GlobalBag:
     # NewsReporter
     CHECKFORNEWS_INTENT: ClassVar[str] = "checkfornews"
     CHECKFORNEWS_PARAM_SILENT: ClassVar[str] = "silent"
-    
+    NEWSSOURCES_INTENT: ClassVar[str] = "newsources"
+
     # Interaction surfaces
     SURFACE_TELEGRAM_BOT_LURCH: ClassVar[str] = "Telegram-Lurch"  # Lurch telegram bot
     SURFACE_NOTIFY_ADMIN: ClassVar[str] = "NotifyAdmin"  # Notification channel for admin

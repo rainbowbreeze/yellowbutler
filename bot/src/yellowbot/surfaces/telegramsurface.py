@@ -75,9 +75,12 @@ class TelegramSurface(BaseInteractionSurface):
         # Sometimes an error happens sending a message with only a _
         #  like "Missing city_name parameter in the request"
         #  and the entire sendMessage call crashes
-        # TODO sanitize the message before sending it
         # To check Markdown, please refer to https://core.telegram.org/bots/api#sendmessage
-        return_message = self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
+        try:
+            return_message = self.telegram_bot.sendMessage(message.channel_id, message.text, "Markdown")
+        except BaseException as err:
+            return_message = self.telegram_bot.sendMessage(message.channel_id, message.text)
+
         # It returns a string with the message id, not the whole message object
         return str(return_message["message_id"]) if "message_id" in return_message else None
 
