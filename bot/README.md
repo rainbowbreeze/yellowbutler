@@ -26,6 +26,18 @@ To use the local development server in App Engine, also the datastore emulator h
 sudo apt-get install google-cloud-sdk-datastore-emulator
 ```
 
+### Google Cloud SDK Mac install
+```
+brew install google-cloud-sdk
+```
+
+Install the datastore emulator
+https://cloud.google.com/datastore/docs/tools/datastore-emulator
+```
+gcloud components install cloud-datastore-emulator
+```
+
+
 
 ## Google Cloud SDK project initialization
 [Initialize](https://cloud.google.com/sdk/docs/initializing) the gcloud environment and get started:
@@ -122,9 +134,6 @@ cp yellowbot_config_template.json yellowbot_config.json
 cp yellowbot_tasks_template.json yellowbot_tasks.json
 ```
 Then, edit files accordingly to the comments.
-
-### Weather gear
-TBD
 
 ## Telegram gear
 TBD

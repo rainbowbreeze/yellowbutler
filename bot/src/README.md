@@ -1,47 +1,6 @@
 # YELLOWBOT GAE AND PYTHON SPECIFIC CONFIGURATIONS
 
 
-## Python notes
-
-### Type Hints
-- [PEP0484 (Type Hints) - May 2015](https://www.python.org/dev/peps/pep-0484/), and [many others PEPs](https://marketplace.visualstudio.com/items?itemName=ms-pyright.pyright)
-- [Type hints cheat sheet (Python 3)](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html)
-- How to use type hints: https://docs.python.org/3/library/typing.html
-- StackOverflow example: https://stackoverflow.com/a/25320495
-- TODO: check static types with [MyPy](https://mypy.readthedocs.io/en/stable/)
-
-Optional[...] is a shorthand notation for Union[..., None] -> [explaination](https://stackoverflow.com/a/51710151)
-
-### Misc
-Data structures: https://docs.python.org/3/tutorial/datastructures.html
-
-
-### Documentation format
-For documentation, the python reStructured Text format is used, following the suggestions on [this article](https://realpython.com/documenting-python-code/#documenting-your-python-code-base-using-docstrings)
-
-Example:
-```
-def print_header(file_loc, print_cols = False):
-  """Gets and prints the spreadsheet's header columns
-
-  This is a more detailed description of the class, and other important things to know.
-
-  :param file_loc: The file location of the spreadsheet
-  :type file_loc: str
-  :param print_cols: A flag used to print the columns to the console
-      (default is False)
-  :type print_cols: bool
-  :returns: a list of strings representing the header columns
-  :rtype: list
-  """
-
-  # Code starts after an empty line
-```
-Other examples: [1](https://googleapis.dev/python/datastore/latest/_modules/google/cloud/datastore/query.html#Query.add_filter), 
-
-Reference
-- [PEP 257 -- Docstring Conventions, 2001](https://www.python.org/dev/peps/pep-0257/)
-
 ### Testing
 
 #### Run Unit tests
@@ -75,14 +34,6 @@ https://martin-thoma.com/configuration-files-in-python/
 https://hackernoon.com/4-ways-to-manage-the-configuration-in-python-4623049e841b
 
 I put in the configuration class logic to obtain the file both via a relative path (relative to the root folder when the python is lauched), and also looking inside of the folder where the specific class is, as fallback. This is particuarly useful with tests, so I can pass different configuration files while running tests.
-
-
-
-### PIP management
-```
-pip freeze > requirements.txt
-pip install -r requirements.txt
-```
 
 
 
